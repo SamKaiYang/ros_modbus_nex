@@ -94,7 +94,6 @@ if __name__=="__main__":
                 modclient.setOutput(register,value,timeout)
                 rospy.loginfo("START")
 
-                
             elif Stop_motion_flag == True:
                 Stop_motion_flag = False
                 # Stopped running programs (falling edge)
