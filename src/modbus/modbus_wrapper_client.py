@@ -291,5 +291,25 @@ class ModbusWrapperClient():
         """
         self.client.close()
 
+    def read_input_Registers(self,address=None,num_registers=None):
 
+        tmp = None
+        with self.__mutex:            
+            try:
+                tmp = self.client.read_input_registers(address,num_registers).registers
+            except Exception, e:
+                rospy.logwarn("Could not read input on address %d. Exception: %s",address,str(e))
+                raise e
+            
+            
+            if self.__reset_registers:
+                try:
+                    self.client.write_registers(address, [0 for i in xrange(num_registers)])
+                except Exception, e:
+                    rospy.logwarn("Could not write to address %d. Exception: %s", address,str(e))
+                    raise e
+            
+        return tmp
+        # rr = client.read_input_registers(0,1, unit=1) #read AI
+        # print(rr, "value=", rr.registers)
     
