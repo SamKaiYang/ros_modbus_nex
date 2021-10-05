@@ -84,6 +84,10 @@ class ModbusWrapperClient():
         self.__reset_registers = reset_registers
         self.__reading_register_start = 0
         self.__num_reading_registers = 20
+        # add input registers
+        self.__read_input_register_start = 0
+        self.__num_read_input_registers = 20
+
 #         self.input_size = 16
         self.__input = HoldingRegister()
         self.__input.data = [0 for i in xrange(self.__num_reading_registers )]
@@ -109,7 +113,15 @@ class ModbusWrapperClient():
         """
         #start reading the modbus
         self.post.__updateModbusInput()
-        
+    
+    # add start read input register
+    def start_readinput_Listening(self):
+        """
+            Non blocking call for starting the listener for the readable modbus server registers 
+        """
+        #start reading the modbus
+        self.post.__updateModbusReadInput()
+
     def stopListening(self):
         """
             Stops the listener loop
@@ -128,6 +140,17 @@ class ModbusWrapperClient():
         """
         self.__reading_register_start = start
         self.__num_reading_registers = num_registers
+
+    def setReadingInputRegisters(self,start,num_registers):
+        """
+            Sets the start address of the registers which should be read and their number
+            :param start: First register that is readable
+            :type start: int
+            :param num_registers: Amount of readable registers
+            :type num_registers: int
+        """
+        self.__read_input_register_start = start
+        self.__num_read_input_registers = num_registers
 
     def setWritingRegisters(self,start,num_registers):
         """
@@ -193,7 +216,47 @@ class ModbusWrapperClient():
                         raise e
             rospy.Rate(self.__rate).sleep()
         self.listener_stopped = True
-    
+    # add read input registers
+    def __updateModbusReadInput(self,delay=0):
+        """                
+            Loop that is listening to the readable modbus registers and publishes it on a topic
+            :param delay: The delay time until the loop starts
+            :type delay: float 
+        """
+        rospy.sleep(delay)
+        self.listener_stopped = False
+        self.stop_listener = False
+        update = True
+        while not rospy.is_shutdown() and self.stop_listener is False:
+            try: 
+                if not rospy.is_shutdown() :
+                    tmp =  self.read_input_Registers()
+                    if tmp is None:
+                        rospy.sleep(2)
+                        continue
+                    # rospy.logwarn("__updateModbusReadInput tmp is %s ", str(tmp))
+                    # rospy.logwarn("__updateModbusReadInput self.__input.data is %s ", str(self.__input.data))
+
+                    if tmp != self.__input.data:
+                        update = True
+                        self.__input.data = tmp
+                    else:
+                        update = False 
+            except Exception,e:
+                rospy.logwarn("Could not read holding register. %s", str(e))
+                raise e
+                rospy.sleep(2)
+        
+            if update:
+                if self.__pub.get_num_connections() > 0:
+                    try:
+                        self.__pub.publish(self.__input)
+                    except Exception,e:
+                        rospy.logwarn("Could not publish message. Exception: %s",str(e))
+                        raise e
+            rospy.Rate(self.__rate).sleep()
+        self.listener_stopped = True
+
     def __updateModbusOutput(self,msg):
         """
             Callback from the subscriber to update the writeable modbus registers
@@ -257,7 +320,38 @@ class ModbusWrapperClient():
                     raise e
             
         return tmp
-    
+    # add input registers
+    def read_input_Registers(self,address=None,num_registers=None):
+        """
+            Reads modbus registers
+            :param address: First address of the registers to read
+            :type address: int
+            :param num_registers: Amount of registers to read
+            :type num_registers: int
+        """
+        if address is None:
+            address = self.__read_input_register_start
+        if num_registers is None:
+            num_registers = self.__num_read_input_registers
+
+        tmp = None
+        with self.__mutex:            
+            try:
+                tmp = self.client.read_input_registers(address,num_registers).registers
+            except Exception, e:
+                rospy.logwarn("Could not read input on address %d. Exception: %s",address,str(e))
+                raise e
+            
+            
+            if self.__reset_registers:
+                try:
+                    self.client.write_registers(address, [0 for i in xrange(num_registers)])
+                except Exception, e:
+                    rospy.logwarn("Could not write to address %d. Exception: %s", address,str(e))
+                    raise e
+            
+        return tmp
+
     def setOutput(self,address,value,timeout=0):
         """
             Directly write one register
@@ -291,25 +385,5 @@ class ModbusWrapperClient():
         """
         self.client.close()
 
-    def read_input_Registers(self,address=None,num_registers=None):
 
-        tmp = None
-        with self.__mutex:            
-            try:
-                tmp = self.client.read_input_registers(address,num_registers).registers
-            except Exception, e:
-                rospy.logwarn("Could not read input on address %d. Exception: %s",address,str(e))
-                raise e
-            
-            
-            if self.__reset_registers:
-                try:
-                    self.client.write_registers(address, [0 for i in xrange(num_registers)])
-                except Exception, e:
-                    rospy.logwarn("Could not write to address %d. Exception: %s", address,str(e))
-                    raise e
-            
-        return tmp
-        # rr = client.read_input_registers(0,1, unit=1) #read AI
-        # print(rr, "value=", rr.registers)
     
