@@ -46,6 +46,7 @@ if __name__=="__main__":
                 key))
 
     def on_release(key):
+        global Stop_motion_flag
         print('Key released: {0}'.format(
             key))
         print('Key released: {0}'.format(
@@ -71,20 +72,24 @@ if __name__=="__main__":
         try: 
             if not rospy.is_shutdown() and modclient.stop_listener is True:
                 # ---- test 
+
+                # Enable robot (rising edge)
                 register = 4096
                 value = 4
                 timeout = 0
                 modclient.setOutput(register,value,timeout)
                 rospy.loginfo("ENABLE")
 
+                # Reload all programs (*2)
                 register = 4096
                 value = 8
                 timeout = 0
                 modclient.setOutput(register,value,timeout)
                 rospy.loginfo("RELOAD_ALL")
 
+                # Starting loaded programs (rising edge)
                 register = 4096
-                value = 0
+                value = 5 # 4+1
                 timeout = 0
                 modclient.setOutput(register,value,timeout)
                 rospy.loginfo("START")
@@ -92,8 +97,9 @@ if __name__=="__main__":
                 
             elif Stop_motion_flag == True:
                 Stop_motion_flag = False
+                # Stopped running programs (falling edge)
                 register = 4096
-                value = 1
+                value = 0
                 timeout = 0
                 modclient.setOutput(register,value,timeout)
                 rospy.loginfo("STOP")
@@ -106,4 +112,17 @@ if __name__=="__main__":
             raise e
             rospy.sleep(2)
 
-    
+#  ------ API --------------------------------############
+# # Shutdown controller
+# register = 4096
+# value = 1024
+# timeout = 0
+# modclient.setOutput(register,value,timeout)
+# rospy.loginfo("SHUTDOWN")
+
+# # Enable robot (rising edge)
+# register = 4096
+# value = 4
+# timeout = 0
+# modclient.setOutput(register,value,timeout)
+# rospy.loginfo("ENABLE")
