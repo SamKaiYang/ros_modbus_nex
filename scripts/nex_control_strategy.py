@@ -10,27 +10,27 @@ if __name__=="__main__":
     rospy.init_node("control_strategy")
     nex_api = ModbusNexApi()
     rospy.loginfo("API setting")
-
+    nex_api.send_reset(4096)
 ## Test all program run, can get task state
-    # nex_api.reload_all_programs()
-    # nex_api.enable_robot()
-    # nex_api.start_programs()
+    nex_api.reload_all_programs()
+    nex_api.enable_robot()
+    nex_api.start_programs()
 
-    # while not rospy.is_shutdown():
-    #     try:
-    #         if Stop_motion_flag == False:
-    #             if nex_api.task_state(0) == "Task exit": #if Task exit
-    #                 Stop_motion_flag = True
-    #         else:
-    #             # Stop_motion_flag = False
-    #             rospy.loginfo("Stop programs")
-    #             nex_api.stop_programs()
-    #             nex_api.disable_robot()
-    #             break
-    #     except Exception,e:
-    #         rospy.logwarn("Could not running. %s", str(e))
-    #         raise e
-    #         rospy.sleep(2)
+    while not rospy.is_shutdown():
+        try:
+            if Stop_motion_flag == False:
+                if nex_api.task_state(0) == "Task exit": #if Task exit
+                    Stop_motion_flag = True
+            else:
+                # Stop_motion_flag = False
+                rospy.loginfo("Stop programs")
+                nex_api.stop_programs()
+                nex_api.disable_robot()
+                break
+        except Exception,e:
+            rospy.logwarn("Could not running. %s", str(e))
+            raise e
+            rospy.sleep(2)
 
 
 ## Test read input register test 

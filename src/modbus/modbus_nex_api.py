@@ -12,7 +12,9 @@ class ModbusNexApi():
     def __init__(self):
         self.host = "192.168.0.6"
         self.port = 502
-        self.modclient = ModbusWrapperClient(self.host,self.port)
+        self.rate = 50
+        self.reset_registers = False
+        self.modclient = ModbusWrapperClient(self.host, self.port, self.rate, self.reset_registers)
 
         self.modclient.setWritingRegisters(ADDRESS_WRITE_START,WRITE_NUM_REGISTERS)
         # self.modclient.setReadingRegisters(ADDRESS_READ_START,READ_NUM_REGISTERS)
@@ -53,22 +55,23 @@ class ModbusNexApi():
         if val:
             return byte | (1 << index)
         else:
-            return byte % ~(1 << index)
+            return byte & ~(1 << index)
     
     # ----------------Write msg to modbus server API-------------------
+    def send_reset(self, address):
+        self.modclient.setOutput(address,0,0)
+        rospy.sleep(0.5)
+        rospy.loginfo("RESET")
+
     def start_programs(self):
         """
             Starting loaded programs (rising edge)
         """
-        input_registers = self.modclient.read_input_Registers(4096,1)
-        
+        input_registers = self.modclient.readRegisters(4096,1)
         value = self.set_bit_val(int(input_registers[0]),0,1)
-        print(value)
         register = 4096
-        # value = 5
-        timeout = 0.5
         self.modclient.setOutput(register,value,0)
-        rospy.sleep(timeout)
+        rospy.sleep(0.5)
         rospy.loginfo("START")
 
     # TODO: when start programs is set, this function is only available
@@ -76,28 +79,22 @@ class ModbusNexApi():
         """
             Stopped running programs (falling edge)
         """
-        input_registers = self.modclient.read_input_Registers(4096,1)
+        input_registers = self.modclient.readRegisters(4096,1)
         value = self.set_bit_val(int(input_registers[0]),0,0)
-        print(value)
         register = 4096
-        # value = 4
-        timeout = 0.5
         self.modclient.setOutput(register,value,0)
-        rospy.sleep(timeout)
+        rospy.sleep(0.5)
         rospy.loginfo("STOP")
 
     def enable_robot(self):
         """
             Enable robot (rising edge)
         """
-        input_registers = self.modclient.read_input_Registers(4096,1)
+        input_registers = self.modclient.readRegisters(4096,1)
         value = self.set_bit_val(int(input_registers[0]),2,1)
-        print(value)
         register = 4096
-        # value = 4
-        timeout = 0.5
         self.modclient.setOutput(register,value,0)
-        rospy.sleep(timeout)
+        rospy.sleep(0.5)
         rospy.loginfo("ENABLE")
 
     # TODO: when programs is stop or not use, this function is only available
@@ -105,56 +102,47 @@ class ModbusNexApi():
         """
             Disable robot (falling edge)
         """
-        input_registers = self.modclient.read_input_Registers(4096,1)
+        input_registers = self.modclient.readRegisters(4096,1)
         value = self.set_bit_val(int(input_registers[0]),2,0)
-        print(value)
         register = 4096
-        # value = 0
-        timeout = 0.5
         self.modclient.setOutput(register,value,0)
-        rospy.sleep(timeout)
+        rospy.sleep(0.5)
         rospy.loginfo("DISABLE")
         
     def reload_all_programs(self):
         """
             Reload all programs (*2)
         """
-        input_registers = self.modclient.read_input_Registers(4096,1)
+        input_registers = self.modclient.readRegisters(4096,1)
         value = self.set_bit_val(int(input_registers[0]),3,1)
-        print(value)
         register = 4096
-        # value = 8
-        timeout = 0.5
         self.modclient.setOutput(register,value,0)
-        rospy.sleep(timeout)
+        rospy.sleep(0.5)
+        # input_registers = self.modclient.readRegisters(4096,1)
+        # value = self.set_bit_val(int(input_registers[0]),3,0)
+        # rospy.sleep(0.5)
         rospy.loginfo("RELOAD_ALL")
 
     def reload_sel_programs(self):
         """
             Reload selected programs according to register:1001h (*3)
         """
-        input_registers = self.modclient.read_input_Registers(4096,1)
+        input_registers = self.modclient.readRegisters(4096,1)
         value = self.set_bit_val(int(input_registers[0]),4,1)
-        print(value)
         register = 4096
-        # value = 16
-        timeout = 0.5
         self.modclient.setOutput(register,value,0)
-        rospy.sleep(timeout)
+        rospy.sleep(0.5)
         rospy.loginfo("RELOAD_SEL")
         
     def shutdown_controller(self):
         """
             Shutdown controller
         """
-        input_registers = self.modclient.read_input_Registers(4096,1)
+        input_registers = self.modclient.readRegisters(4096,1)
         value = self.set_bit_val(int(input_registers[0]),10,1)
-        print(value)
         register = 4096
-        # value = 1024
-        timeout = 0.5
         self.modclient.setOutput(register,value,0)
-        rospy.sleep(timeout)
+        rospy.sleep(0.5)
         rospy.loginfo("SHUTDOWN")
 
     # ----------------Request modbus server to read server state API-------------------
