@@ -36,7 +36,8 @@ class ModbusNexApi():
         register = 4096
         value = 5
         timeout = 0.5
-        self.modclient.setOutput(register,value,timeout)
+        self.modclient.setOutput(register,value,0)
+        rospy.sleep(timeout)
         rospy.loginfo("START")
 
     # TODO: when start programs is set, this function is only available
@@ -47,7 +48,8 @@ class ModbusNexApi():
         register = 4096
         value = 4
         timeout = 0.5
-        self.modclient.setOutput(register,value,timeout)
+        self.modclient.setOutput(register,value,0)
+        rospy.sleep(timeout)
         rospy.loginfo("STOP")
 
     def enable_robot(self):
@@ -57,7 +59,8 @@ class ModbusNexApi():
         register = 4096
         value = 4
         timeout = 0.5
-        self.modclient.setOutput(register,value,timeout)
+        self.modclient.setOutput(register,value,0)
+        rospy.sleep(timeout)
         rospy.loginfo("ENABLE")
 
     # TODO: when programs is stop or not use, this function is only available
@@ -68,7 +71,8 @@ class ModbusNexApi():
         register = 4096
         value = 0
         timeout = 0.5
-        self.modclient.setOutput(register,value,timeout)
+        self.modclient.setOutput(register,value,0)
+        rospy.sleep(timeout)
         rospy.loginfo("DISABLE")
         
     def reload_all_programs(self):
@@ -78,7 +82,8 @@ class ModbusNexApi():
         register = 4096
         value = 8
         timeout = 0.5
-        self.modclient.setOutput(register,value,timeout)
+        self.modclient.setOutput(register,value,0)
+        rospy.sleep(timeout)
         rospy.loginfo("RELOAD_ALL")
 
     def reload_sel_programs(self):
@@ -88,7 +93,8 @@ class ModbusNexApi():
         register = 4096
         value = 16
         timeout = 0.5
-        self.modclient.setOutput(register,value,timeout)
+        self.modclient.setOutput(register,value,0)
+        rospy.sleep(timeout)
         rospy.loginfo("RELOAD_SEL")
         
     def shutdown_controller(self):
@@ -98,7 +104,8 @@ class ModbusNexApi():
         register = 4096
         value = 1024
         timeout = 0.5
-        self.modclient.setOutput(register,value,timeout)
+        self.modclient.setOutput(register,value,0)
+        rospy.sleep(timeout)
         rospy.loginfo("SHUTDOWN")
 
     # ----------------Request modbus server to read server state API-------------------

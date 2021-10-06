@@ -103,8 +103,6 @@ class ModbusWrapperClient():
         self.__sub = rospy.Subscriber(sub_topic,HoldingRegister,self.__updateModbusOutput,queue_size=500)
         self.__pub = rospy.Publisher(pub_topic,HoldingRegister,queue_size=500, latch=True)
         
-         
-        
         rospy.on_shutdown(self.closeConnection)
     
     def startListening(self):
