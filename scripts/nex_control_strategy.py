@@ -38,72 +38,68 @@ if __name__=="__main__":
     nex_api = ModbusNexApi()
     rospy.loginfo("API setting")
 
-    # nex_api.reload_all_programs()
-    # nex_api.enable_robot()
-    # nex_api.start_programs()
+    nex_api.reload_all_programs()
+    nex_api.enable_robot()
+    nex_api.start_programs()
 
 
-    # Stop_motion_flag == True
+    
 
-    # while not rospy.is_shutdown():
-    #     try:
-    #         if Stop_motion_flag == True:
-    #             Stop_motion_flag = False
-    #             rospy.loginfo("Stop programs")
-    #             nex_api.stop_programs()
-    #             nex_api.disable_robot()
-    #         else:
-    #             pass
-
-    #     except Exception,e:
-    #         rospy.logwarn("Could not running. %s", str(e))
-    #         raise e
-    #         rospy.sleep(2)
+    while not rospy.is_shutdown():
+        try:
+            if Stop_motion_flag == False:
+                if nex_api.task_state(0) == "Task exit": #if Task exit
+                    Stop_motion_flag = True
+                    print("aaa")
+            else:
+                # Stop_motion_flag = False
+                rospy.loginfo("Stop programs")
+                nex_api.stop_programs()
+                nex_api.disable_robot()
+                break
+        except Exception,e:
+            rospy.logwarn("Could not running. %s", str(e))
+            raise e
+            rospy.sleep(2)
 
     # read input register test 
     
-    while not rospy.is_shutdown():
-        try:
-            input_registers = nex_api.operation_mode_state()
-            print("operation_mode_state:",input_registers)
-            print("\n")
-            input_registers = nex_api.safety_state()
-            print("safety_state:",input_registers)
-            print("\n")
-            input_registers = nex_api.enable_switch_state()
-            print("enable_switch_state:",input_registers)
-            print("\n")
-            input_registers = nex_api.open_project_state()
-            print("open_project_state:",input_registers)
-            print("\n")
-            input_registers = nex_api.task_state(0)
-            print("task_state:",input_registers)
-            print("\n")
-            input_registers = nex_api.is_run_ready()
-            print("is_run_ready:",input_registers)
-            print("\n")
-            input_registers = nex_api.is_running()
-            print("is_running:",input_registers)
-            print("\n")
-            input_registers = nex_api.is_in_ext_mode()
-            print("is_in_ext_mode:",input_registers)
-            print("\n")
-            input_registers = nex_api.is_error()
-            print("is_error:",input_registers)
-            print("\n")
-            input_registers = nex_api.is_enable()
-            print("is_enable:",input_registers)
-            print("\n")
-            input_registers = nex_api.is_task_init()
-            print("is_task_init:",input_registers)
-            print("\n")
-            input_registers = nex_api.is_idle()
-            print("is_idle:",input_registers)
+    # while not rospy.is_shutdown():
+    #     input_registers = nex_api.operation_mode_state()
+    #     print("operation_mode_state:",input_registers)
+    #     print("\n")
+    #     input_registers = nex_api.safety_state()
+    #     print("safety_state:",input_registers)
+    #     print("\n")
+    #     input_registers = nex_api.enable_switch_state()
+    #     print("enable_switch_state:",input_registers)
+    #     print("\n")
+    #     input_registers = nex_api.open_project_state()
+    #     print("open_project_state:",input_registers)
+    #     print("\n")
+    #     input_registers = nex_api.task_state(0)
+    #     print("task_state:",input_registers)
+    #     print("\n")
+    #     input_registers = nex_api.is_run_ready()
+    #     print("is_run_ready:",input_registers)
+    #     print("\n")
+    #     input_registers = nex_api.is_running()
+    #     print("is_running:",input_registers)
+    #     print("\n")
+    #     input_registers = nex_api.is_in_ext_mode()
+    #     print("is_in_ext_mode:",input_registers)
+    #     print("\n")
+    #     input_registers = nex_api.is_error()
+    #     print("is_error:",input_registers)
+    #     print("\n")
+    #     input_registers = nex_api.is_enable()
+    #     print("is_enable:",input_registers)
+    #     print("\n")
+    #     input_registers = nex_api.is_task_init()
+    #     print("is_task_init:",input_registers)
+    #     print("\n")
+    #     input_registers = nex_api.is_idle()
+    #     print("is_idle:",input_registers)
 
-            print("\n\n")
-            rospy.sleep(2)
-            
-        except Exception, e:
-            rospy.logwarn("Could not read any callback information. %s", str(e))
-            raise e
-            rospy.sleep(1)
+    #     print("\n\n")
+    #     rospy.sleep(2)

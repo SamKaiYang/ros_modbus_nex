@@ -218,7 +218,7 @@ class ModbusNexApi():
         address = 8448+task_num
         input_registers = self.modclient.read_input_Registers(address,1)
         _bin = bin(int(input_registers[0]))[2:]
-        print("bin:",_bin)
+        # print("bin:",_bin)
         
         if _bin == "0":
             return "Task idle"
@@ -240,10 +240,11 @@ class ModbusNexApi():
             NRPL tasks are ready to run when bit turn on.
         """
         input_registers = self.modclient.read_input_Registers(8205,1)
-        _bin = bin(int(input_registers[0]))[2:]
-        print("bin:",_bin)
+        bit_val = self.get_bit_val(input_registers[0],0)
+        _bin = bin(int(bit_val))[2:]
+        # print("bin:",_bin)
 
-        if self.get_bit_val(_bin,0) == 1:
+        if _bin == 1:
             return True
         else:
             return False
@@ -253,10 +254,11 @@ class ModbusNexApi():
             NRPL programs (tasks) are running when bit turn on.
         """
         input_registers = self.modclient.read_input_Registers(8205,1)
-        _bin = bin(int(input_registers[0]))[2:]
-        print("bin:",_bin)
+        bit_val = self.get_bit_val(input_registers[0],1)
+        _bin = bin(int(bit_val))[2:]
+        # print("bin:",_bin)
 
-        if self.get_bit_val(_bin,1) == 1:
+        if _bin == 1:
             return True
         else:
             return False
@@ -266,10 +268,11 @@ class ModbusNexApi():
             System is in EXT operation mode when bit turn on.
         """
         input_registers = self.modclient.read_input_Registers(8205,1)
-        _bin = bin(int(input_registers[0]))[2:]
+        bit_val = self.get_bit_val(input_registers[0],2)
+        _bin = bin(int(bit_val))[2:]
         print("bin:",_bin)
 
-        if self.get_bit_val(_bin,2) == 1:
+        if _bin == 1:
             return True
         else:
             return False
@@ -279,10 +282,11 @@ class ModbusNexApi():
             System is in ERROR state when bit turn on. (Safety state=ERROR)
         """
         input_registers = self.modclient.read_input_Registers(8205,1)
-        _bin = bin(int(input_registers[0]))[2:]
+        bit_val = self.get_bit_val(input_registers[0],3)
+        _bin = bin(int(bit_val))[2:]
         print("bin:",_bin)
 
-        if self.get_bit_val(_bin,3) == 1:
+        if _bin == 1:
             return True
         else:
             return False
@@ -292,10 +296,11 @@ class ModbusNexApi():
             System is in ENABLE state when bit turn on. (Safety state=ENABLE or RUN)
         """
         input_registers = self.modclient.read_input_Registers(8205,1)
-        _bin = bin(int(input_registers[0]))[2:]
+        bit_val = self.get_bit_val(input_registers[0],4)
+        _bin = bin(int(bit_val))[2:]
         print("bin:",_bin)
 
-        if self.get_bit_val(_bin,4) == 1:
+        if _bin == 1:
             return True
         else:
             return False
@@ -305,10 +310,11 @@ class ModbusNexApi():
             NRPL tasks are at program entry point when bit turn on.
         """
         input_registers = self.modclient.read_input_Registers(8205,1)
-        _bin = bin(int(input_registers[0]))[2:]
+        bit_val = self.get_bit_val(input_registers[0],5)
+        _bin = bin(int(bit_val))[2:]
         print("bin:",_bin)
 
-        if self.get_bit_val(_bin,5) == 1:
+        if _bin == 1:
             return True
         else:
             return False
@@ -318,10 +324,11 @@ class ModbusNexApi():
             System is in IDLE state.(Safety state!=RUN && != ERROR)
         """
         input_registers = self.modclient.read_input_Registers(8205,1)
-        _bin = bin(int(input_registers[0]))[2:]
+        bit_val = self.get_bit_val(input_registers[0],6)
+        _bin = bin(int(bit_val))[2:]
         print("bin:",_bin)
 
-        if self.get_bit_val(_bin,6) == 1:
+        if _bin == 1:
             return True
         else:
             return False
