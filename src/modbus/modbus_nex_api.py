@@ -143,30 +143,68 @@ class ModbusNexApi():
         input_registers = self.modclient.read_input_Registers(8192,1)
         _bin = bin(int(input_registers[0]))[2:]
         print("bin:",_bin)
-        if _bin == "11":
+        if _bin == "0":
+            return "T1"
+        elif _bin == "1":
+            return "T2"
+        elif _bin == "10":
+            return "AUT"
+        elif _bin == "11":
             return "EXT"
-        return input_registers[0] 
+        else:
+            return "ERROR"
 
     def safety_state(self):
         """
             (0)Disable, (1)Ready, (2)Error, (3)Enable, (4)Running
         """
         input_registers = self.modclient.read_input_Registers(8193,1)
-        return input_registers[0] 
+        _bin = bin(int(input_registers[0]))[2:]
+        print("bin:",_bin)
+        if _bin == "0":
+            return "Disable"
+        elif _bin == "1":
+            return "Ready"
+        elif _bin == "10":
+            return "Error"
+        elif _bin == "11":
+            return "Enable"
+        elif _bin == "100":
+            return "Running"
+        else:
+            return "ERROR"
 
     def enable_switch_state(self):
         """
             (0)Disable,(1)Enable, (2)Pressed-EMG
         """
         input_registers = self.modclient.read_input_Registers(8198,1)
-        return input_registers[0]     
+        _bin = bin(int(input_registers[0]))[2:]
+        print("bin:",_bin)
+        if _bin == "0":
+            return "Disable"
+        elif _bin == "1":
+            return "Enable"
+        elif _bin == "10":
+            return "Pressed-EMG"
+        else:
+            return "ERROR"
 
     def open_project_state(self):
         """
             (0) Idle, (1) Opening, (2) Failed
         """
         input_registers = self.modclient.read_input_Registers(8204,1)
-        return input_registers[0]    
+        _bin = bin(int(input_registers[0]))[2:]
+        print("bin:",_bin)
+        if _bin == "0":
+            return "Idle"
+        elif _bin == "1":
+            return "Opening"
+        elif _bin == "10":
+            return "Failed"
+        else:
+            return "ERROR"
 
     def task_state(self, task_num):
         """
@@ -179,52 +217,118 @@ class ModbusNexApi():
         """
         address = 8448+task_num
         input_registers = self.modclient.read_input_Registers(address,1)
-        return input_registers[0]
+        _bin = bin(int(input_registers[0]))[2:]
+        print("bin:",_bin)
         
-    def task_status(self):
+        if _bin == "0":
+            return "Task idle"
+        elif _bin == "1":
+            return "Task initialed"
+        elif _bin == "10":
+            return "Task running"
+        elif _bin == "11":
+            return "Task exit"
+        elif _bin == "100":
+            return "Task pause"
+        elif _bin == "101":
+            return "Task error"
+        else:
+            return "ERROR"
+
+    def is_run_ready(self):
         """
-            RUN_READY : NRPL tasks are ready to run when bit turn on.
-            RUNNING : NRPL programs (tasks) are running when bit turn on.
+            NRPL tasks are ready to run when bit turn on.
         """
         input_registers = self.modclient.read_input_Registers(8205,1)
-        # if input_registers[0] == True:
-        #     status = "RUN_READY"
-        #     return status
-        # if input_registers[1] == True:
-        #     status = "RUNNING"
-        #     return status
-        # else:
-        #     return "0"
-        return input_registers[0] 
+        _bin = bin(int(input_registers[0]))[2:]
+        print("bin:",_bin)
 
-    def system_status(self):
+        if self.get_bit_val(_bin,0) == 1:
+            return True
+        else:
+            return False
+
+    def is_running(self):
         """
-            ERROR : System is in ERROR state when bit turn on. (Safety state=ERROR)
-            ENABLE : System is in ENABLE state when bit turn on. (Safety state=ENABLE or RUN)
-            TASK_INIT : NRPL tasks are at program entry point when bit turn on.
-            IDLE : System is in IDLE state.(Safety state!=RUN && != ERROR)
+            NRPL programs (tasks) are running when bit turn on.
         """
         input_registers = self.modclient.read_input_Registers(8205,1)
-        # if input_registers[3] == True:
-        #     status = "ERROR"
-        #     return status
-        # if input_registers[4] == True:
-        #     status = "ENABLE"
-        #     return status
-        # if input_registers[5] == True:
-        #     status = "TASK_INIT"
-        #     return status
-        # if input_registers[6] == True:
-        #     status = "IDLE"
-        #     return status
-        # else:
-        #     return "0"
+        _bin = bin(int(input_registers[0]))[2:]
+        print("bin:",_bin)
 
-        return input_registers[0] 
+        if self.get_bit_val(_bin,1) == 1:
+            return True
+        else:
+            return False
 
-    def task_run_status(self,task_num):
+    def is_in_ext_mode(self):
         """
-            Task#n is running.
+            System is in EXT operation mode when bit turn on.
         """
-        input_registers = self.modclient.read_input_Registers(8206,task_num)
-        return input_registers[0]
+        input_registers = self.modclient.read_input_Registers(8205,1)
+        _bin = bin(int(input_registers[0]))[2:]
+        print("bin:",_bin)
+
+        if self.get_bit_val(_bin,2) == 1:
+            return True
+        else:
+            return False
+
+    def is_error(self):
+        """
+            System is in ERROR state when bit turn on. (Safety state=ERROR)
+        """
+        input_registers = self.modclient.read_input_Registers(8205,1)
+        _bin = bin(int(input_registers[0]))[2:]
+        print("bin:",_bin)
+
+        if self.get_bit_val(_bin,3) == 1:
+            return True
+        else:
+            return False
+
+    def is_enable(self):
+        """
+            System is in ENABLE state when bit turn on. (Safety state=ENABLE or RUN)
+        """
+        input_registers = self.modclient.read_input_Registers(8205,1)
+        _bin = bin(int(input_registers[0]))[2:]
+        print("bin:",_bin)
+
+        if self.get_bit_val(_bin,4) == 1:
+            return True
+        else:
+            return False
+
+    def is_task_init(self):
+        """
+            NRPL tasks are at program entry point when bit turn on.
+        """
+        input_registers = self.modclient.read_input_Registers(8205,1)
+        _bin = bin(int(input_registers[0]))[2:]
+        print("bin:",_bin)
+
+        if self.get_bit_val(_bin,5) == 1:
+            return True
+        else:
+            return False
+
+    def is_idle(self):
+        """
+            System is in IDLE state.(Safety state!=RUN && != ERROR)
+        """
+        input_registers = self.modclient.read_input_Registers(8205,1)
+        _bin = bin(int(input_registers[0]))[2:]
+        print("bin:",_bin)
+
+        if self.get_bit_val(_bin,6) == 1:
+            return True
+        else:
+            return False
+
+    # def task_run_status(self,task_num):
+    #     """
+    #         Task#n is running.
+    #     """
+    #     input_registers = self.modclient.read_input_Registers(8206,task_num)
+    #     return input_registers[0]
