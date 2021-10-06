@@ -10,8 +10,10 @@ if __name__=="__main__":
     rospy.init_node("control_strategy")
     nex_api = ModbusNexApi()
     rospy.loginfo("API setting")
-    nex_api.send_reset(4096)
+    
+
 ## Test all program run, can get task state
+    nex_api.send_reset(4096)
     nex_api.reload_all_programs()
     nex_api.enable_robot()
     nex_api.start_programs()

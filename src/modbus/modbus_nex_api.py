@@ -118,9 +118,6 @@ class ModbusNexApi():
         register = 4096
         self.modclient.setOutput(register,value,0)
         rospy.sleep(0.5)
-        # input_registers = self.modclient.readRegisters(4096,1)
-        # value = self.set_bit_val(int(input_registers[0]),3,0)
-        # rospy.sleep(0.5)
         rospy.loginfo("RELOAD_ALL")
 
     def reload_sel_programs(self):
