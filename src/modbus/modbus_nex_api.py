@@ -60,8 +60,12 @@ class ModbusNexApi():
         """
             Starting loaded programs (rising edge)
         """
+        input_registers = self.modclient.read_input_Registers(4096,1)
+        
+        value = self.set_bit_val(int(input_registers[0]),0,1)
+        print(value)
         register = 4096
-        value = 5
+        # value = 5
         timeout = 0.5
         self.modclient.setOutput(register,value,0)
         rospy.sleep(timeout)
@@ -72,8 +76,11 @@ class ModbusNexApi():
         """
             Stopped running programs (falling edge)
         """
+        input_registers = self.modclient.read_input_Registers(4096,1)
+        value = self.set_bit_val(int(input_registers[0]),0,0)
+        print(value)
         register = 4096
-        value = 4
+        # value = 4
         timeout = 0.5
         self.modclient.setOutput(register,value,0)
         rospy.sleep(timeout)
@@ -83,8 +90,11 @@ class ModbusNexApi():
         """
             Enable robot (rising edge)
         """
+        input_registers = self.modclient.read_input_Registers(4096,1)
+        value = self.set_bit_val(int(input_registers[0]),2,1)
+        print(value)
         register = 4096
-        value = 4
+        # value = 4
         timeout = 0.5
         self.modclient.setOutput(register,value,0)
         rospy.sleep(timeout)
@@ -95,8 +105,11 @@ class ModbusNexApi():
         """
             Disable robot (falling edge)
         """
+        input_registers = self.modclient.read_input_Registers(4096,1)
+        value = self.set_bit_val(int(input_registers[0]),2,0)
+        print(value)
         register = 4096
-        value = 0
+        # value = 0
         timeout = 0.5
         self.modclient.setOutput(register,value,0)
         rospy.sleep(timeout)
@@ -106,8 +119,11 @@ class ModbusNexApi():
         """
             Reload all programs (*2)
         """
+        input_registers = self.modclient.read_input_Registers(4096,1)
+        value = self.set_bit_val(int(input_registers[0]),3,1)
+        print(value)
         register = 4096
-        value = 8
+        # value = 8
         timeout = 0.5
         self.modclient.setOutput(register,value,0)
         rospy.sleep(timeout)
@@ -117,8 +133,11 @@ class ModbusNexApi():
         """
             Reload selected programs according to register:1001h (*3)
         """
+        input_registers = self.modclient.read_input_Registers(4096,1)
+        value = self.set_bit_val(int(input_registers[0]),4,1)
+        print(value)
         register = 4096
-        value = 16
+        # value = 16
         timeout = 0.5
         self.modclient.setOutput(register,value,0)
         rospy.sleep(timeout)
@@ -128,8 +147,11 @@ class ModbusNexApi():
         """
             Shutdown controller
         """
+        input_registers = self.modclient.read_input_Registers(4096,1)
+        value = self.set_bit_val(int(input_registers[0]),10,1)
+        print(value)
         register = 4096
-        value = 1024
+        # value = 1024
         timeout = 0.5
         self.modclient.setOutput(register,value,0)
         rospy.sleep(timeout)
