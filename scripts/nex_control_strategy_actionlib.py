@@ -50,7 +50,7 @@ class ArmControlActionClass(object):
                             self._result.result_message = "Successfully completed counting."
                             rospy.loginfo('%s: Succeeded' % self._action_name)
                             self._as.set_succeeded(self._result)
-                            nex_api.disable_robot()
+                            # nex_api.disable_robot()
                             self.Stop_motion_flag = False
                             break
                     except Exception, e:
@@ -62,14 +62,20 @@ class ArmControlActionClass(object):
                 rospy.loginfo("Please switch to external control mode")
         if cmd == 2:
             nex_api.disable_robot()
+            self._result.result_message = "disable_arm_done"
+            rospy.loginfo('%s: Succeeded' % self._action_name)
+            self._as.set_succeeded(self._result)
         if cmd == 3:
             nex_api.enable_robot()
+            self._result.result_message = "enable_arm_done"
+            rospy.loginfo('%s: Succeeded' % self._action_name)
+            self._as.set_succeeded(self._result)
 if __name__=="__main__":
     rospy.init_node("control_strategy")
     # Create an instance of the action server here.
     nex_api = ModbusNexApi()
     rospy.loginfo("API setting")
-    
+
     nex_api.send_reset(4096)
     nex_api.reload_all_programs()
     nex_api.enable_robot()
