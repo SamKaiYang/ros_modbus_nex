@@ -1,0 +1,5 @@
+uint32 num_counts
+---
+string result_message
+---
+uint32 counts_elapsed
