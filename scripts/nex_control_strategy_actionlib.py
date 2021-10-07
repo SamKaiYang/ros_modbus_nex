@@ -30,9 +30,7 @@ class ArmControlActionClass(object):
         if cmd == 1:
             ## Test all program run, can get task state
             if nex_api.operation_mode_state() == "EXT":
-                nex_api.send_reset(4096)
-                nex_api.reload_all_programs()
-                nex_api.enable_robot()
+                
                 nex_api.start_programs()
                 while not rospy.is_shutdown():
                     # check that preempt has not been requested by the client
@@ -53,6 +51,7 @@ class ArmControlActionClass(object):
                             rospy.loginfo('%s: Succeeded' % self._action_name)
                             self._as.set_succeeded(self._result)
                             nex_api.disable_robot()
+                            self.Stop_motion_flag = False
                             break
                     except Exception, e:
                         self.Stop_motion_flag = False
@@ -61,11 +60,20 @@ class ArmControlActionClass(object):
             else:
                 self.Stop_motion_flag = False
                 rospy.loginfo("Please switch to external control mode")
-
+        if cmd == 2:
+            nex_api.disable_robot()
+        if cmd == 3:
+            nex_api.enable_robot()
 if __name__=="__main__":
     rospy.init_node("control_strategy")
     # Create an instance of the action server here.
     nex_api = ModbusNexApi()
     rospy.loginfo("API setting")
+    
+    nex_api.send_reset(4096)
+    nex_api.reload_all_programs()
+    nex_api.enable_robot()
+
     server = ArmControlActionClass(rospy.get_name())
+
     rospy.spin()
