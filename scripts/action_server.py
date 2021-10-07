@@ -3,7 +3,7 @@ import rospy
 import actionlib
 import modbus.msg
 
-class CounterWithDelayActionClass(object):
+class ArmControlActionClass(object):
     # create messages that are used to publish feedback/result
     _feedback = modbus.msg.arm_task_commandFeedback()
     _result = modbus.msg.arm_task_commandResult()
@@ -40,6 +40,7 @@ class CounterWithDelayActionClass(object):
             self._as.publish_feedback(self._feedback)
             # Wait for counter_delay s before incrementing the counter.
             r.sleep()
+            print("AA")
 
         if success:
             self._result.result_message = "Successfully completed counting."
@@ -51,5 +52,5 @@ if __name__ == '__main__':
     rospy.init_node('counter_with_delay')
 
     # Create an instance of the action server here.
-    server = CounterWithDelayActionClass(rospy.get_name())
+    server = ArmControlActionClass(rospy.get_name())
     rospy.spin()
