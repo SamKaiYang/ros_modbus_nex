@@ -149,7 +149,7 @@ class ModbusNexApi():
         """
         input_registers = self.modclient.read_input_Registers(8192,1)
         _bin = bin(int(input_registers[0]))[2:]
-        print("bin:",_bin)
+        # print("bin:",_bin)
         if _bin == "0":
             return "T1"
         elif _bin == "1":
@@ -167,7 +167,7 @@ class ModbusNexApi():
         """
         input_registers = self.modclient.read_input_Registers(8193,1)
         _bin = bin(int(input_registers[0]))[2:]
-        print("bin:",_bin)
+        # print("bin:",_bin)
         if _bin == "0":
             return "Disable"
         elif _bin == "1":
@@ -187,7 +187,7 @@ class ModbusNexApi():
         """
         input_registers = self.modclient.read_input_Registers(8198,1)
         _bin = bin(int(input_registers[0]))[2:]
-        print("bin:",_bin)
+        # print("bin:",_bin)
         if _bin == "0":
             return "Disable"
         elif _bin == "1":
@@ -203,7 +203,7 @@ class ModbusNexApi():
         """
         input_registers = self.modclient.read_input_Registers(8204,1)
         _bin = bin(int(input_registers[0]))[2:]
-        print("bin:",_bin)
+        # print("bin:",_bin)
         if _bin == "0":
             return "Idle"
         elif _bin == "1":
@@ -225,7 +225,7 @@ class ModbusNexApi():
         address = 8448+task_num
         input_registers = self.modclient.read_input_Registers(address,1)
         _bin = bin(int(input_registers[0]))[2:]
-        # print("bin:",_bin)
+        # # print("bin:",_bin)
         
         if _bin == "0":
             return "Task idle"
@@ -249,9 +249,9 @@ class ModbusNexApi():
         input_registers = self.modclient.read_input_Registers(8205,1)
         bit_val = self.get_bit_val(input_registers[0],0)
         _bin = bin(int(bit_val))[2:]
-        # print("bin:",_bin)
+        # # print("bin:",_bin)
 
-        if _bin == 1:
+        if _bin == "1":
             return True
         else:
             return False
@@ -263,9 +263,9 @@ class ModbusNexApi():
         input_registers = self.modclient.read_input_Registers(8205,1)
         bit_val = self.get_bit_val(input_registers[0],1)
         _bin = bin(int(bit_val))[2:]
-        # print("bin:",_bin)
+        # # print("bin:",_bin)
 
-        if _bin == 1:
+        if _bin == "1":
             return True
         else:
             return False
@@ -277,9 +277,9 @@ class ModbusNexApi():
         input_registers = self.modclient.read_input_Registers(8205,1)
         bit_val = self.get_bit_val(input_registers[0],2)
         _bin = bin(int(bit_val))[2:]
-        print("bin:",_bin)
+        # print("bin:",_bin)
 
-        if _bin == 1:
+        if _bin == "1":
             return True
         else:
             return False
@@ -291,9 +291,9 @@ class ModbusNexApi():
         input_registers = self.modclient.read_input_Registers(8205,1)
         bit_val = self.get_bit_val(input_registers[0],3)
         _bin = bin(int(bit_val))[2:]
-        print("bin:",_bin)
+        # print("bin:",_bin)
 
-        if _bin == 1:
+        if _bin == "1":
             return True
         else:
             return False
@@ -305,9 +305,9 @@ class ModbusNexApi():
         input_registers = self.modclient.read_input_Registers(8205,1)
         bit_val = self.get_bit_val(input_registers[0],4)
         _bin = bin(int(bit_val))[2:]
-        print("bin:",_bin)
+        # print("bin:",_bin)
 
-        if _bin == 1:
+        if _bin == "1":
             return True
         else:
             return False
@@ -319,9 +319,9 @@ class ModbusNexApi():
         input_registers = self.modclient.read_input_Registers(8205,1)
         bit_val = self.get_bit_val(input_registers[0],5)
         _bin = bin(int(bit_val))[2:]
-        print("bin:",_bin)
+        # print("bin:",_bin)
 
-        if _bin == 1:
+        if _bin == "1":
             return True
         else:
             return False
@@ -333,9 +333,9 @@ class ModbusNexApi():
         input_registers = self.modclient.read_input_Registers(8205,1)
         bit_val = self.get_bit_val(input_registers[0],6)
         _bin = bin(int(bit_val))[2:]
-        print("bin:",_bin)
+        # print("bin:",_bin)
 
-        if _bin == 1:
+        if _bin == "1":
             return True
         else:
             return False
