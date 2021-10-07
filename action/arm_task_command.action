@@ -1,4 +1,4 @@
-uint32 num_counts
+uint32 cmd
 ---
 string result_message
 ---

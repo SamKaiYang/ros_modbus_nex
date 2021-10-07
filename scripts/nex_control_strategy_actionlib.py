@@ -24,13 +24,10 @@ class ArmControlActionClass(object):
         rospy.loginfo("Action server started...")
 
     def execute_cb(self, goal):
-        # Define frequency
-        # r = rospy.Rate(1)
-    # start executing the action
-        self.start_arm_task(goal)
+        self.start_arm_task(goal.cmd)
 
     def start_arm_task(self, cmd):
-        if cmd == True:
+        if cmd == 1:
             ## Test all program run, can get task state
             if nex_api.operation_mode_state() == "EXT":
                 nex_api.send_reset(4096)
@@ -45,9 +42,6 @@ class ArmControlActionClass(object):
                         # success = False
                         break
                     try:
-                        # publish the feedback
-                        # self._feedback.counts_elapsed = counter_idx
-                        # self._as.publish_feedback(self._feedback)
                         if self.Stop_motion_flag == False:
                             if nex_api.task_state(0) == "Task exit": #if Task exit
                                 self.Stop_motion_flag = True
@@ -64,9 +58,6 @@ class ArmControlActionClass(object):
                         self.Stop_motion_flag = False
                         rospy.logwarn("Could not running. %s", str(e))
                         raise e
-                # else:
-                #     Stop_motion_flag = False
-                #     rospy.loginfo("The robot is moving or not enable, please send the command again")
             else:
                 self.Stop_motion_flag = False
                 rospy.loginfo("Please switch to external control mode")
