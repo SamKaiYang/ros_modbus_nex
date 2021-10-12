@@ -49,6 +49,7 @@ class nex_control:
 
     def arm_task_sub(self):
         if self.task_cmd == 1:
+            self.task_cmd = 0
             self.arm_task_program()
         else:
             self.Stop_motion_flag = False
