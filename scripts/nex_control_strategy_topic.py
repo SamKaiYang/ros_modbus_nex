@@ -4,7 +4,8 @@ from modbus.modbus_nex_api import ModbusNexApi
 from std_msgs.msg import Int32MultiArray as HoldingRegister
 from std_msgs.msg import String
 from modbus.msg import arm_callback
-from agv_test.msg import send
+# from agv_test.msg import send
+from modbus.msg import send
 
 class nex_control:
     def __init__(self):
