@@ -1,5 +1,5 @@
 
-modbus control teco robotic arm task package
+Modbus control the TECO robotic arm task package
 ======
 ## Prerequisities
 
@@ -17,12 +17,24 @@ rosrun modbus nex_control_strategy_topic.py
 ```
 ## ROS topic control
 
-Test echo arm status (Topic)
+### Test echo arm status (Topic)
 ```bash
-rostopic echo /arm_status
+rostopic echo /reply_external_comm
 ```
 
-Test pub task arm task command (Topic)
+### Test pub task arm task command (Topic)
 ```bash
-rostopic pub /armTask_cmd  modbus/send "task_cmd: 1"
+rostopic pub /write_external_comm modbus/peripheralCmd "actionTypeID: 4"
 ```
+
+### Publish command list:
+```If you want to issue a command to control the TECO robotic arm, you must call the task command.```
+
+1. Command 1 : Start Task Program <br>
+```rostopic pub /write_external_comm modbus/peripheralCmd "actionTypeID: 1"``` 
+2. Command 2 : Enable Robot <br>
+```rostopic pub /write_external_comm modbus/peripheralCmd "actionTypeID: 2"```
+3. Command 3 : Disable Robot <br>
+```rostopic pub /write_external_comm modbus/peripheralCmd "actionTypeID: 3"```
+4. Command 4 : Reset Holding Register-External Control Address 4096 <br>
+```rostopic pub /write_external_comm modbus/peripheralCmd "actionTypeID: 4"```

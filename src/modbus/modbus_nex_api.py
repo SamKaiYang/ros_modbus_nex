@@ -63,7 +63,12 @@ class ModbusNexApi():
         rospy.sleep(0.5)
         rospy.loginfo("RESET")
 
-    def start_programs(self):
+    def send_reset_other_state(self, address, output):
+        self.modclient.setOutput(address,output,0)
+        rospy.sleep(0.5)
+        rospy.loginfo("RESET")
+
+    def start_programs(self, num):
         """
             Starting loaded programs (rising edge)
         """
@@ -72,7 +77,10 @@ class ModbusNexApi():
         register = 4096
         self.modclient.setOutput(register,value,0)
         rospy.sleep(0.5)
-        rospy.loginfo("START")
+        if self.task_state(num) == "Task running":
+            rospy.loginfo("START")
+        else:
+            rospy.loginfo("CAN'T START")
 
     # TODO: when start programs is set, this function is only available
     def stop_programs(self):
@@ -119,17 +127,6 @@ class ModbusNexApi():
         self.modclient.setOutput(register,value,0)
         rospy.sleep(0.5)
         rospy.loginfo("RELOAD_ALL")
-
-    # def reload_all_programs(self):
-    #     """
-    #         Reload all programs (*2)
-    #     """
-    #     input_registers = self.modclient.readRegisters(4096,1)
-    #     value = self.set_bit_val(int(input_registers[0]),3,1)
-    #     register = 4096
-    #     self.modclient.setOutput(register,value,0)
-    #     rospy.sleep(0.5)
-    #     rospy.loginfo("RELOAD_ALL & ENABLE")
 
     def reload_sel_programs(self):
         """
