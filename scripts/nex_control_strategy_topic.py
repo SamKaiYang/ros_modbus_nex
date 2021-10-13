@@ -20,8 +20,13 @@ class nex_control:
     def arm_task_program(self):
         ## Test all program run, can get task state
         if self.nex_api.operation_mode_state() == "EXT":
+            
+            # TODO: test 1013
+            if self.nex_api.is_enabled() == False: 
+                self.nex_api.enable_robot()
+
             # self.nex_api.send_reset(4096)
-            # self.nex_api.reload_all_programs()
+            self.nex_api.reload_all_programs() # TODO: test 1013
             # self.nex_api.enable_robot()
             self.nex_api.start_programs()
             while not rospy.is_shutdown():
@@ -37,7 +42,7 @@ class nex_control:
                             self.pub_armstatus.publish(0, self.peripheralCmd.statusID)
                     else:
                         rospy.loginfo("Stop programs")
-                        # self.nex_api.stop_programs()
+                        self.nex_api.stop_programs() # TODO: test 1013
                         # self.nex_api.disable_robot()
                         break
                 except Exception, e:
@@ -53,11 +58,11 @@ class nex_control:
         if self.task_cmd == 1:
             self.task_cmd = 0
             self.arm_task_program()
-        # reload_all_programs
-        elif self.task_cmd == 2:
-            self.task_cmd = 0
-            self.nex_api.send_reset(4096)
-            self.nex_api.reload_all_programs()
+        # # reload_all_programs
+        # elif self.task_cmd == 2:
+        #     self.task_cmd = 0
+        #     self.nex_api.send_reset(4096)
+        #     self.nex_api.reload_all_programs()
         # enable robot
         elif self.task_cmd == 3:
             self.task_cmd = 0

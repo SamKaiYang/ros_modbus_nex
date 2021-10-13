@@ -120,6 +120,17 @@ class ModbusNexApi():
         rospy.sleep(0.5)
         rospy.loginfo("RELOAD_ALL")
 
+    # def reload_all_programs(self):
+    #     """
+    #         Reload all programs (*2)
+    #     """
+    #     input_registers = self.modclient.readRegisters(4096,1)
+    #     value = self.set_bit_val(int(input_registers[0]),3,1)
+    #     register = 4096
+    #     self.modclient.setOutput(register,value,0)
+    #     rospy.sleep(0.5)
+    #     rospy.loginfo("RELOAD_ALL & ENABLE")
+
     def reload_sel_programs(self):
         """
             Reload selected programs according to register:1001h (*3)
