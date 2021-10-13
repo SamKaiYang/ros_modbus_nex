@@ -50,8 +50,8 @@ catkin_python_setup()
 ## Generate messages in the 'msg' folder
 add_message_files(
   FILES
-  arm_callback.msg
-  send.msg
+  peripheralCmd.msg
+
 #   Message2.msg
 )
 
