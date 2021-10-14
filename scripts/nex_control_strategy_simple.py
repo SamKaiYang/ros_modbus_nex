@@ -10,37 +10,48 @@ if __name__=="__main__":
     rospy.init_node("control_strategy")
     nex_api = ModbusNexApi()
     rospy.loginfo("API setting")
-    
-## Test all program run, can get task state
-    if nex_api.operation_mode_state() == "EXT":
-        nex_api.send_reset(4096)
-        nex_api.reload_all_programs()
-        nex_api.enable_robot()
 
-        # if nex_api.is_idle == True:
-        nex_api.start_programs()
-        while not rospy.is_shutdown():
-            try:
-                if Stop_motion_flag == False:
-                    if nex_api.task_state(0) == "Task exit": #if Task exit
-                        Stop_motion_flag = True
-                else:
-                    rospy.loginfo("Stop programs")
-                    nex_api.stop_programs()
-                    nex_api.disable_robot()
-                    break
-            except Exception, e:
-                Stop_motion_flag = False
-                rospy.logwarn("Could not running. %s", str(e))
-                raise e
-        # else:
-        #     Stop_motion_flag = False
-        #     rospy.loginfo("The robot is moving or not enable, please send the command again")
+
+# TODO: test select project function not test
+# Test select project
+
+    nex_api.project_name("")
+    nex_api.open_project()
+
+    if nex_api.open_project_state() == "Opening":
+        rospy.loginfo("opening ok")
     else:
-        Stop_motion_flag = False
-        rospy.loginfo("Please switch to external control mode")
+        rospy.loginfo("opening fail")
+        
+# TODO: Test all program run, can get task state
+    # if nex_api.operation_mode_state() == "EXT":
+    #     nex_api.send_reset(4096)
+    #     nex_api.reload_all_programs()
+    #     nex_api.enable_robot()
 
-## Test read input register test 
+    #     # if nex_api.is_idle == True:
+    #     nex_api.start_programs()
+    #     while not rospy.is_shutdown():
+    #         try:
+    #             if Stop_motion_flag == False:
+    #                 if nex_api.task_state(0) == "Task exit": #if Task exit
+    #                     Stop_motion_flag = True
+    #             else:
+    #                 rospy.loginfo("Stop programs")
+    #                 nex_api.stop_programs()
+    #                 nex_api.disable_robot()
+    #                 break
+    #         except Exception, e:
+    #             Stop_motion_flag = False
+    #             rospy.logwarn("Could not running. %s", str(e))
+    #             raise e
+    #     # else:
+    #     #     Stop_motion_flag = False
+    #     #     rospy.loginfo("The robot is moving or not enable, please send the command again")
+    # else:
+    #     Stop_motion_flag = False
+    #     rospy.loginfo("Please switch to external control mode")
+# TODO: Test read input register test
     
     # while not rospy.is_shutdown():
     #     input_registers = nex_api.operation_mode_state()

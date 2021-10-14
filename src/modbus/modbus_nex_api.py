@@ -152,6 +152,32 @@ class ModbusNexApi():
         rospy.sleep(0.5)
         rospy.loginfo("SHUTDOWN")
 
+    # TODO: add select project name function 
+    def project_name(self, name_str):
+        """
+            Specfied a project name to be opened. (*4)
+            Using ASCII code (C-style string).
+            Maximum 64 characters including terminating null-character.
+        """
+        project_name_str = name_str + "\0"
+        str_to_bin = bin(int(binascii.hexlify(project_name_str), 16))
+        bin_to_int = int(str_to_bin,2)
+        register = 4096
+        self.modclient.setOutput(register,bin_to_int,0)
+        rospy.sleep(0.5)
+        rospy.loginfo("project name set")
+
+    def open_project(self):
+        """
+            Open selected project according to 1004h~1035h  (*4)
+        """
+        input_registers = self.modclient.readRegisters(4096,1)
+        value = self.set_bit_val(int(input_registers[0]),8,1)
+        register = 4096
+        self.modclient.setOutput(register,value,0)
+        rospy.sleep(0.5)
+        rospy.loginfo("open project")
+
     # ----------------Request modbus server to read server state API-------------------
     def operation_mode_state(self):
         """
