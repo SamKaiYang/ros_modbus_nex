@@ -79,8 +79,10 @@ class ModbusNexApi():
         rospy.sleep(0.5)
         if self.task_state(num) == "Task running":
             rospy.loginfo("START")
+            return True
         else:
             rospy.loginfo("CAN'T START")
+            return False
 
     # TODO: when start programs is set, this function is only available
     def stop_programs(self):

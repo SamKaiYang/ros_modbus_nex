@@ -13,7 +13,7 @@ sudo apt-get install python-pyasn1 python-twisted-conch
 
 Start a modbus control arm task:
 ```bash
-rosrun modbus nex_control_strategy_topic.py 
+rosrun modbus nex_control_strategy_topic.py
 ```
 ## ROS topic control
 ### Publish command list:
@@ -22,7 +22,7 @@ rosrun modbus nex_control_strategy_topic.py
 1. Command 1 : Start Task Program <br>
 ```bash
 rostopic pub /write_external_comm modbus/peripheralCmd "actionTypeID: 1"
-``` 
+```
 2. Command 2 : Enable Robot <br>
 ```bash
 rostopic pub /write_external_comm modbus/peripheralCmd "actionTypeID: 2"
@@ -35,7 +35,10 @@ rostopic pub /write_external_comm modbus/peripheralCmd "actionTypeID: 3"
 ```bash
 rostopic pub /write_external_comm modbus/peripheralCmd "actionTypeID: 4"
 ```
-
+4. Command 4 : Stop Task Program <br>
+```bash
+rostopic pub /write_external_comm modbus/peripheralCmd "actionTypeID: 5"
+```
 ### Subscribe arm status:
 ```bash
 rostopic echo /reply_external_comm
