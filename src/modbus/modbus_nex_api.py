@@ -96,6 +96,17 @@ class ModbusNexApi():
         rospy.sleep(0.5)
         rospy.loginfo("STOP")
 
+    def reset_error_robot(self):
+        """
+            reset robot
+        """
+        input_registers = self.modclient.readRegisters(4096,1)
+        value = self.set_bit_val(int(input_registers[0]),1,1)
+        register = 4096
+        self.modclient.setOutput(register,value,0)
+        rospy.sleep(0.5)
+        rospy.loginfo("Reset error")
+        
     def enable_robot(self):
         """
             Enable robot (rising edge)
