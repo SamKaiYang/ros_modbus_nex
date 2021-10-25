@@ -50,6 +50,11 @@ class nex_control:
         self.nex_api.reload_all_programs() 
         self.nex_api.stop_programs() # reset before starting cmd
 
+        # TODO: this is not test 
+        while not rospy.is_shutdown():
+            if self.nex_api.is_task_init() == True:
+                break #
+
     def publish_status_running(self):
         self.pub_armstatus.publish(99, 99)# hex 63, 63
     def publish_status_exit(self):
