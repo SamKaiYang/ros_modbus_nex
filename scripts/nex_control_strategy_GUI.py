@@ -1,10 +1,14 @@
 #!/usr/bin/env python
+# -*-coding:utf-8 -*-
 import rospy
 from modbus.modbus_nex_api import ModbusNexApi 
 from modbus.msg import peripheralCmd
 from PyQt5 import QtWidgets
+from PyQt5.QtCore import QTimer
 from main_ui import Ui_MainWindow
 import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
 class switch(object):
     def __init__(self, value):
         self.value = value
@@ -295,6 +299,39 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.btn_disable.clicked.connect(self.disable_buttonClicked)
         self.ui.btn_reload.clicked.connect(self.reload_buttonClicked)
         self.ui.btn_start.clicked.connect(self.start_buttonClicked)
+
+        # QTimer
+        self.timer = QTimer()
+
+        # QPushButton
+        self.ui.btn_start_time.clicked.connect(self.timeGo)
+        self.ui.btn_stop_time.clicked.connect(self.timeStop)
+
+        # Other
+        self.timer.timeout.connect(self.LCDEvent)
+        self.s = 0
+
+        # ComboBox
+        choices = ['1', '2', '3', '4']
+        self.ui.comboBox.addItems(choices)
+        self.ui.comboBox.currentIndexChanged.connect(self.display)
+        self.display()
+
+    def display(self):
+        self.ui.label_mission_case_show.setText('你目前選擇的是：%s' % self.ui.comboBox.currentText())
+
+    def timeGo(self):
+        self.timer.start(100)
+
+    def timeStop(self):
+        self.timer.stop()
+
+    def LCDEvent(self):
+        self.s += 1
+        second = self.s/10
+        m_second = self.s%10
+        showtest = str(second) + '.' + str(m_second)
+        self.ui.lcdNumber.display(showtest)
 
     def reset_buttonClicked(self):
         self.nex_api_ui.send_reset(4096)

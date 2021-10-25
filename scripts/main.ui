@@ -14,71 +14,6 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="btn_reload">
-    <property name="geometry">
-     <rect>
-      <x>140</x>
-      <y>110</y>
-      <width>89</width>
-      <height>25</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>reload</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_reload_state">
-    <property name="geometry">
-     <rect>
-      <x>480</x>
-      <y>90</y>
-      <width>81</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>reload</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="btn_enable">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>110</y>
-      <width>89</width>
-      <height>25</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>enable</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_safety_state">
-    <property name="geometry">
-     <rect>
-      <x>480</x>
-      <y>50</y>
-      <width>101</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>safety state</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="btn_disable">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>170</y>
-      <width>89</width>
-      <height>25</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>disable</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="btn_reset">
     <property name="geometry">
      <rect>
@@ -105,57 +40,157 @@
      <string>reset</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_5">
+   <widget class="QLCDNumber" name="lcdNumber">
     <property name="geometry">
      <rect>
-      <x>480</x>
-      <y>170</y>
-      <width>67</width>
-      <height>17</height>
+      <x>230</x>
+      <y>20</y>
+      <width>64</width>
+      <height>23</height>
      </rect>
-    </property>
-    <property name="text">
-     <string>TextLabel</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_6">
+   <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>480</x>
-      <y>210</y>
-      <width>67</width>
-      <height>17</height>
+      <x>10</x>
+      <y>80</y>
+      <width>160</width>
+      <height>120</height>
      </rect>
     </property>
-    <property name="text">
-     <string>TextLabel</string>
-    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QPushButton" name="btn_enable">
+       <property name="text">
+        <string>enable</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btn_disable">
+       <property name="text">
+        <string>disable</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btn_reload">
+       <property name="text">
+        <string>reload</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btn_start">
+       <property name="text">
+        <string>start</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
-   <widget class="QPushButton" name="btn_start">
+   <widget class="QWidget" name="verticalLayoutWidget_2">
     <property name="geometry">
      <rect>
-      <x>140</x>
-      <y>170</y>
-      <width>89</width>
-      <height>25</height>
+      <x>310</x>
+      <y>10</y>
+      <width>91</width>
+      <height>80</height>
      </rect>
     </property>
-    <property name="text">
-     <string>start</string>
-    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <widget class="QPushButton" name="btn_start_time">
+       <property name="text">
+        <string>start</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btn_stop_time">
+       <property name="text">
+        <string>stop</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
-   <widget class="QLabel" name="label_task_state">
+   <widget class="QWidget" name="verticalLayoutWidget_3">
     <property name="geometry">
      <rect>
-      <x>480</x>
-      <y>130</y>
-      <width>67</width>
-      <height>17</height>
+      <x>460</x>
+      <y>110</y>
+      <width>160</width>
+      <height>111</height>
      </rect>
     </property>
-    <property name="text">
-     <string>task state</string>
+    <layout class="QVBoxLayout" name="verticalLayout_3">
+     <item>
+      <widget class="QLabel" name="label_safety_state">
+       <property name="text">
+        <string>safety state</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_reload_state">
+       <property name="text">
+        <string>reload</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_task_state">
+       <property name="text">
+        <string>task state</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_6">
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="gridLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>220</y>
+      <width>241</width>
+      <height>71</height>
+     </rect>
     </property>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="1" column="1">
+      <widget class="QLabel" name="label_mission_case_show">
+       <property name="text">
+        <string>???</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLabel" name="label_mission_case">
+       <property name="text">
+        <string>你選擇的任務?</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QComboBox" name="comboBox"/>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
