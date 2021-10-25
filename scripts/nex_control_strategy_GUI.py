@@ -286,9 +286,32 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.ui = Ui_MainWindow()
+        self.nex_api_ui = ModbusNexApi()
+        self.nex_control = nex_control()
         self.ui.setupUi(self)
-        self.ui.label.setText('Hello World!')
+        self.ui.label_5.setText('Hello World!')
+        self.ui.btn_reset.clicked.connect(self.reset_buttonClicked)
+        self.ui.btn_enable.clicked.connect(self.enable_buttonClicked)
+        self.ui.btn_disable.clicked.connect(self.disable_buttonClicked)
+        self.ui.btn_reload.clicked.connect(self.reload_buttonClicked)
+        self.ui.btn_start.clicked.connect(self.start_buttonClicked)
 
+    def reset_buttonClicked(self):
+        self.nex_api_ui.send_reset(4096)
+        self.nex_api_ui.reset_error_robot()
+        self.nex_api_ui.send_reset(4096)
+
+    def enable_buttonClicked(self):
+        self.nex_api_ui.send_reset_other_state(4096, 4) # reset and only reserve enable
+
+    def disable_buttonClicked(self):
+        self.nex_api_ui.disable_robot()
+
+    def reload_buttonClicked(self):
+        self.nex_control.start_arm_reset()
+
+    def start_buttonClicked(self):
+        start_status = self.nex_api_ui.start_programs(0)
 
 if __name__=="__main__":
     rospy.init_node("control_strategy")
@@ -297,7 +320,9 @@ if __name__=="__main__":
     app = QtWidgets.QApplication([])
     window = MainWindow()
     window.show()
-    sys.exit(app.exec_())
+    
 
-    while not rospy.is_shutdown():
-        nex.arm_task_sub()
+    # while not rospy.is_shutdown():
+    #     nex.arm_task_sub()
+
+    sys.exit(app.exec_())
