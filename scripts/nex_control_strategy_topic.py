@@ -239,7 +239,6 @@ class nex_control:
             rospy.loginfo("Please switch to external control mode")
 
     def arm_task_sub(self):
-                   
         # TODO: switch function test 
         for case in switch(self.task_cmd):
             # start simple task_programs
@@ -275,7 +274,7 @@ class nex_control:
                 self.nex_api.send_reset(4096)
                 break
             if case(): # default, could also just omit condition or 'if True'
-		self.pub_armstatus.publish(100, 100)
+		        # self.pub_armstatus.publish(100, 100)
                 if self.task_cmd == 1003 and self.statusID == 99:
                     rospy.loginfo("Scripts break")
                     self.nex_api.stop_programs()
