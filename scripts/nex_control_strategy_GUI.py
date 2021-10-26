@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # -*-coding:utf-8 -*-
 import rospy
+import threading
+import time
+import numpy as np
 from modbus.modbus_nex_api import ModbusNexApi 
 from modbus.msg import peripheralCmd
 from PyQt5 import QtWidgets
-from PyQt5.QtCore import QTimer
+from PyQt5.QtCore import QTimer, QThread, pyqtSignal
 from main_ui import Ui_MainWindow
 import sys
 reload(sys)
@@ -286,9 +289,29 @@ class nex_control:
                     self.nex_api.stop_programs()
                     # self.stop_arm_reset()
                 self.Stop_motion_flag = False
+class MyThread(QThread):
+    callback = pyqtSignal(int, int)#自定義訊號, Qt的文件中有說明, 必需為類別變數
+    def __init__(self, label, delay, parent=None):
+        super(MyThread, self).__init__(parent)
+        self.runFlag = True
+        self.label=label
+        self.delay=delay
+        
+    def __del__(self):
+        self.runFlag = False
+        self.wait()
+
+    def run(self):
+        index=0
+        while self.runFlag:
+            self.callback.emit(index, self.label)
+            print(threading.currentThread().getName())
+            index+=1
+            self.msleep(self.delay)
+
 class MainWindow(QtWidgets.QMainWindow):
-    def __init__(self):
-        super(MainWindow, self).__init__()
+    def __init__(self, parent=None):
+        super(MainWindow, self).__init__(parent)
         self.ui = Ui_MainWindow()
         self.nex_api_ui = ModbusNexApi()
         self.nex_control = nex_control()
@@ -299,6 +322,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.btn_disable.clicked.connect(self.disable_buttonClicked)
         self.ui.btn_reload.clicked.connect(self.reload_buttonClicked)
         self.ui.btn_start.clicked.connect(self.start_buttonClicked)
+        self.ui.onBtn.clicked.connect(self.onBtn)
 
         # QTimer
         self.timer = QTimer()
@@ -322,6 +346,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def timeGo(self):
         self.timer.start(100)
+        # self.ui.label_arm_picture.setPixmap(QtGui.QPixmap("../picture/teco_arm.png"))
 
     def timeStop(self):
         self.timer.stop()
@@ -350,16 +375,36 @@ class MainWindow(QtWidgets.QMainWindow):
     def start_buttonClicked(self):
         start_status = self.nex_api_ui.start_programs(0)
 
+    def onBtn(self, event):
+        self.thread1=MyThread(1, 200)
+        self.thread1.callback.connect(self.drawUi)
+        self.thread1.start()
+
+        self.thread2=MyThread(2, 1000)
+        self.thread2.callback.connect(self.drawUi)
+        self.thread2.start()
+
+    #@QtCore.pyqtSlot(int, int)
+    def drawUi(self, index, label):
+        if label==1:
+            self.ui.label_task_state.setText(self.nex_api_ui.task_state(0))
+            self.ui.label_safety_state.setText(self.nex_api_ui.safety_state())
+            self.ui.lbl1.setText(str(index))
+        else :
+            self.ui.lbl2.setText(str(index))
+        print(threading.currentThread().getName())
+
+
+		
 if __name__=="__main__":
     rospy.init_node("control_strategy")
     nex = nex_control()
-
     app = QtWidgets.QApplication([])
     window = MainWindow()
     window.show()
-    
 
     # while not rospy.is_shutdown():
     #     nex.arm_task_sub()
 
     sys.exit(app.exec_())
+    # thread_ui.join()
