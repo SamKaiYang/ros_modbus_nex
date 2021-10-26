@@ -53,6 +53,7 @@ class nex_control:
         # TODO: this is not test 
         while not rospy.is_shutdown():
             if self.nex_api.is_task_init() == True:
+                rospy.loginfo("reload_all_programs finished")
                 break #
 
     def publish_status_running(self):

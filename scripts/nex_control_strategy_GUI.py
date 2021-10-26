@@ -59,6 +59,11 @@ class nex_control:
         self.nex_api.reload_all_programs() 
         self.nex_api.stop_programs() # reset before starting cmd
 
+        # TODO: this is not test 
+        while not rospy.is_shutdown():
+            if self.nex_api.is_task_init() == True:
+                rospy.loginfo("reload_all_programs finished")
+                break #
     def publish_status_running(self):
         self.pub_armstatus.publish(99, 99)# hex 63, 63
     def publish_status_exit(self):
@@ -305,7 +310,7 @@ class MyThread(QThread):
         index=0
         while self.runFlag:
             self.callback.emit(index, self.label)
-            print(threading.currentThread().getName())
+            # print(threading.currentThread().getName())
             index+=1
             self.msleep(self.delay)
 
@@ -315,7 +320,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui = Ui_MainWindow()
         self.nex_api_ui = ModbusNexApi()
         self.nex_control = nex_control()
+        self.mission_number = 0
         self.ui.setupUi(self)
+        self._creat_menubar()
         self.ui.label_5.setText('Hello World!')
         self.ui.btn_reset.clicked.connect(self.reset_buttonClicked)
         self.ui.btn_enable.clicked.connect(self.enable_buttonClicked)
@@ -323,7 +330,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.btn_reload.clicked.connect(self.reload_buttonClicked)
         self.ui.btn_start.clicked.connect(self.start_buttonClicked)
         self.ui.onBtn.clicked.connect(self.onBtn)
-
+        self.ui.btn_start_program.clicked.connect(self.start_buttonClicked)
         # QTimer
         self.timer = QTimer()
 
@@ -336,14 +343,26 @@ class MainWindow(QtWidgets.QMainWindow):
         self.s = 0
 
         # ComboBox
-        choices = ['1', '2', '3', '4']
+        choices = ['1', '2', '3', '4','5','6']
         self.ui.comboBox.addItems(choices)
         self.ui.comboBox.currentIndexChanged.connect(self.display)
         self.display()
+    
+    def _creat_menubar(self):
+        self.menu=self.menuBar()
+        file=self.menu.addMenu('File')
+        file.addAction('New')
+        file.addAction('Open')
+        file.addAction('Close Project')
+
+        tool=self.menu.addMenu('Tool')
+        tool.addAction('Python')
+        tool.addAction('C++')
+        tool.addAction('C')
 
     def display(self):
         self.ui.label_mission_case_show.setText('你目前選擇的是：%s' % self.ui.comboBox.currentText())
-
+        self.mission_number = int(self.ui.comboBox.currentText())
     def timeGo(self):
         self.timer.start(100)
         # self.ui.label_arm_picture.setPixmap(QtGui.QPixmap("../picture/teco_arm.png"))
@@ -370,17 +389,27 @@ class MainWindow(QtWidgets.QMainWindow):
         self.nex_api_ui.disable_robot()
 
     def reload_buttonClicked(self):
-        self.nex_control.start_arm_reset()
+        # self.nex_control.start_arm_reset()
+        self.nex_api_ui.send_reset_other_state(4096, 4) # reset and only reserve enable
+        self.nex_api_ui.reload_all_programs() 
+        self.nex_api_ui.stop_programs() # reset before starting cmd
+        while not rospy.is_shutdown():
+            if self.nex_api_ui.is_task_init() == True:
+                rospy.loginfo("reload_all_programs finished")
+                break #
 
     def start_buttonClicked(self):
+        register = 1024
+        value = self.mission_number
+        self.nex_api_ui.modclient.setOutput(register,value,0)
         start_status = self.nex_api_ui.start_programs(0)
 
     def onBtn(self, event):
-        self.thread1=MyThread(1, 200)
+        self.thread1=MyThread(1, 100)
         self.thread1.callback.connect(self.drawUi)
         self.thread1.start()
 
-        self.thread2=MyThread(2, 1000)
+        self.thread2=MyThread(2, 100)
         self.thread2.callback.connect(self.drawUi)
         self.thread2.start()
 
@@ -388,11 +417,12 @@ class MainWindow(QtWidgets.QMainWindow):
     def drawUi(self, index, label):
         if label==1:
             self.ui.label_task_state.setText(self.nex_api_ui.task_state(0))
-            self.ui.label_safety_state.setText(self.nex_api_ui.safety_state())
-            self.ui.lbl1.setText(str(index))
+            
+            # self.ui.lbl1.setText(str(index))
         else :
-            self.ui.lbl2.setText(str(index))
-        print(threading.currentThread().getName())
+            self.ui.label_safety_state.setText(self.nex_api_ui.safety_state())
+            # self.ui.lbl2.setText(str(index))
+        # print(threading.currentThread().getName())
 
 
 		
