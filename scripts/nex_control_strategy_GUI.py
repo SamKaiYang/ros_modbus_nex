@@ -318,6 +318,9 @@ class MyThread(QThread):
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
+        self.vel = 50
+        self.acc = 50
+        
         self.ui = Ui_MainWindow()
         self.nex_api_ui = ModbusNexApi()
         self.nex_control = nex_control()
@@ -325,49 +328,63 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.setupUi(self)
         self._creat_menubar()
         self.setWindowIcon(QtGui.QIcon('src/modbus/modbus/picture/teco_icon.png'))
-        # self.ui.label_5.setText('Hello World!')
+        self.ui.lineEdit_vel.setText(str(self.vel))
+        self.ui.lineEdit_acc.setText(str(self.acc))
         self.ui.btn_reset.clicked.connect(self.reset_buttonClicked)
         self.ui.btn_enable.clicked.connect(self.enable_buttonClicked)
         self.ui.btn_disable.clicked.connect(self.disable_buttonClicked)
         self.ui.btn_reload.clicked.connect(self.reload_buttonClicked)
         self.ui.onBtn.clicked.connect(self.onBtn)
         self.ui.btn_start_program.clicked.connect(self.start_buttonClicked)
+        self.ui.btn_vel_set.clicked.connect(self.vel_setClicked)
+        self.ui.btn_acc_set.clicked.connect(self.acc_setClicked)
         self.ui.btn_ip_set.clicked.connect(self.ip_setClicked)
         
+        # Vel. HorizontalSlider
+        self.ui.horizontalSlider_vel.valueChanged.connect(self.VelSliderValue)
+        # Acc. HorizontalSlider
+        self.ui.horizontalSlider_acc.valueChanged.connect(self.AccSliderValue)
         # QTimer
         self.timer = QTimer()
 
         # QPushButton
         self.ui.btn_start_time.clicked.connect(self.timeGo)
         self.ui.btn_stop_time.clicked.connect(self.timeStop)
+        self.ui.btn_reset_time.clicked.connect(self.timeReset)
 
         # Other
         self.timer.timeout.connect(self.LCDEvent)
         self.s = 0
 
         # ComboBox
-        choices = ['All', 'Init', '3', 'Home','5','6']
+        choices = ['None','All', 'Init', '3', 'Home','5','6']
         self.ui.comboBox.addItems(choices)
         self.ui.comboBox.currentIndexChanged.connect(self.display)
         self.display()
     
         self.initUi()
+
+        # Gif 
+        self.movie = QtGui.QMovie("src/modbus/modbus/picture/earth.gif")
+        self.ui.label_arm_gif.setMovie(self.movie)
+        self.movie.start()
+
     def initUi(self):
         # self.resize(500, 500)
         self.status = self.statusBar()
-        self.status.showMessage('更新訊息', 0) #状态栏本身显示的信息 第二个参数是信息停留的时间，单位是毫秒，默认是0（0表示在下一个操作来临前一直显示）
-        self.status.setStyleSheet("background-color: #F5E8FF")
-        self.safetyNum = QtWidgets.QLabel("Safety state:")
-        self.taskNum = QtWidgets.QLabel("Task state:")
-        self.reloadNum = QtWidgets.QLabel("Reload state:")
+        self.status.showMessage('Update State', 0) #状态栏本身显示的信息 第二个参数是信息停留的时间，单位是毫秒，默认是0（0表示在下一个操作来临前一直显示）
+        self.status.setStyleSheet("font-size: 18px;background-color: #F5E8FF")
+        self.safetyNum = QtWidgets.QLabel("Safety:")
+        self.taskNum = QtWidgets.QLabel("Task:")
+        self.reloadNum = QtWidgets.QLabel("Reload:")
 
         self.safetyNum.setFixedWidth(200)
-        self.safetyNum.setStyleSheet("border-radius: 25px;border: 1px solid black;")
+        self.safetyNum.setStyleSheet("font-size: 18px;border-radius: 25px;border: 1px solid black;")
         # self.safetyNum.setColor()
         self.taskNum.setFixedWidth(200)
-        self.taskNum.setStyleSheet("border-radius: 25px;border: 1px solid black;")
+        self.taskNum.setStyleSheet("font-size: 18px;border-radius: 25px;border: 1px solid black;")
         self.reloadNum.setFixedWidth(200)
-        self.reloadNum.setStyleSheet("border-radius: 25px;border: 1px solid black;")
+        self.reloadNum.setStyleSheet("font-size: 18px;border-radius: 25px;border: 1px solid black;")
 
         self.status.addPermanentWidget(self.safetyNum, stretch=0)
         self.status.addPermanentWidget(self.taskNum, stretch=0)
@@ -386,7 +403,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def display(self):
         self.ui.label_mission_case_show.setText('Choose：%s' % self.ui.comboBox.currentText())
-        if self.ui.comboBox.currentText() == "All":
+        if self.ui.comboBox.currentText() == "None":
+            task_value = 0
+        elif self.ui.comboBox.currentText() == "All":
             task_value = 1
         elif self.ui.comboBox.currentText() == "Init":
             task_value = 2
@@ -405,6 +424,14 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def timeStop(self):
         self.timer.stop()
+
+    def timeReset(self):
+        # self.timer.reset()
+        self.s = 0
+        second = self.s/10
+        m_second = self.s%10
+        showtest = str(second) + '.' + str(m_second)
+        self.ui.lcdNumber.display(showtest)
 
     def LCDEvent(self):
         self.s += 1
@@ -467,6 +494,23 @@ class MainWindow(QtWidgets.QMainWindow):
         else :
             # self.ui.label_safety_state.setText("safety state:"+self.nex_api_ui.safety_state())
             pass
+
+    def vel_setClicked(self):
+        register = 1025
+        self.vel = int(self.ui.lineEdit_vel.text())
+        self.nex_api_ui.modclient.setOutput(register,self.vel,0)
+
+    def acc_setClicked(self):
+        register = 1026
+        self.acc = int(self.ui.lineEdit_acc.text())
+        self.nex_api_ui.modclient.setOutput(register,self.acc,0)
+
+    def VelSliderValue(self):
+        self.ui.lineEdit_vel.setText(str(self.ui.horizontalSlider_vel.value()))
+        
+    def AccSliderValue(self):
+        self.ui.lineEdit_acc.setText(str(self.ui.horizontalSlider_acc.value()))
+
 if __name__=="__main__":
     rospy.init_node("control_strategy")
     nex = nex_control()

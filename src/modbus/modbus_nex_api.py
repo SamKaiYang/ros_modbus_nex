@@ -8,8 +8,49 @@ WRITE_NUM_REGISTERS = 36
 READ_INPUT_NUM_REGISTERS = 272
 ADDRESS_WRITE_START = 4096
 ADDRESS_READ_INPUT_START = 8192
+
+class PCS_actual():
+    def __init__(self):
+        self.X = None
+        self.Y = None
+        self.Z = None
+        self.A = None
+        self.B = None
+        self.C = None
+
+class PCS_command():
+    def __init__(self):
+        self.X = None
+        self.Y = None
+        self.Z = None
+        self.A = None
+        self.B = None
+        self.C = None
+
+class ACS_actual():
+    def __init__(self):
+        self.axis1 = None
+        self.axis2 = None
+        self.axis3 = None
+        self.axis4 = None
+        self.axis5 = None
+        self.axis6 = None
+
+class ACS_command():
+    def __init__(self):
+        self.axis1 = None
+        self.axis2 = None
+        self.axis3 = None
+        self.axis4 = None
+        self.axis5 = None
+        self.axis6 = None
+
 class ModbusNexApi():
     def __init__(self):
+        self.pcs_actual = PCS_actual()
+        self.pcs_command = PCS_command()
+        self.acs_actual = ACS_actual()
+        self.acs_command = ACS_command()
         self.host = "192.168.0.6" # 192.168.0.6
         self.port = 502
         self.rate = 50
@@ -394,9 +435,48 @@ class ModbusNexApi():
         else:
             return False
 
-    # def task_run_status(self,task_num):
-    #     """
-    #         Task#n is running.
-    #     """
-    #     input_registers = self.modclient.read_input_Registers(8206,task_num)
-    #     return input_registers[0]
+
+    # TODO: add read input register pcs & angle
+    def read_PCS_actual_position(self):
+        """
+            read_PCS_actual_position (double)
+        """
+        self.pcs_actual.X = self.modclient.read_input_Registers(16528,4)
+        self.pcs_actual.Y = self.modclient.read_input_Registers(16532,4)
+        self.pcs_actual.Z = self.modclient.read_input_Registers(16536,4)
+        self.pcs_actual.A = self.modclient.read_input_Registers(16540,4)
+        self.pcs_actual.B = self.modclient.read_input_Registers(16544,4)
+        self.pcs_actual.C = self.modclient.read_input_Registers(16548,4)
+        
+    def read_PCS_command_position(self):
+        """
+            read_PCS_command_position (double)
+        """
+        self.pcs_command.X = self.modclient.read_input_Registers(16464,4)
+        self.pcs_command.Y = self.modclient.read_input_Registers(16468,4)
+        self.pcs_command.C = self.modclient.read_input_Registers(16472,4)
+        self.pcs_command.A = self.modclient.read_input_Registers(16476,4)
+        self.pcs_command.B = self.modclient.read_input_Registers(16480,4)
+        self.pcs_command.C = self.modclient.read_input_Registers(16484,4)
+
+    def read_ACS_actual_position(self):
+        """
+            read_ACS_actual_position (double)
+        """
+        self.acs_actual.axis1 = self.modclient.read_input_Registers(16432,4)
+        self.acs_actual.axis2 = self.modclient.read_input_Registers(16436,4)
+        self.acs_actual.axis3 = self.modclient.read_input_Registers(16440,4)
+        self.acs_actual.axis4 = self.modclient.read_input_Registers(16444,4)
+        self.acs_actual.axis5 = self.modclient.read_input_Registers(16448,4)
+        self.acs_actual.axis6 = self.modclient.read_input_Registers(16452,4)
+
+    def read_ACS_command_position(self):
+        """
+            read_ACS_command_position (double)
+        """
+        self.acs_command.axis1 = self.modclient.read_input_Registers(16400,4)
+        self.acs_command.axis2 = self.modclient.read_input_Registers(16404,4)
+        self.acs_command.axis3 = self.modclient.read_input_Registers(16408,4)
+        self.acs_command.axis4 = self.modclient.read_input_Registers(16412,4)
+        self.acs_command.axis5 = self.modclient.read_input_Registers(16416,4)
+        self.acs_command.axis6 = self.modclient.read_input_Registers(16420,4)
