@@ -315,6 +315,27 @@ class MyThread(QThread):
             index+=1
             self.msleep(self.delay)
 
+class StrategyThread(QThread):
+    callback = pyqtSignal(int, int)#自定義訊號, Qt的文件中有說明, 必需為類別變數
+    def __init__(self, label, delay, parent=None):
+        super(StrategyThread, self).__init__(parent)
+        self.runFlag = True
+        self.label=label
+        self.delay=delay
+        
+    def __del__(self):
+        self.runFlag = False
+        self.wait()
+
+    def run(self):
+        index=0
+        while self.runFlag:
+            self.callback.emit(index, self.label)
+            # print(threading.currentThread().getName())
+            # TODO：移除index
+            index+=1
+            self.msleep(self.delay)
+
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
@@ -340,6 +361,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.btn_acc_set.clicked.connect(self.acc_setClicked)
         self.ui.btn_ip_set.clicked.connect(self.ip_setClicked)
         
+        # TODO: edit thread for AGV & arm strategy 
+        # self.thread1=StrategyThread(1, 100)
+        # self.thread1.callback.connect(self.drawUi)
+        # self.thread1.start()
+
         # Vel. HorizontalSlider
         self.ui.horizontalSlider_vel.valueChanged.connect(self.VelSliderValue)
         # Acc. HorizontalSlider
@@ -370,7 +396,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.movie.start()
 
     def initUi(self):
-        # self.resize(500, 500)
         self.status = self.statusBar()
         self.status.showMessage('Update State', 0) #状态栏本身显示的信息 第二个参数是信息停留的时间，单位是毫秒，默认是0（0表示在下一个操作来临前一直显示）
         self.status.setStyleSheet("font-size: 18px;background-color: #F5E8FF")
@@ -379,8 +404,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.reloadNum = QtWidgets.QLabel("Reload:")
 
         self.safetyNum.setFixedWidth(200)
+        # self.safetyNum.setStyleSheet("background-color:red;font-size: 18px;border-radius: 25px;border: 1px solid black;")
         self.safetyNum.setStyleSheet("font-size: 18px;border-radius: 25px;border: 1px solid black;")
-        # self.safetyNum.setColor()
         self.taskNum.setFixedWidth(200)
         self.taskNum.setStyleSheet("font-size: 18px;border-radius: 25px;border: 1px solid black;")
         self.reloadNum.setFixedWidth(200)
@@ -389,17 +414,18 @@ class MainWindow(QtWidgets.QMainWindow):
         self.status.addPermanentWidget(self.safetyNum, stretch=0)
         self.status.addPermanentWidget(self.taskNum, stretch=0)
         self.status.addPermanentWidget(self.reloadNum, stretch=0)
+        
     def _creat_menubar(self):
         self.menu=self.menuBar()
         file=self.menu.addMenu('File')
-        file.addAction('New')
-        file.addAction('Open')
-        file.addAction('Close Project')
+        # file.addAction('New')
+        # file.addAction('Open')
+        # file.addAction('Close Project')
 
         tool=self.menu.addMenu('Tool')
-        tool.addAction('Python')
-        tool.addAction('C++')
-        tool.addAction('C')
+        # tool.addAction('Python')
+        # tool.addAction('C++')
+        # tool.addAction('C')
 
     def display(self):
         self.ui.label_mission_case_show.setText('Choose：%s' % self.ui.comboBox.currentText())
@@ -421,7 +447,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def timeGo(self):
         self.timer.start(100)
-
+        
     def timeStop(self):
         self.timer.stop()
 
@@ -491,6 +517,9 @@ class MainWindow(QtWidgets.QMainWindow):
             self.safetyNum.setText("Task:"+self.nex_api_ui.task_state(0))
             self.taskNum.setText("Reload:"+self.nex_api_ui.is_task_init())
             self.reloadNum.setText("Safety:"+self.nex_api_ui.safety_state())
+            # (0)Disable, (1)Ready, (2)Error, (3)Enable, (4)Running
+            if self.nex_api_ui.safety_state() == "Error":
+                self.safetyNum.setStyleSheet("background-color:red;font-size: 18px;border-radius: 25px;border: 1px solid black;")
         else :
             # ACS_actual = self.nex_api_ui.read_ACS_actual_position()
             # ACS_command = self.nex_api_ui.read_ACS_command_position()
