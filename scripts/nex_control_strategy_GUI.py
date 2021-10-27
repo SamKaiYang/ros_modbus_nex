@@ -311,6 +311,7 @@ class MyThread(QThread):
         while self.runFlag:
             self.callback.emit(index, self.label)
             # print(threading.currentThread().getName())
+            # TODO：移除index
             index+=1
             self.msleep(self.delay)
 
@@ -328,9 +329,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.btn_enable.clicked.connect(self.enable_buttonClicked)
         self.ui.btn_disable.clicked.connect(self.disable_buttonClicked)
         self.ui.btn_reload.clicked.connect(self.reload_buttonClicked)
-        self.ui.btn_start.clicked.connect(self.start_buttonClicked)
         self.ui.onBtn.clicked.connect(self.onBtn)
         self.ui.btn_start_program.clicked.connect(self.start_buttonClicked)
+        self.ui.btn_ip_set.clicked.connect(self.ip_setClicked)
+        
         # QTimer
         self.timer = QTimer()
 
@@ -361,7 +363,7 @@ class MainWindow(QtWidgets.QMainWindow):
         tool.addAction('C')
 
     def display(self):
-        self.ui.label_mission_case_show.setText('你目前選擇的是：%s' % self.ui.comboBox.currentText())
+        self.ui.label_mission_case_show.setText('choose：%s' % self.ui.comboBox.currentText())
         self.mission_number = int(self.ui.comboBox.currentText())
     def timeGo(self):
         self.timer.start(100)
@@ -413,14 +415,22 @@ class MainWindow(QtWidgets.QMainWindow):
         self.thread2.callback.connect(self.drawUi)
         self.thread2.start()
 
+    def ip_setClicked(self):
+        text = self.ui.lineEdit_ip.text()
+        self.ui.label_ip.setText("Set IP:"+text)
+        self.ui.lineEdit_ip.clear()
+        self.nex_api_ui.ip_set(text)
+        rospy.loginfo("Setup complete")
+
     #@QtCore.pyqtSlot(int, int)
     def drawUi(self, index, label):
         if label==1:
-            self.ui.label_task_state.setText(self.nex_api_ui.task_state(0))
+            self.ui.label_task_state.setText("task state:"+self.nex_api_ui.task_state(0))
+            self.ui.label_reload_state.setText("reload state:"+self.nex_api_ui.is_task_init())
             
             # self.ui.lbl1.setText(str(index))
         else :
-            self.ui.label_safety_state.setText(self.nex_api_ui.safety_state())
+            self.ui.label_safety_state.setText("safety state:"+self.nex_api_ui.safety_state())
             # self.ui.lbl2.setText(str(index))
         # print(threading.currentThread().getName())
 

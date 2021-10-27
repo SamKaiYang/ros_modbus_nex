@@ -10,7 +10,7 @@ ADDRESS_WRITE_START = 4096
 ADDRESS_READ_INPUT_START = 8192
 class ModbusNexApi():
     def __init__(self):
-        self.host = "192.168.0.7" # 192.168.0.6
+        self.host = "192.168.0.6" # 192.168.0.6
         self.port = 502
         self.rate = 50
         self.reset_registers = False
@@ -20,6 +20,13 @@ class ModbusNexApi():
         # self.modclient.setReadingRegisters(ADDRESS_READ_START,READ_NUM_REGISTERS)
         self.modclient.setReadingInputRegisters(ADDRESS_READ_INPUT_START,READ_INPUT_NUM_REGISTERS)
         rospy.loginfo("Setup complete")
+
+    def ip_set(self, ip):
+        self.host = ip 
+        self.port = 502
+        self.rate = 50
+        self.reset_registers = False
+        self.modclient = ModbusWrapperClient(self.host, self.port, self.rate, self.reset_registers)
 
     def read_holding_Listening(self):
         self.modclient.startListening()
