@@ -447,7 +447,8 @@ class ModbusNexApi():
         self.pcs_actual.A = self.modclient.read_input_Registers(16540,4)
         self.pcs_actual.B = self.modclient.read_input_Registers(16544,4)
         self.pcs_actual.C = self.modclient.read_input_Registers(16548,4)
-        
+        return self.pcs_actual
+
     def read_PCS_command_position(self):
         """
             read_PCS_command_position (double)
@@ -458,6 +459,7 @@ class ModbusNexApi():
         self.pcs_command.A = self.modclient.read_input_Registers(16476,4)
         self.pcs_command.B = self.modclient.read_input_Registers(16480,4)
         self.pcs_command.C = self.modclient.read_input_Registers(16484,4)
+        return self.pcs_command
 
     def read_ACS_actual_position(self):
         """
@@ -469,6 +471,7 @@ class ModbusNexApi():
         self.acs_actual.axis4 = self.modclient.read_input_Registers(16444,4)
         self.acs_actual.axis5 = self.modclient.read_input_Registers(16448,4)
         self.acs_actual.axis6 = self.modclient.read_input_Registers(16452,4)
+        return self.acs_actual
 
     def read_ACS_command_position(self):
         """
@@ -480,3 +483,5 @@ class ModbusNexApi():
         self.acs_command.axis4 = self.modclient.read_input_Registers(16412,4)
         self.acs_command.axis5 = self.modclient.read_input_Registers(16416,4)
         self.acs_command.axis6 = self.modclient.read_input_Registers(16420,4)
+        return self.acs_command
+        

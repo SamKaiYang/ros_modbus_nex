@@ -488,11 +488,18 @@ class MainWindow(QtWidgets.QMainWindow):
         if label==1:
             # self.ui.label_task_state.setText("task state:"+self.nex_api_ui.task_state(0))
             # self.ui.label_reload_state.setText("reload state:"+self.nex_api_ui.is_task_init())
-            self.safetyNum.setText("Task state:"+self.nex_api_ui.task_state(0))
-            self.taskNum.setText("Reload state:"+self.nex_api_ui.is_task_init())
-            self.reloadNum.setText("Safety state:"+self.nex_api_ui.safety_state())
+            self.safetyNum.setText("Task:"+self.nex_api_ui.task_state(0))
+            self.taskNum.setText("Reload:"+self.nex_api_ui.is_task_init())
+            self.reloadNum.setText("Safety:"+self.nex_api_ui.safety_state())
         else :
-            # self.ui.label_safety_state.setText("safety state:"+self.nex_api_ui.safety_state())
+            # ACS_actual = self.nex_api_ui.read_ACS_actual_position()
+            # ACS_command = self.nex_api_ui.read_ACS_command_position()
+            # PCS_actual = self.nex_api_ui.read_PCS_actual_position()
+            # PCS_command = self.nex_api_ui.read_PCS_command_position()
+            # self.ui.label_acs_command_show.setText("A1:"+ ACS_command.axis1 +"A2:" + ACS_command.axis2 + "A3:" + ACS_command.axis3 + "A4:"+ ACS_command.axis4 +  "A5:"+ ACS_command.axis5 + "A6:" + ACS_command.axis6 )
+            # self.ui.label_acs_actual_show.setText("A1:"+ ACS_actual.axis1 +"A2:" + ACS_actual.axis2 + "A3:" + ACS_actual.axis3 + "A4:"+ ACS_actual.axis4 +  "A5:"+ ACS_actual.axis5 + "A6:" + ACS_actual.axis6 )
+            # self.ui.label_pcs_command_show.setText("X:"+ PCS_command.X +"Y:" + PCS_command.Y + "Z:" + PCS_command.Z + "A:"+ PCS_command.A +  "B:"+ PCS_command.B + "C:" + PCS_command.C )
+            # self.ui.label_pcs_actual_show.setText("X:"+ PCS_actual.X +"Y:" + PCS_actual.Y + "Z:" + PCS_actual.Z + "A:"+ PCS_actual.A +  "B:"+ PCS_actual.B + "C:" + PCS_actual.C )
             pass
 
     def vel_setClicked(self):
