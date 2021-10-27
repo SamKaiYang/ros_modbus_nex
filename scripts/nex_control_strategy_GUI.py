@@ -6,7 +6,7 @@ import time
 import numpy as np
 from modbus.modbus_nex_api import ModbusNexApi 
 from modbus.msg import peripheralCmd
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtCore import QTimer, QThread, pyqtSignal
 from main_ui import Ui_MainWindow
 import sys
@@ -324,7 +324,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.mission_number = 0
         self.ui.setupUi(self)
         self._creat_menubar()
-        self.ui.label_5.setText('Hello World!')
+        self.setWindowIcon(QtGui.QIcon('src/modbus/modbus/picture/teco_icon.png'))
+        # self.ui.label_5.setText('Hello World!')
         self.ui.btn_reset.clicked.connect(self.reset_buttonClicked)
         self.ui.btn_enable.clicked.connect(self.enable_buttonClicked)
         self.ui.btn_disable.clicked.connect(self.disable_buttonClicked)
@@ -345,11 +346,32 @@ class MainWindow(QtWidgets.QMainWindow):
         self.s = 0
 
         # ComboBox
-        choices = ['1', '2', '3', '4','5','6']
+        choices = ['All', 'Init', '3', 'Home','5','6']
         self.ui.comboBox.addItems(choices)
         self.ui.comboBox.currentIndexChanged.connect(self.display)
         self.display()
     
+        self.initUi()
+    def initUi(self):
+        # self.resize(500, 500)
+        self.status = self.statusBar()
+        self.status.showMessage('更新訊息', 0) #状态栏本身显示的信息 第二个参数是信息停留的时间，单位是毫秒，默认是0（0表示在下一个操作来临前一直显示）
+        self.status.setStyleSheet("background-color: #F5E8FF")
+        self.safetyNum = QtWidgets.QLabel("Safety state:")
+        self.taskNum = QtWidgets.QLabel("Task state:")
+        self.reloadNum = QtWidgets.QLabel("Reload state:")
+
+        self.safetyNum.setFixedWidth(200)
+        self.safetyNum.setStyleSheet("border-radius: 25px;border: 1px solid black;")
+        # self.safetyNum.setColor()
+        self.taskNum.setFixedWidth(200)
+        self.taskNum.setStyleSheet("border-radius: 25px;border: 1px solid black;")
+        self.reloadNum.setFixedWidth(200)
+        self.reloadNum.setStyleSheet("border-radius: 25px;border: 1px solid black;")
+
+        self.status.addPermanentWidget(self.safetyNum, stretch=0)
+        self.status.addPermanentWidget(self.taskNum, stretch=0)
+        self.status.addPermanentWidget(self.reloadNum, stretch=0)
     def _creat_menubar(self):
         self.menu=self.menuBar()
         file=self.menu.addMenu('File')
@@ -363,11 +385,23 @@ class MainWindow(QtWidgets.QMainWindow):
         tool.addAction('C')
 
     def display(self):
-        self.ui.label_mission_case_show.setText('choose：%s' % self.ui.comboBox.currentText())
-        self.mission_number = int(self.ui.comboBox.currentText())
+        self.ui.label_mission_case_show.setText('Choose：%s' % self.ui.comboBox.currentText())
+        if self.ui.comboBox.currentText() == "All":
+            task_value = 1
+        elif self.ui.comboBox.currentText() == "Init":
+            task_value = 2
+        elif self.ui.comboBox.currentText() == "3":
+            task_value = 3
+        elif self.ui.comboBox.currentText() == "Home":
+            task_value = 4
+        elif self.ui.comboBox.currentText() == "5":
+            task_value = 5
+        elif self.ui.comboBox.currentText() == "6":
+            task_value = 6
+        self.mission_number = task_value
+
     def timeGo(self):
         self.timer.start(100)
-        # self.ui.label_arm_picture.setPixmap(QtGui.QPixmap("../picture/teco_arm.png"))
 
     def timeStop(self):
         self.timer.stop()
@@ -425,17 +459,14 @@ class MainWindow(QtWidgets.QMainWindow):
     #@QtCore.pyqtSlot(int, int)
     def drawUi(self, index, label):
         if label==1:
-            self.ui.label_task_state.setText("task state:"+self.nex_api_ui.task_state(0))
-            self.ui.label_reload_state.setText("reload state:"+self.nex_api_ui.is_task_init())
-            
-            # self.ui.lbl1.setText(str(index))
+            # self.ui.label_task_state.setText("task state:"+self.nex_api_ui.task_state(0))
+            # self.ui.label_reload_state.setText("reload state:"+self.nex_api_ui.is_task_init())
+            self.safetyNum.setText("Task state:"+self.nex_api_ui.task_state(0))
+            self.taskNum.setText("Reload state:"+self.nex_api_ui.is_task_init())
+            self.reloadNum.setText("Safety state:"+self.nex_api_ui.safety_state())
         else :
-            self.ui.label_safety_state.setText("safety state:"+self.nex_api_ui.safety_state())
-            # self.ui.lbl2.setText(str(index))
-        # print(threading.currentThread().getName())
-
-
-		
+            # self.ui.label_safety_state.setText("safety state:"+self.nex_api_ui.safety_state())
+            pass
 if __name__=="__main__":
     rospy.init_node("control_strategy")
     nex = nex_control()
