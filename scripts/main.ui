@@ -348,7 +348,11 @@
     </property>
     <layout class="QGridLayout" name="gridLayout_2">
      <item row="2" column="0">
-      <widget class="QLineEdit" name="lineEdit_ip"/>
+      <widget class="QLineEdit" name="lineEdit_ip">
+       <property name="text">
+        <string>192.168.0.6</string>
+       </property>
+      </widget>
      </item>
      <item row="0" column="0">
       <widget class="QLabel" name="label_ip">
@@ -441,7 +445,7 @@
      <enum>QTabWidget::Triangular</enum>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="tab_arm">
      <attribute name="title">
@@ -451,7 +455,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>20</y>
+        <y>10</y>
         <width>511</width>
         <height>431</height>
        </rect>
@@ -1061,8 +1065,74 @@
      <attribute name="title">
       <string>State</string>
      </attribute>
+     <widget class="QWidget" name="verticalLayoutWidget_4">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>511</width>
+        <height>431</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_4">
+       <item>
+        <widget class="QLabel" name="label_rostopic_pub_list">
+         <property name="font">
+          <font>
+           <pointsize>14</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>rostopic pub</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_rostopic_pub_show">
+         <property name="font">
+          <font>
+           <weight>50</weight>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_rostopic_echo_list">
+         <property name="font">
+          <font>
+           <pointsize>14</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>rostopic echo</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_rostopic_echo_show">
+         <property name="font">
+          <font>
+           <weight>50</weight>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </widget>
-    <widget class="QWidget" name="tab_6">
+    <widget class="QWidget" name="tab_other">
      <attribute name="title">
       <string>Other</string>
      </attribute>
@@ -1244,7 +1314,7 @@
      <x>0</x>
      <y>0</y>
      <width>778</width>
-     <height>22</height>
+     <height>23</height>
     </rect>
    </property>
   </widget>
