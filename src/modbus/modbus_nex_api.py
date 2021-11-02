@@ -434,25 +434,31 @@ class ModbusNexApi():
             return True
         else:
             return False
-
+#  self.pcs_actual = PCS_actual()
+#         self.pcs_command = PCS_command()
+#         self.acs_actual = ACS_actual()
+#         self.acs_command = ACS_command()
 
     # TODO: add read input register pcs & angle
     def read_PCS_actual_position(self):
         """
             read_PCS_actual_position (double)
         """
+        self.pcs_actual = PCS_actual()
         self.pcs_actual.X = self.modclient.read_input_Registers(16528,4)
         self.pcs_actual.Y = self.modclient.read_input_Registers(16532,4)
         self.pcs_actual.Z = self.modclient.read_input_Registers(16536,4)
         self.pcs_actual.A = self.modclient.read_input_Registers(16540,4)
         self.pcs_actual.B = self.modclient.read_input_Registers(16544,4)
         self.pcs_actual.C = self.modclient.read_input_Registers(16548,4)
+        print("pcs actual:", self.pcs_actual.X)
         return self.pcs_actual
 
     def read_PCS_command_position(self):
         """
             read_PCS_command_position (double)
         """
+        self.pcs_command = PCS_command()
         self.pcs_command.X = self.modclient.read_input_Registers(16464,4)
         self.pcs_command.Y = self.modclient.read_input_Registers(16468,4)
         self.pcs_command.C = self.modclient.read_input_Registers(16472,4)
@@ -465,6 +471,7 @@ class ModbusNexApi():
         """
             read_ACS_actual_position (double)
         """
+        self.acs_actual = ACS_actual()
         self.acs_actual.axis1 = self.modclient.read_input_Registers(16432,4)
         self.acs_actual.axis2 = self.modclient.read_input_Registers(16436,4)
         self.acs_actual.axis3 = self.modclient.read_input_Registers(16440,4)
@@ -477,6 +484,7 @@ class ModbusNexApi():
         """
             read_ACS_command_position (double)
         """
+        self.acs_command = ACS_command()
         self.acs_command.axis1 = self.modclient.read_input_Registers(16400,4)
         self.acs_command.axis2 = self.modclient.read_input_Registers(16404,4)
         self.acs_command.axis3 = self.modclient.read_input_Registers(16408,4)

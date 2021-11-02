@@ -514,9 +514,9 @@ class MainWindow(QtWidgets.QMainWindow):
         if label==1:
             # self.ui.label_task_state.setText("task state:"+self.nex_api_ui.task_state(0))
             # self.ui.label_reload_state.setText("reload state:"+self.nex_api_ui.is_task_init())
-            self.safetyNum.setText("Task:"+self.nex_api_ui.task_state(0))
-            self.taskNum.setText("Reload:"+self.nex_api_ui.is_task_init())
-            self.reloadNum.setText("Safety:"+self.nex_api_ui.safety_state())
+            self.safetyNum.setText("Safety:"+self.safety_state())
+            self.taskNum.setText("Task:"+self.task_state(0))
+            self.reloadNum.setText("Reload:"+str(self.is_task_init()))
             # (0)Disable, (1)Ready, (2)Error, (3)Enable, (4)Running
             if self.nex_api_ui.safety_state() == "Error":
                 self.safetyNum.setStyleSheet("background-color:red;font-size: 18px;border-radius: 25px;border: 1px solid black;")
@@ -553,9 +553,5 @@ if __name__=="__main__":
     app = QtWidgets.QApplication([])
     window = MainWindow()
     window.show()
-
-    # while not rospy.is_shutdown():
-    #     nex.arm_task_sub()
-
     sys.exit(app.exec_())
     # thread_ui.join()
