@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 import rospy
 from modbus.modbus_wrapper_client import ModbusWrapperClient 
+from pymodbus.constants import Endian
+from pymodbus.payload import BinaryPayloadDecoder
+from pymodbus.payload import BinaryPayloadBuilder
+from pymodbus.compat import iteritems
+from collections import OrderedDict
 from std_msgs.msg import Int32MultiArray as HoldingRegister
 import time
 
@@ -445,13 +450,39 @@ class ModbusNexApi():
             read_PCS_actual_position (double)
         """
         self.pcs_actual = PCS_actual()
-        self.pcs_actual.X = self.modclient.read_input_Registers(16528,4)
-        self.pcs_actual.Y = self.modclient.read_input_Registers(16532,4)
-        self.pcs_actual.Z = self.modclient.read_input_Registers(16536,4)
-        self.pcs_actual.A = self.modclient.read_input_Registers(16540,4)
-        self.pcs_actual.B = self.modclient.read_input_Registers(16544,4)
-        self.pcs_actual.C = self.modclient.read_input_Registers(16548,4)
-        print("pcs actual:", self.pcs_actual.X)
+        result = self.modclient.read_input_Registers(16528,4)
+        decoder = BinaryPayloadDecoder.fromRegisters(result, byteorder= Endian.Big, wordorder=Endian.Little)
+        self.pcs_actual.X = decoder.decode_64bit_float()
+
+        result = self.modclient.read_input_Registers(16532,4)
+        decoder = BinaryPayloadDecoder.fromRegisters(result, byteorder= Endian.Big, wordorder=Endian.Little)
+        self.pcs_actual.Y = decoder.decode_64bit_float()
+
+        result = self.modclient.read_input_Registers(16536,4)
+        decoder = BinaryPayloadDecoder.fromRegisters(result, byteorder= Endian.Big, wordorder=Endian.Little)
+        self.pcs_actual.Z = decoder.decode_64bit_float()
+
+        result = self.modclient.read_input_Registers(16540,4)
+        decoder = BinaryPayloadDecoder.fromRegisters(result, byteorder= Endian.Big, wordorder=Endian.Little)
+        self.pcs_actual.A = decoder.decode_64bit_float()
+
+        result = self.modclient.read_input_Registers(16544,4)
+        decoder = BinaryPayloadDecoder.fromRegisters(result, byteorder= Endian.Big, wordorder=Endian.Little)
+        self.pcs_actual.B = decoder.decode_64bit_float()
+
+        result = self.modclient.read_input_Registers(16548,4)
+        decoder = BinaryPayloadDecoder.fromRegisters(result, byteorder= Endian.Big, wordorder=Endian.Little)
+        self.pcs_actual.C = decoder.decode_64bit_float()
+
+
+        # print('%2.4f'%self.pcs_actual.X)
+        print("pcs actual X: %2.4f",self.pcs_actual.X)
+        print("pcs actual Y: %2.4f",self.pcs_actual.Y)
+        print("pcs actual Z: %2.4f",self.pcs_actual.Z)
+        print("pcs actual A: %2.4f",self.pcs_actual.A)
+        print("pcs actual B: %2.4f",self.pcs_actual.B)
+        print("pcs actual C: %2.4f",self.pcs_actual.C)
+   
         return self.pcs_actual
 
     def read_PCS_command_position(self):

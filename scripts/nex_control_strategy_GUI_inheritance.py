@@ -215,9 +215,9 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
         self.thread1.callback.connect(self.drawUi)
         self.thread1.start()
 
-        # self.thread2=MyThread(2, 100)
-        # self.thread2.callback.connect(self.drawUi)
-        # self.thread2.start()
+        self.thread2=MyThread(2, 100)
+        self.thread2.callback.connect(self.drawUi)
+        self.thread2.start()
 
         # self.thread3=MyThread(3, 100)
         # self.thread3.callback.connect(self.drawUi)
@@ -242,10 +242,12 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
             if self.safety_state() == "Error":
                 self.safetyNum.setStyleSheet("background-color:red;font-size: 18px;border-radius: 25px;border: 1px solid black;")
         elif label == 2:
-            ACS_actual = self.read_ACS_actual_position()
-            ACS_command = self.read_ACS_command_position()
+            # ACS_actual = self.read_ACS_actual_position()
+            # ACS_command = self.read_ACS_command_position()
             PCS_actual = self.read_PCS_actual_position()
-            PCS_command = self.read_PCS_command_position()
+            # PCS_command = self.read_PCS_command_position()
+
+
             # self.ui.label_acs_command_show.setText("A1:"+ ACS_command.axis1 +"A2:" + ACS_command.axis2 + "A3:" + ACS_command.axis3 + "A4:"+ ACS_command.axis4 +  "A5:"+ ACS_command.axis5 + "A6:" + ACS_command.axis6 )
             # self.ui.label_acs_actual_show.setText("A1:"+ ACS_actual.axis1 +"A2:" + ACS_actual.axis2 + "A3:" + ACS_actual.axis3 + "A4:"+ ACS_actual.axis4 +  "A5:"+ ACS_actual.axis5 + "A6:" + ACS_actual.axis6 )
             # self.ui.label_pcs_command_show.setText("X:"+ PCS_command.X +"Y:" + PCS_command.Y + "Z:" + PCS_command.Z + "A:"+ PCS_command.A +  "B:"+ PCS_command.B + "C:" + PCS_command.C )
