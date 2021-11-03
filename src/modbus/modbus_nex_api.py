@@ -52,10 +52,18 @@ class ACS_command():
 
 class ModbusNexApi():
     def __init__(self):
-        self.pcs_actual = PCS_actual()
-        self.pcs_command = PCS_command()
-        self.acs_actual = ACS_actual()
-        self.acs_command = ACS_command()
+        self.host = "192.168.0.6" # 192.168.0.6
+        self.port = 502
+        self.rate = 50
+        self.reset_registers = False
+        self.modclient = ModbusWrapperClient(self.host, self.port, self.rate, self.reset_registers)
+
+        self.modclient.setWritingRegisters(ADDRESS_WRITE_START,WRITE_NUM_REGISTERS)
+        # self.modclient.setReadingRegisters(ADDRESS_READ_START,READ_NUM_REGISTERS)
+        self.modclient.setReadingInputRegisters(ADDRESS_READ_INPUT_START,READ_INPUT_NUM_REGISTERS)
+        rospy.loginfo("Setup complete")
+
+    def ip_init(self):
         self.host = "192.168.0.6" # 192.168.0.6
         self.port = 502
         self.rate = 50

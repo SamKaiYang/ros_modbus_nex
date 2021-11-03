@@ -7,7 +7,9 @@ import numpy as np
 from modbus.modbus_nex_api import ModbusNexApi 
 from modbus.msg import peripheralCmd
 from PyQt5 import QtWidgets, QtGui
-from PyQt5.QtCore import QTimer, QThread, pyqtSignal
+from PyQt5.QtCore import *
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
 from main_ui import Ui_MainWindow
 from nex_control_strategy_topic import nex_control, switch
 import sys
@@ -53,6 +55,84 @@ class StrategyThread(QThread, nex_control):
             self.callback.emit(index, self.label)
             # self.arm_task_sub()
 
+class PandasModel_pos(QAbstractTableModel):
+    header_labels = ['X', 'Y', 'Z', 'A', 'B', 'C']
+    vertical_labels = ['Command', 'Actual','Unit']
+    def __init__(self, data, parent=None):
+        super(PandasModel_pos,self).__init__(parent)
+        self._data = data
+
+    def headerData(self, section, orientation, role=Qt.DisplayRole):
+        if role == Qt.DisplayRole and orientation == Qt.Horizontal:
+            return self.header_labels[section]
+        if role == Qt.DisplayRole and orientation == Qt.Vertical:
+            return self.vertical_labels[section]
+        return QAbstractTableModel.headerData(self, section, orientation, role)
+
+    def rowCount(self, index):
+        return self._data.shape[0]
+
+    def columnCount(self, index):
+        return self._data.shape[1]
+
+    def data(self, index, role=Qt.DisplayRole):
+        if index.isValid():
+            if role == Qt.DisplayRole or role == Qt.EditRole:
+                value = self._data[index.row(), index.column()]
+                return str(value)
+
+    def setData(self, index, value, role):
+        if role == Qt.EditRole:
+            try:
+                value = int(value)
+            except ValueError:
+                return False
+            self._data[index.row(), index.column()] = value
+            return True
+        return False
+
+    def flags(self, index):
+        return Qt.ItemIsSelectable | Qt.ItemIsEnabled | Qt.ItemIsEditable
+
+class PandasModel_joint(QAbstractTableModel):
+    header_labels = ['J1', 'J2', 'J3', 'J4', 'J5', 'J6']
+    vertical_labels = ['Command', 'Actual','Unit']
+    def __init__(self, data, parent=None):
+        super(PandasModel_joint,self).__init__(parent)
+        self._data = data
+
+    def headerData(self, section, orientation, role=Qt.DisplayRole):
+        if role == Qt.DisplayRole and orientation == Qt.Horizontal:
+            return self.header_labels[section]
+        if role == Qt.DisplayRole and orientation == Qt.Vertical:
+            return self.vertical_labels[section]
+        return QAbstractTableModel.headerData(self, section, orientation, role)
+
+    def rowCount(self, index):
+        return self._data.shape[0]
+
+    def columnCount(self, index):
+        return self._data.shape[1]
+
+    def data(self, index, role=Qt.DisplayRole):
+        if index.isValid():
+            if role == Qt.DisplayRole or role == Qt.EditRole:
+                value = self._data[index.row(), index.column()]
+                return str(value)
+
+    def setData(self, index, value, role):
+        if role == Qt.EditRole:
+            try:
+                value = int(value)
+            except ValueError:
+                return False
+            self._data[index.row(), index.column()] = value
+            return True
+        return False
+
+    def flags(self, index):
+        return Qt.ItemIsSelectable | Qt.ItemIsEnabled | Qt.ItemIsEditable
+
 class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
@@ -71,12 +151,17 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
         self.ui.btn_disable.clicked.connect(self.disable_buttonClicked)
         self.ui.btn_reload.clicked.connect(self.reload_buttonClicked)
         self.ui.onBtn.clicked.connect(self.onBtn)
+        self.ui.offBtn.clicked.connect(self.offBtn)
         self.ui.btn_start_program.clicked.connect(self.start_buttonClicked)
         self.ui.btn_vel_set.clicked.connect(self.vel_setClicked)
         self.ui.btn_acc_set.clicked.connect(self.acc_setClicked)
         self.ui.btn_ip_set.clicked.connect(self.ip_setClicked)
         self.ui.btn_project_name_select.clicked.connect(self.project_name_setClicked)
+        # modbus connect server ip init
+        self.ip_init()
+        # arm position class define
         self.point_init() 
+        
         # TODO: edit thread for AGV & arm strategy 
         # self.thread1=StrategyThread(1, 100)
         # self.thread1.callback.connect(self.drawUi)
@@ -110,6 +195,22 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
         self.movie = QtGui.QMovie("src/modbus/modbus/picture/earth.gif")
         self.ui.label_arm_gif.setMovie(self.movie)
         self.movie.start()
+        # TODO:table view
+        # table_view init
+        data_pos = np.array([
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+            ["mm","mm","mm","Deg","Deg","Deg"]
+        ])
+        data_joint = np.array([
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+            ["Deg","Deg","Deg","Deg","Deg","Deg"]
+        ])
+        self.model = PandasModel_pos(data_pos)
+        self.ui.tableView_pos.setModel(self.model)
+        self.model = PandasModel_joint(data_joint)
+        self.ui.tableView_joint.setModel(self.model)
 
     def initUi(self):
         self.status = self.statusBar()
@@ -222,6 +323,26 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
         # self.thread3.callback.connect(self.drawUi)
         # self.thread3.start()
 
+    def offBtn(self, event):
+        self.stopThread(self.thread1)
+        self.stopThread(self.thread2)
+
+    def stopThread(self, name_or_qthread):
+        """
+        Stop a running thread.
+        :type name_or_qthread: T <= str | QThread
+        """
+        try:
+            #LOGGER.debug("Terminate thread: %s (runtime=%.2fms)", name, time.monotonic() - self._started[name])
+            qthread = name_or_qthread
+            qthread.quit()
+            if not qthread.wait(2000):
+                qthread.terminate()
+                qthread.wait()
+        except Exception as e:
+            rospy.loginfo('Thread shutdown could not be completed: %s', e)
+        del name_or_qthread
+
     def ip_setClicked(self):
         text = self.ui.lineEdit_ip.text()
         self.ui.label_ip.setText("Set IP:"+text)
@@ -241,20 +362,42 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
             ACS_command = self.read_ACS_command_position()
             PCS_actual = self.read_PCS_actual_position()
             PCS_command = self.read_PCS_command_position()
-            self.ui.label_acs_command_show.setText("A1:"+ str(round(ACS_command.axis1,3)) +"  A2:" + str(round(ACS_command.axis2,3)) + "  A3:" + str(round(ACS_command.axis3,3)) + "  A4:"+ str(round(ACS_command.axis4,3)) +  "  A5:"+ str(round(ACS_command.axis5,3)) + "  A6:" + str(round(ACS_command.axis6,3)) )
-            self.ui.label_acs_actual_show.setText("A1:"+ str(round(ACS_actual.axis1,3)) +"  A2:" + str(round(ACS_actual.axis2,3)) + "  A3:" + str(round(ACS_actual.axis3,3)) + "  A4:"+ str(round(ACS_actual.axis4,3)) +  "  A5:"+ str(round(ACS_actual.axis5,3)) + "  A6:" + str(round(ACS_actual.axis6,3)) )
-            self.ui.label_pcs_command_show.setText("X:"+ str(round(PCS_command.X,3)) +"  Y:" + str(round(PCS_command.Y,3)) + "  Z:" + str(round(PCS_command.Z,3)) + "  A:"+ str(round(PCS_command.A,3)) +  "  B:"+ str(round(PCS_command.B,3)) + "  C:" + str(round(PCS_command.C,3)) )
-            self.ui.label_pcs_actual_show.setText("X:"+ str(round(PCS_actual.X,3)) +"  Y:" + str(round(PCS_actual.Y,3)) + "  Z:" + str(round(PCS_actual.Z,3)) + "  A:"+ str(round(PCS_actual.A,3)) +  "  B:"+ str(round(PCS_actual.B,3)) + "  C:" + str(round(PCS_actual.C,3)) )
+            # self.ui.label_acs_command_show.setText("A1:"+ str(round(ACS_command.axis1,3)) +"  A2:" + str(round(ACS_command.axis2,3)) + "  A3:" + str(round(ACS_command.axis3,3)) + "  A4:"+ str(round(ACS_command.axis4,3)) +  "  A5:"+ str(round(ACS_command.axis5,3)) + "  A6:" + str(round(ACS_command.axis6,3)) )
+            # self.ui.label_acs_actual_show.setText("A1:"+ str(round(ACS_actual.axis1,3)) +"  A2:" + str(round(ACS_actual.axis2,3)) + "  A3:" + str(round(ACS_actual.axis3,3)) + "  A4:"+ str(round(ACS_actual.axis4,3)) +  "  A5:"+ str(round(ACS_actual.axis5,3)) + "  A6:" + str(round(ACS_actual.axis6,3)) )
+            # self.ui.label_pcs_command_show.setText("X:"+ str(round(PCS_command.X,3)) +"  Y:" + str(round(PCS_command.Y,3)) + "  Z:" + str(round(PCS_command.Z,3)) + "  A:"+ str(round(PCS_command.A,3)) +  "  B:"+ str(round(PCS_command.B,3)) + "  C:" + str(round(PCS_command.C,3)) )
+            # self.ui.label_pcs_actual_show.setText("X:"+ str(round(PCS_actual.X,3)) +"  Y:" + str(round(PCS_actual.Y,3)) + "  Z:" + str(round(PCS_actual.Z,3)) + "  A:"+ str(round(PCS_actual.A,3)) +  "  B:"+ str(round(PCS_actual.B,3)) + "  C:" + str(round(PCS_actual.C,3)) )
+            data = np.array([
+                [round(ACS_command.axis1,3),round(ACS_command.axis2,3),round(ACS_command.axis3,3),round(ACS_command.axis4,3),round(ACS_command.axis5,3),round(ACS_command.axis6,3)],
+                [round(ACS_actual.axis1,3),round(ACS_actual.axis2,3),round(ACS_actual.axis3,3),round(ACS_actual.axis4,3),round(ACS_actual.axis5,3),round(ACS_actual.axis6,3)],
+                ["Deg","Deg","Deg","Deg","Deg","Deg"]
+                ])
+            self.model = PandasModel_joint(data)
+            self.ui.tableView_joint.setModel(self.model)
+            self.ui.tableView_joint.update()
+            data = np.array([
+                [round(PCS_command.X,3),round(PCS_command.Y,3),round(PCS_command.Z,3),round(PCS_command.A,3),round(PCS_command.B,3), round(PCS_command.C,3)],
+                [round(PCS_actual.X,3),round(PCS_actual.Y,3),round(PCS_actual.Z,3),round(PCS_actual.A,3),round(PCS_actual.B,3), round(PCS_actual.C,3)],
+                ["mm","mm","mm","Deg","Deg","Deg"]
+                ])
+            self.model = PandasModel_pos(data)
+            self.ui.tableView_pos.setModel(self.model)
+            self.ui.tableView_pos.update()
         else:
             # self.ui.label_rostopic_pub_show.setText("task_cmd:"+ self.task_cmd  +"statusID:" + self.statusID)
             pass
 
     def vel_setClicked(self):
+        """
+            set TPUI SMO 1 
+        """
         register = 1025
         self.vel = int(self.ui.lineEdit_vel.text())
         self.modclient.setOutput(register,self.vel,0)
 
     def acc_setClicked(self):
+        """
+            set TPUI SMO 2
+        """
         register = 1026
         self.acc = int(self.ui.lineEdit_acc.text())
         self.modclient.setOutput(register,self.acc,0)
@@ -268,6 +411,13 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
     def project_name_setClicked(self):
         self.read_project_name()
 
+    def insert_data(self, table_widget, data):
+        row0 = data[0] if len(data) else []
+        table_widget.setRowCount(len(data))
+        table_widget.setColumnCount(len(row0))
+        for r, row in enumerate(data):
+            for c, item in enumerate(row):
+                table_widget.setItem(r, c, QTableWidgetItem(str(item)))
 if __name__=="__main__":
     rospy.init_node("control_strategy")
     app = QtWidgets.QApplication([])
@@ -275,4 +425,3 @@ if __name__=="__main__":
     window.show()
 
     sys.exit(app.exec_())
-    # thread_ui.join()
