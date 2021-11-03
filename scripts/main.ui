@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>910</width>
+    <width>922</width>
     <height>566</height>
    </rect>
   </property>
@@ -335,6 +335,58 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QPushButton" name="offBtn">
+       <property name="palette">
+        <palette>
+         <active>
+          <colorrole role="Button">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>229</red>
+             <green>253</green>
+             <blue>106</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </active>
+         <inactive>
+          <colorrole role="Button">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>229</red>
+             <green>253</green>
+             <blue>106</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </inactive>
+         <disabled>
+          <colorrole role="Button">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>229</red>
+             <green>253</green>
+             <blue>106</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </disabled>
+        </palette>
+       </property>
+       <property name="font">
+        <font>
+         <family>Bitstream Vera Sans</family>
+         <pointsize>16</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Read off</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </widget>
    <widget class="QWidget" name="gridLayoutWidget_2">
@@ -427,7 +479,7 @@
      <rect>
       <x>220</x>
       <y>10</y>
-      <width>641</width>
+      <width>691</width>
       <height>501</height>
      </rect>
     </property>
@@ -456,7 +508,7 @@
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>611</width>
+        <width>671</width>
         <height>431</height>
        </rect>
       </property>
@@ -465,51 +517,31 @@
         <widget class="QLabel" name="label_acs_command_list">
          <property name="font">
           <font>
+           <pointsize>15</pointsize>
            <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
          <property name="text">
-          <string>ACS Command Position List</string>
+          <string>Joint Space (ACS)</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="label_acs_command_show">
+        <widget class="QTableView" name="tableView_joint">
          <property name="font">
           <font>
-           <weight>50</weight>
-           <bold>false</bold>
+           <pointsize>13</pointsize>
           </font>
          </property>
-         <property name="text">
-          <string/>
+         <property name="selectionMode">
+          <enum>QAbstractItemView::MultiSelection</enum>
          </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_acs_actual_list">
-         <property name="font">
-          <font>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>ACS Actual Position List</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_acs_actual_show">
-         <property name="font">
-          <font>
-           <weight>50</weight>
-           <bold>false</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string/>
+         <property name="selectionBehavior">
+          <enum>QAbstractItemView::SelectRows</enum>
          </property>
         </widget>
        </item>
@@ -517,51 +549,31 @@
         <widget class="QLabel" name="label_pcs_command_list">
          <property name="font">
           <font>
+           <pointsize>15</pointsize>
            <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
          <property name="text">
-          <string>PCS Command Position List</string>
+          <string>Cartesian Space (PCS)</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="label_pcs_command_show">
+        <widget class="QTableView" name="tableView_pos">
          <property name="font">
           <font>
-           <weight>50</weight>
-           <bold>false</bold>
+           <pointsize>13</pointsize>
           </font>
          </property>
-         <property name="text">
-          <string/>
+         <property name="selectionMode">
+          <enum>QAbstractItemView::MultiSelection</enum>
          </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_pcs_actual_list">
-         <property name="font">
-          <font>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>PCS Actual Position List</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_pcs_actual_show">
-         <property name="font">
-          <font>
-           <weight>50</weight>
-           <bold>false</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string/>
+         <property name="selectionBehavior">
+          <enum>QAbstractItemView::SelectRows</enum>
          </property>
         </widget>
        </item>
@@ -652,8 +664,8 @@
      <widget class="QPushButton" name="btn_reload">
       <property name="geometry">
        <rect>
-        <x>70</x>
-        <y>270</y>
+        <x>90</x>
+        <y>260</y>
         <width>191</width>
         <height>41</height>
        </rect>
@@ -712,9 +724,9 @@
      <widget class="QGroupBox" name="groupBox_speed">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>130</y>
-        <width>361</width>
+        <x>10</x>
+        <y>110</y>
+        <width>371</width>
         <height>131</height>
        </rect>
       </property>
@@ -870,6 +882,9 @@
       </property>
       <property name="title">
        <string>Overall speed setting</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
       </property>
       <widget class="QSlider" name="horizontalSlider_acc">
        <property name="geometry">
@@ -1045,6 +1060,9 @@
        <property name="text">
         <string>Velocity</string>
        </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
       </widget>
       <widget class="QLabel" name="label_acceleration">
        <property name="geometry">
@@ -1058,6 +1076,9 @@
        <property name="text">
         <string>Acceleration</string>
        </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
       </widget>
      </widget>
      <widget class="QLabel" name="label_project_name">
@@ -1069,8 +1090,16 @@
         <height>17</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>13</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Project Name:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
      <widget class="QLineEdit" name="lineEdit_project_name_select">
@@ -1384,6 +1413,11 @@
       </property>
      </widget>
     </widget>
+    <widget class="QWidget" name="tab">
+     <attribute name="title">
+      <string>Page</string>
+     </attribute>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -1391,7 +1425,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>910</width>
+     <width>922</width>
      <height>23</height>
     </rect>
    </property>
