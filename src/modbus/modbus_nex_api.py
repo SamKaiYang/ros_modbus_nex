@@ -67,6 +67,12 @@ class ModbusNexApi():
         self.modclient.setReadingInputRegisters(ADDRESS_READ_INPUT_START,READ_INPUT_NUM_REGISTERS)
         rospy.loginfo("Setup complete")
 
+    def point_init(self):
+        self.pcs_actual = PCS_actual()
+        self.pcs_command = PCS_command()
+        self.acs_actual = ACS_actual()
+        self.acs_command = ACS_command()
+
     def ip_set(self, ip):
         self.host = ip 
         self.port = 502
@@ -449,7 +455,6 @@ class ModbusNexApi():
         """
             read_PCS_actual_position (double)
         """
-        self.pcs_actual = PCS_actual()
         result = self.modclient.read_input_Registers(16528,4)
         decoder = BinaryPayloadDecoder.fromRegisters(result, byteorder= Endian.Big, wordorder=Endian.Little)
         self.pcs_actual.X = decoder.decode_64bit_float()
@@ -474,53 +479,101 @@ class ModbusNexApi():
         decoder = BinaryPayloadDecoder.fromRegisters(result, byteorder= Endian.Big, wordorder=Endian.Little)
         self.pcs_actual.C = decoder.decode_64bit_float()
 
-
-        # print('%2.4f'%self.pcs_actual.X)
-        print("pcs actual X: %2.4f",self.pcs_actual.X)
-        print("pcs actual Y: %2.4f",self.pcs_actual.Y)
-        print("pcs actual Z: %2.4f",self.pcs_actual.Z)
-        print("pcs actual A: %2.4f",self.pcs_actual.A)
-        print("pcs actual B: %2.4f",self.pcs_actual.B)
-        print("pcs actual C: %2.4f",self.pcs_actual.C)
-   
         return self.pcs_actual
 
     def read_PCS_command_position(self):
         """
             read_PCS_command_position (double)
         """
-        self.pcs_command = PCS_command()
-        self.pcs_command.X = self.modclient.read_input_Registers(16464,4)
-        self.pcs_command.Y = self.modclient.read_input_Registers(16468,4)
-        self.pcs_command.C = self.modclient.read_input_Registers(16472,4)
-        self.pcs_command.A = self.modclient.read_input_Registers(16476,4)
-        self.pcs_command.B = self.modclient.read_input_Registers(16480,4)
-        self.pcs_command.C = self.modclient.read_input_Registers(16484,4)
+        result = self.modclient.read_input_Registers(16464,4)
+        decoder = BinaryPayloadDecoder.fromRegisters(result, byteorder= Endian.Big, wordorder=Endian.Little)
+        self.pcs_command.X = decoder.decode_64bit_float()
+
+        result = self.modclient.read_input_Registers(16468,4)
+        decoder = BinaryPayloadDecoder.fromRegisters(result, byteorder= Endian.Big, wordorder=Endian.Little)
+        self.pcs_command.Y = decoder.decode_64bit_float()
+
+        result = self.modclient.read_input_Registers(16472,4)
+        decoder = BinaryPayloadDecoder.fromRegisters(result, byteorder= Endian.Big, wordorder=Endian.Little)
+        self.pcs_command.Z = decoder.decode_64bit_float()
+
+        result = self.modclient.read_input_Registers(16476,4)
+        decoder = BinaryPayloadDecoder.fromRegisters(result, byteorder= Endian.Big, wordorder=Endian.Little)
+        self.pcs_command.A = decoder.decode_64bit_float()
+
+        result = self.modclient.read_input_Registers(16480,4)
+        decoder = BinaryPayloadDecoder.fromRegisters(result, byteorder= Endian.Big, wordorder=Endian.Little)
+        self.pcs_command.B = decoder.decode_64bit_float()
+
+        result = self.modclient.read_input_Registers(16484,4)
+        decoder = BinaryPayloadDecoder.fromRegisters(result, byteorder= Endian.Big, wordorder=Endian.Little)
+        self.pcs_command.C = decoder.decode_64bit_float()
         return self.pcs_command
 
     def read_ACS_actual_position(self):
         """
             read_ACS_actual_position (double)
         """
-        self.acs_actual = ACS_actual()
-        self.acs_actual.axis1 = self.modclient.read_input_Registers(16432,4)
-        self.acs_actual.axis2 = self.modclient.read_input_Registers(16436,4)
-        self.acs_actual.axis3 = self.modclient.read_input_Registers(16440,4)
-        self.acs_actual.axis4 = self.modclient.read_input_Registers(16444,4)
-        self.acs_actual.axis5 = self.modclient.read_input_Registers(16448,4)
-        self.acs_actual.axis6 = self.modclient.read_input_Registers(16452,4)
+        result = self.modclient.read_input_Registers(16432,4)
+        decoder = BinaryPayloadDecoder.fromRegisters(result, byteorder= Endian.Big, wordorder=Endian.Little)
+        self.acs_actual.axis1 = decoder.decode_64bit_float()
+
+        result = self.modclient.read_input_Registers(16436,4)
+        decoder = BinaryPayloadDecoder.fromRegisters(result, byteorder= Endian.Big, wordorder=Endian.Little)
+        self.acs_actual.axis2 = decoder.decode_64bit_float()
+
+        result = self.modclient.read_input_Registers(16440,4)
+        decoder = BinaryPayloadDecoder.fromRegisters(result, byteorder= Endian.Big, wordorder=Endian.Little)
+        self.acs_actual.axis3 = decoder.decode_64bit_float()
+
+        result = self.modclient.read_input_Registers(16444,4)
+        decoder = BinaryPayloadDecoder.fromRegisters(result, byteorder= Endian.Big, wordorder=Endian.Little)
+        self.acs_actual.axis4 = decoder.decode_64bit_float()
+
+        result = self.modclient.read_input_Registers(16448,4)
+        decoder = BinaryPayloadDecoder.fromRegisters(result, byteorder= Endian.Big, wordorder=Endian.Little)
+        self.acs_actual.axis5 = decoder.decode_64bit_float()
+
+        result = self.modclient.read_input_Registers(16452,4)
+        decoder = BinaryPayloadDecoder.fromRegisters(result, byteorder= Endian.Big, wordorder=Endian.Little)
+        self.acs_actual.axis6 = decoder.decode_64bit_float()
         return self.acs_actual
 
     def read_ACS_command_position(self):
         """
             read_ACS_command_position (double)
         """
-        self.acs_command = ACS_command()
-        self.acs_command.axis1 = self.modclient.read_input_Registers(16400,4)
-        self.acs_command.axis2 = self.modclient.read_input_Registers(16404,4)
-        self.acs_command.axis3 = self.modclient.read_input_Registers(16408,4)
-        self.acs_command.axis4 = self.modclient.read_input_Registers(16412,4)
-        self.acs_command.axis5 = self.modclient.read_input_Registers(16416,4)
-        self.acs_command.axis6 = self.modclient.read_input_Registers(16420,4)
+        result = self.modclient.read_input_Registers(16400,4)
+        decoder = BinaryPayloadDecoder.fromRegisters(result, byteorder= Endian.Big, wordorder=Endian.Little)
+        self.acs_command.axis1 = decoder.decode_64bit_float()
+
+        result = self.modclient.read_input_Registers(16404,4)
+        decoder = BinaryPayloadDecoder.fromRegisters(result, byteorder= Endian.Big, wordorder=Endian.Little)
+        self.acs_command.axis2 = decoder.decode_64bit_float()
+
+        result = self.modclient.read_input_Registers(16408,4)
+        decoder = BinaryPayloadDecoder.fromRegisters(result, byteorder= Endian.Big, wordorder=Endian.Little)
+        self.acs_command.axis3 = decoder.decode_64bit_float()
+
+        result = self.modclient.read_input_Registers(16412,4)
+        decoder = BinaryPayloadDecoder.fromRegisters(result, byteorder= Endian.Big, wordorder=Endian.Little)
+        self.acs_command.axis4 = decoder.decode_64bit_float()
+
+        result = self.modclient.read_input_Registers(16416,4)
+        decoder = BinaryPayloadDecoder.fromRegisters(result, byteorder= Endian.Big, wordorder=Endian.Little)
+        self.acs_command.axis5 = decoder.decode_64bit_float()
+
+        result = self.modclient.read_input_Registers(16420,4)
+        decoder = BinaryPayloadDecoder.fromRegisters(result, byteorder= Endian.Big, wordorder=Endian.Little)
+        self.acs_command.axis6 = decoder.decode_64bit_float()
         return self.acs_command
         
+    def read_project_name(self):
+        """
+            Maximum 64 char, C-String, include null terminating char.
+        """
+        result = self.modclient.read_input_Registers(8208,32)
+        decoder = BinaryPayloadDecoder.fromRegisters(result, byteorder= Endian.Big, wordorder=Endian.Little)
+        project_name = decoder.decode_string(32)
+        print("project name: %s" % project_name)
+        return project_name

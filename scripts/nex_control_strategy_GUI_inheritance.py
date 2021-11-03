@@ -77,7 +77,8 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
         self.ui.btn_vel_set.clicked.connect(self.vel_setClicked)
         self.ui.btn_acc_set.clicked.connect(self.acc_setClicked)
         self.ui.btn_ip_set.clicked.connect(self.ip_setClicked)
-        
+        self.ui.btn_project_name_select.clicked.connect(self.project_name_setClicked)
+        self.point_init()
         # TODO: edit thread for AGV & arm strategy 
         # self.thread1=StrategyThread(1, 100)
         # self.thread1.callback.connect(self.drawUi)
@@ -242,16 +243,16 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
             if self.safety_state() == "Error":
                 self.safetyNum.setStyleSheet("background-color:red;font-size: 18px;border-radius: 25px;border: 1px solid black;")
         elif label == 2:
-            # ACS_actual = self.read_ACS_actual_position()
-            # ACS_command = self.read_ACS_command_position()
+            ACS_actual = self.read_ACS_actual_position()
+            ACS_command = self.read_ACS_command_position()
             PCS_actual = self.read_PCS_actual_position()
-            # PCS_command = self.read_PCS_command_position()
+            PCS_command = self.read_PCS_command_position()
 
 
-            # self.ui.label_acs_command_show.setText("A1:"+ ACS_command.axis1 +"A2:" + ACS_command.axis2 + "A3:" + ACS_command.axis3 + "A4:"+ ACS_command.axis4 +  "A5:"+ ACS_command.axis5 + "A6:" + ACS_command.axis6 )
-            # self.ui.label_acs_actual_show.setText("A1:"+ ACS_actual.axis1 +"A2:" + ACS_actual.axis2 + "A3:" + ACS_actual.axis3 + "A4:"+ ACS_actual.axis4 +  "A5:"+ ACS_actual.axis5 + "A6:" + ACS_actual.axis6 )
-            # self.ui.label_pcs_command_show.setText("X:"+ PCS_command.X +"Y:" + PCS_command.Y + "Z:" + PCS_command.Z + "A:"+ PCS_command.A +  "B:"+ PCS_command.B + "C:" + PCS_command.C )
-            # self.ui.label_pcs_actual_show.setText("X:"+ PCS_actual.X +"Y:" + PCS_actual.Y + "Z:" + PCS_actual.Z + "A:"+ PCS_actual.A +  "B:"+ PCS_actual.B + "C:" + PCS_actual.C )
+            self.ui.label_acs_command_show.setText("A1:"+ str(round(ACS_command.axis1,3)) +"  A2:" + str(round(ACS_command.axis2,3)) + "  A3:" + str(round(ACS_command.axis3,3)) + "  A4:"+ str(round(ACS_command.axis4,3)) +  "  A5:"+ str(round(ACS_command.axis5,3)) + "  A6:" + str(round(ACS_command.axis6,3)) )
+            self.ui.label_acs_actual_show.setText("A1:"+ str(round(ACS_actual.axis1,3)) +"  A2:" + str(round(ACS_actual.axis2,3)) + "  A3:" + str(round(ACS_actual.axis3,3)) + "  A4:"+ str(round(ACS_actual.axis4,3)) +  "  A5:"+ str(round(ACS_actual.axis5,3)) + "  A6:" + str(round(ACS_actual.axis6,3)) )
+            self.ui.label_pcs_command_show.setText("X:"+ str(round(PCS_command.X,3)) +"  Y:" + str(round(PCS_command.Y,3)) + "  Z:" + str(round(PCS_command.Z,3)) + "  A:"+ str(round(PCS_command.A,3)) +  "  B:"+ str(round(PCS_command.B,3)) + "  C:" + str(round(PCS_command.C,3)) )
+            self.ui.label_pcs_actual_show.setText("X:"+ str(round(PCS_actual.X,3)) +"  Y:" + str(round(PCS_actual.Y,3)) + "  Z:" + str(round(PCS_actual.Z,3)) + "  A:"+ str(round(PCS_actual.A,3)) +  "  B:"+ str(round(PCS_actual.B,3)) + "  C:" + str(round(PCS_actual.C,3)) )
             # pass
         else:
             # self.ui.label_rostopic_pub_show.setText("task_cmd:"+ self.task_cmd  +"statusID:" + self.statusID)
@@ -272,6 +273,9 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
         
     def AccSliderValue(self):
         self.ui.lineEdit_acc.setText(str(self.ui.horizontalSlider_acc.value()))
+
+    def project_name_setClicked(self):
+        self.read_project_name()
 
 if __name__=="__main__":
     rospy.init_node("control_strategy")
