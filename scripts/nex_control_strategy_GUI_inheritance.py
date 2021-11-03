@@ -157,6 +157,9 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
         self.ui.btn_acc_set.clicked.connect(self.acc_setClicked)
         self.ui.btn_ip_set.clicked.connect(self.ip_setClicked)
         self.ui.btn_project_name_select.clicked.connect(self.project_name_setClicked)
+        self.ui.btn_test.clicked.connect(self.testClicked)
+        self.ui.btn_test2.clicked.connect(self.test2Clicked)
+
         # modbus connect server ip init
         self.ip_init()
         # arm position class define
@@ -188,7 +191,6 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
         self.ui.comboBox.addItems(choices)
         self.ui.comboBox.currentIndexChanged.connect(self.display)
         self.display()
-    
         self.initUi()
 
         # Gif 
@@ -238,7 +240,6 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
         # file.addAction('New')
         # file.addAction('Open')
         # file.addAction('Close Project')
-
         tool=self.menu.addMenu('Tool')
         # tool.addAction('Python')
         # tool.addAction('C++')
@@ -269,7 +270,6 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
         self.timer.stop()
 
     def timeReset(self):
-        # self.timer.reset()
         self.s = 0
         second = self.s/10
         m_second = self.s%10
@@ -295,14 +295,13 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
         self.disable_robot()
 
     def reload_buttonClicked(self):
-        # self.nex_control.start_arm_reset()
         self.send_reset_other_state(4096, 4) # reset and only reserve enable
         self.reload_all_programs() 
         self.stop_programs() # reset before starting cmd
         while not rospy.is_shutdown():
             if self.is_task_init() == True:
                 rospy.loginfo("reload_all_programs finished")
-                break #
+                break
 
     def start_buttonClicked(self):
         register = 1024
@@ -333,7 +332,6 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
         :type name_or_qthread: T <= str | QThread
         """
         try:
-            #LOGGER.debug("Terminate thread: %s (runtime=%.2fms)", name, time.monotonic() - self._started[name])
             qthread = name_or_qthread
             qthread.quit()
             if not qthread.wait(2000):
@@ -362,10 +360,6 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
             ACS_command = self.read_ACS_command_position()
             PCS_actual = self.read_PCS_actual_position()
             PCS_command = self.read_PCS_command_position()
-            # self.ui.label_acs_command_show.setText("A1:"+ str(round(ACS_command.axis1,3)) +"  A2:" + str(round(ACS_command.axis2,3)) + "  A3:" + str(round(ACS_command.axis3,3)) + "  A4:"+ str(round(ACS_command.axis4,3)) +  "  A5:"+ str(round(ACS_command.axis5,3)) + "  A6:" + str(round(ACS_command.axis6,3)) )
-            # self.ui.label_acs_actual_show.setText("A1:"+ str(round(ACS_actual.axis1,3)) +"  A2:" + str(round(ACS_actual.axis2,3)) + "  A3:" + str(round(ACS_actual.axis3,3)) + "  A4:"+ str(round(ACS_actual.axis4,3)) +  "  A5:"+ str(round(ACS_actual.axis5,3)) + "  A6:" + str(round(ACS_actual.axis6,3)) )
-            # self.ui.label_pcs_command_show.setText("X:"+ str(round(PCS_command.X,3)) +"  Y:" + str(round(PCS_command.Y,3)) + "  Z:" + str(round(PCS_command.Z,3)) + "  A:"+ str(round(PCS_command.A,3)) +  "  B:"+ str(round(PCS_command.B,3)) + "  C:" + str(round(PCS_command.C,3)) )
-            # self.ui.label_pcs_actual_show.setText("X:"+ str(round(PCS_actual.X,3)) +"  Y:" + str(round(PCS_actual.Y,3)) + "  Z:" + str(round(PCS_actual.Z,3)) + "  A:"+ str(round(PCS_actual.A,3)) +  "  B:"+ str(round(PCS_actual.B,3)) + "  C:" + str(round(PCS_actual.C,3)) )
             data = np.array([
                 [round(ACS_command.axis1,3),round(ACS_command.axis2,3),round(ACS_command.axis3,3),round(ACS_command.axis4,3),round(ACS_command.axis5,3),round(ACS_command.axis6,3)],
                 [round(ACS_actual.axis1,3),round(ACS_actual.axis2,3),round(ACS_actual.axis3,3),round(ACS_actual.axis4,3),round(ACS_actual.axis5,3),round(ACS_actual.axis6,3)],
@@ -411,13 +405,11 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
     def project_name_setClicked(self):
         self.read_project_name()
 
-    def insert_data(self, table_widget, data):
-        row0 = data[0] if len(data) else []
-        table_widget.setRowCount(len(data))
-        table_widget.setColumnCount(len(row0))
-        for r, row in enumerate(data):
-            for c, item in enumerate(row):
-                table_widget.setItem(r, c, QTableWidgetItem(str(item)))
+    def testClicked(self):
+        self.set_pcs_position(0,-162.5,818.1,-180,0,-90)
+    def test2Clicked(self):
+        self.set_acs_position(0,-90,0,-90,0,0)
+
 if __name__=="__main__":
     rospy.init_node("control_strategy")
     app = QtWidgets.QApplication([])

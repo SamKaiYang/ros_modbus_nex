@@ -11,5 +11,11 @@
         "/usr/local/lib/python3.6/dist-packages/cv2",
         "/opt/installer/open_cv/cv_bridge/lib/python3/dist-packages"
     ],
-    "cSpell.words": []
+    "cSpell.words": [
+        "NRPL",
+        "pymodbus",
+        "rospy",
+        "Specfied",
+        "TPUI"
+    ]
 }

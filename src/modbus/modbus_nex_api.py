@@ -265,38 +265,38 @@ class ModbusNexApi():
         builder = BinaryPayloadBuilder()
         builder.add_64bit_float(x)
         X = builder.to_registers()
-        X = builder.build()
-        register = 1024 + 8
+        # X = builder.build()
+        register = 1024 + 4
         self.modclient.setOutput(register,X,0)
         builder = BinaryPayloadBuilder()
         builder.add_64bit_float(y)
         Y = builder.to_registers()
-        Y = builder.build()
-        register = 1024 + 12
+        # Y = builder.build()
+        register = 1024 + 8
         self.modclient.setOutput(register,Y,0)
         builder = BinaryPayloadBuilder()
         builder.add_64bit_float(z)
         Z = builder.to_registers()
-        Z = builder.build()
-        register = 1024 + 16
+        # Z = builder.build()
+        register = 1024 + 12
         self.modclient.setOutput(register,Z,0)
         builder = BinaryPayloadBuilder()
         builder.add_64bit_float(a)
         A = builder.to_registers()
-        A = builder.build()
-        register = 1024 + 20
+        # A = builder.build()
+        register = 1024 + 16
         self.modclient.setOutput(register,A,0)
         builder = BinaryPayloadBuilder()
         builder.add_64bit_float(b)
         B = builder.to_registers()
-        B = builder.build()
-        register = 1024 + 24
+        # B = builder.build()
+        register = 1024 + 20
         self.modclient.setOutput(register,B,0)
         builder = BinaryPayloadBuilder()
         builder.add_64bit_float(c)
         C = builder.to_registers()
-        C = builder.build()
-        register = 1024 + 28
+        # C = builder.build()
+        register = 1024 + 24
         self.modclient.setOutput(register,C,0)
 
         rospy.sleep(0.5)
@@ -309,37 +309,37 @@ class ModbusNexApi():
         builder = BinaryPayloadBuilder()
         builder.add_64bit_float(axis1)
         Axis1 = builder.to_registers()
-        Axis1 = builder.build()
+        # Axis1 = builder.build()
         register = 1024 + 32
         self.modclient.setOutput(register,Axis1,0)
         builder = BinaryPayloadBuilder()
         builder.add_64bit_float(axis2)
         Axis2 = builder.to_registers()
-        Axis2 = builder.build()
+        # Axis2 = builder.build()
         register = 1024 + 36
         self.modclient.setOutput(register,Axis2,0)
         builder = BinaryPayloadBuilder()
         builder.add_64bit_float(axis3)
         Axis3 = builder.to_registers()
-        Axis3 = builder.build()
+        # Axis3 = builder.build()
         register = 1024 + 40
         self.modclient.setOutput(register,Axis3,0)
         builder = BinaryPayloadBuilder()
         builder.add_64bit_float(axis4)
         Axis4 = builder.to_registers()
-        Axis4 = builder.build()
+        # Axis4 = builder.build()
         register = 1024 + 44
         self.modclient.setOutput(register,Axis4,0)
         builder = BinaryPayloadBuilder()
         builder.add_64bit_float(axis5)
         Axis5 = builder.to_registers()
-        Axis5 = builder.build()
+        # Axis5 = builder.build()
         register = 1024 + 48
         self.modclient.setOutput(register,Axis5,0)
         builder = BinaryPayloadBuilder()
         builder.add_64bit_float(axis6)
         Axis6 = builder.to_registers()
-        Axis6 = builder.build()
+        # Axis6 = builder.build()
         register = 1024 + 52
         self.modclient.setOutput(register,Axis6,0)
         
