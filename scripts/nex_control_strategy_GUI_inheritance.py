@@ -60,8 +60,6 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
         self.acc = 50
         
         self.ui = Ui_MainWindow()
-        # self.nex_api_ui = ModbusNexApi()
-        # self.nex_control = nex_control()
         self.mission_number = 0
         self.ui.setupUi(self)
         self._creat_menubar()
@@ -78,7 +76,7 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
         self.ui.btn_acc_set.clicked.connect(self.acc_setClicked)
         self.ui.btn_ip_set.clicked.connect(self.ip_setClicked)
         self.ui.btn_project_name_select.clicked.connect(self.project_name_setClicked)
-        self.point_init()
+        self.point_init() 
         # TODO: edit thread for AGV & arm strategy 
         # self.thread1=StrategyThread(1, 100)
         # self.thread1.callback.connect(self.drawUi)
@@ -231,15 +229,11 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
         self.ip_set(text)
         rospy.loginfo("Setup complete")
 
-    #@QtCore.pyqtSlot(int, int)
     def drawUi(self, index, label):
         if label == 1:
-            # self.ui.label_task_state.setText("task state:"+self.task_state(0))
-            # self.ui.label_reload_state.setText("reload state:"+self.is_task_init())
             self.safetyNum.setText("Safety:"+self.safety_state())
             self.taskNum.setText("Task:"+self.task_state(0))
             self.reloadNum.setText("Reload:"+str(self.is_task_init()))
-            # (0)Disable, (1)Ready, (2)Error, (3)Enable, (4)Running
             if self.safety_state() == "Error":
                 self.safetyNum.setStyleSheet("background-color:red;font-size: 18px;border-radius: 25px;border: 1px solid black;")
         elif label == 2:
@@ -247,13 +241,10 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
             ACS_command = self.read_ACS_command_position()
             PCS_actual = self.read_PCS_actual_position()
             PCS_command = self.read_PCS_command_position()
-
-
             self.ui.label_acs_command_show.setText("A1:"+ str(round(ACS_command.axis1,3)) +"  A2:" + str(round(ACS_command.axis2,3)) + "  A3:" + str(round(ACS_command.axis3,3)) + "  A4:"+ str(round(ACS_command.axis4,3)) +  "  A5:"+ str(round(ACS_command.axis5,3)) + "  A6:" + str(round(ACS_command.axis6,3)) )
             self.ui.label_acs_actual_show.setText("A1:"+ str(round(ACS_actual.axis1,3)) +"  A2:" + str(round(ACS_actual.axis2,3)) + "  A3:" + str(round(ACS_actual.axis3,3)) + "  A4:"+ str(round(ACS_actual.axis4,3)) +  "  A5:"+ str(round(ACS_actual.axis5,3)) + "  A6:" + str(round(ACS_actual.axis6,3)) )
             self.ui.label_pcs_command_show.setText("X:"+ str(round(PCS_command.X,3)) +"  Y:" + str(round(PCS_command.Y,3)) + "  Z:" + str(round(PCS_command.Z,3)) + "  A:"+ str(round(PCS_command.A,3)) +  "  B:"+ str(round(PCS_command.B,3)) + "  C:" + str(round(PCS_command.C,3)) )
             self.ui.label_pcs_actual_show.setText("X:"+ str(round(PCS_actual.X,3)) +"  Y:" + str(round(PCS_actual.Y,3)) + "  Z:" + str(round(PCS_actual.Z,3)) + "  A:"+ str(round(PCS_actual.A,3)) +  "  B:"+ str(round(PCS_actual.B,3)) + "  C:" + str(round(PCS_actual.C,3)) )
-            # pass
         else:
             # self.ui.label_rostopic_pub_show.setText("task_cmd:"+ self.task_cmd  +"statusID:" + self.statusID)
             pass

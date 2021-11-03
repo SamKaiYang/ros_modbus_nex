@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>778</width>
+    <width>910</width>
     <height>566</height>
    </rect>
   </property>
@@ -427,7 +427,7 @@
      <rect>
       <x>220</x>
       <y>10</y>
-      <width>541</width>
+      <width>641</width>
       <height>501</height>
      </rect>
     </property>
@@ -445,7 +445,7 @@
      <enum>QTabWidget::Triangular</enum>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="tab_arm">
      <attribute name="title">
@@ -456,7 +456,7 @@
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>511</width>
+        <width>611</width>
         <height>431</height>
        </rect>
       </property>
@@ -576,7 +576,7 @@
       <property name="geometry">
        <rect>
         <x>390</x>
-        <y>270</y>
+        <y>300</y>
         <width>131</width>
         <height>151</height>
        </rect>
@@ -611,8 +611,8 @@
      <widget class="QWidget" name="gridLayoutWidget">
       <property name="geometry">
        <rect>
-        <x>30</x>
-        <y>290</y>
+        <x>20</x>
+        <y>320</y>
         <width>321</width>
         <height>131</height>
        </rect>
@@ -652,8 +652,8 @@
      <widget class="QPushButton" name="btn_reload">
       <property name="geometry">
        <rect>
-        <x>100</x>
-        <y>230</y>
+        <x>70</x>
+        <y>270</y>
         <width>191</width>
         <height>41</height>
        </rect>
@@ -713,7 +713,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>30</y>
+        <y>130</y>
         <width>361</width>
         <height>131</height>
        </rect>
@@ -1060,6 +1060,84 @@
        </property>
       </widget>
      </widget>
+     <widget class="QLabel" name="label_project_name">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>20</y>
+        <width>351</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Project Name:</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_project_name_select">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>50</y>
+        <width>251</width>
+        <height>25</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btn_project_name_select">
+      <property name="geometry">
+       <rect>
+        <x>280</x>
+        <y>50</y>
+        <width>81</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="palette">
+       <palette>
+        <active>
+         <colorrole role="Button">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>252</red>
+            <green>175</green>
+            <blue>62</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </active>
+        <inactive>
+         <colorrole role="Button">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>252</red>
+            <green>175</green>
+            <blue>62</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </inactive>
+        <disabled>
+         <colorrole role="Button">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>252</red>
+            <green>175</green>
+            <blue>62</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </disabled>
+       </palette>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>13</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Select</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab_state">
      <attribute name="title">
@@ -1070,7 +1148,7 @@
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>511</width>
+        <width>591</width>
         <height>431</height>
        </rect>
       </property>
@@ -1313,7 +1391,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>778</width>
+     <width>910</width>
      <height>23</height>
     </rect>
    </property>
