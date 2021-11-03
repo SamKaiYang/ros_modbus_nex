@@ -231,9 +231,9 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
 
     def drawUi(self, index, label):
         if label == 1:
-            self.safetyNum.setText("Safety:"+self.safety_state())
-            self.taskNum.setText("Task:"+self.task_state(0))
-            self.reloadNum.setText("Reload:"+str(self.is_task_init()))
+            self.safetyNum.setText("Safety: "+self.safety_state())
+            self.taskNum.setText("Task: "+self.task_state(0))
+            self.reloadNum.setText("Reload: "+str(self.is_task_init()))
             if self.safety_state() == "Error":
                 self.safetyNum.setStyleSheet("background-color:red;font-size: 18px;border-radius: 25px;border: 1px solid black;")
         elif label == 2:

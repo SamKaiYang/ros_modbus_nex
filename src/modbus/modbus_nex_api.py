@@ -230,10 +230,12 @@ class ModbusNexApi():
             Maximum 64 characters including terminating null-character.
         """
         project_name_str = name_str + "\0"
-        str_to_bin = bin(int(binascii.hexlify(project_name_str), 16))
-        bin_to_int = int(str_to_bin,2)
-        register = 4096
-        self.modclient.setOutput(register,bin_to_int,0)
+        builder = BinaryPayloadBuilder()
+        builder.add_string(project_name_str)
+        payload = builder.to_registers()
+        payload = builder.build()
+        register = 4100
+        self.modclient.setOutput(register,payload,0)
         rospy.sleep(0.5)
         rospy.loginfo("project name set")
 
@@ -247,6 +249,94 @@ class ModbusNexApi():
         self.modclient.setOutput(register,value,0)
         rospy.sleep(0.5)
         rospy.loginfo("open project")
+
+    def set_pcs_position(self, x, y, z, a, b, c):
+        """
+            set TPUI SMO 8 start 31 end
+        """
+        builder = BinaryPayloadBuilder()
+        builder.add_64bit_float(x)
+        X = builder.to_registers()
+        X = builder.build()
+        register = 1024 + 8
+        self.modclient.setOutput(register,X,0)
+        builder = BinaryPayloadBuilder()
+        builder.add_64bit_float(y)
+        Y = builder.to_registers()
+        Y = builder.build()
+        register = 1024 + 12
+        self.modclient.setOutput(register,Y,0)
+        builder = BinaryPayloadBuilder()
+        builder.add_64bit_float(z)
+        Z = builder.to_registers()
+        Z = builder.build()
+        register = 1024 + 16
+        self.modclient.setOutput(register,Z,0)
+        builder = BinaryPayloadBuilder()
+        builder.add_64bit_float(a)
+        A = builder.to_registers()
+        A = builder.build()
+        register = 1024 + 20
+        self.modclient.setOutput(register,A,0)
+        builder = BinaryPayloadBuilder()
+        builder.add_64bit_float(b)
+        B = builder.to_registers()
+        B = builder.build()
+        register = 1024 + 24
+        self.modclient.setOutput(register,B,0)
+        builder = BinaryPayloadBuilder()
+        builder.add_64bit_float(c)
+        C = builder.to_registers()
+        C = builder.build()
+        register = 1024 + 28
+        self.modclient.setOutput(register,C,0)
+
+        rospy.sleep(0.5)
+        rospy.loginfo("set pcs position")
+
+    def set_acs_position(self, axis1, axis2, axis3, axis4, axis5, axis6):
+        """
+            set TPUI SMO 32 start 51 end
+        """
+        builder = BinaryPayloadBuilder()
+        builder.add_64bit_float(axis1)
+        Axis1 = builder.to_registers()
+        Axis1 = builder.build()
+        register = 1024 + 32
+        self.modclient.setOutput(register,Axis1,0)
+        builder = BinaryPayloadBuilder()
+        builder.add_64bit_float(axis2)
+        Axis2 = builder.to_registers()
+        Axis2 = builder.build()
+        register = 1024 + 36
+        self.modclient.setOutput(register,Axis2,0)
+        builder = BinaryPayloadBuilder()
+        builder.add_64bit_float(axis3)
+        Axis3 = builder.to_registers()
+        Axis3 = builder.build()
+        register = 1024 + 40
+        self.modclient.setOutput(register,Axis3,0)
+        builder = BinaryPayloadBuilder()
+        builder.add_64bit_float(axis4)
+        Axis4 = builder.to_registers()
+        Axis4 = builder.build()
+        register = 1024 + 44
+        self.modclient.setOutput(register,Axis4,0)
+        builder = BinaryPayloadBuilder()
+        builder.add_64bit_float(axis5)
+        Axis5 = builder.to_registers()
+        Axis5 = builder.build()
+        register = 1024 + 48
+        self.modclient.setOutput(register,Axis5,0)
+        builder = BinaryPayloadBuilder()
+        builder.add_64bit_float(axis6)
+        Axis6 = builder.to_registers()
+        Axis6 = builder.build()
+        register = 1024 + 52
+        self.modclient.setOutput(register,Axis6,0)
+        
+        rospy.sleep(0.5)
+        rospy.loginfo("set acs position")
 
     # ----------------Request modbus server to read server state API-------------------
     def operation_mode_state(self):
