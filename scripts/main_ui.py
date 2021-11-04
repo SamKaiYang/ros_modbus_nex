@@ -39,7 +39,7 @@ class Ui_MainWindow(object):
         font.setFamily("Bitstream Vera Sans Mono")
         MainWindow.setFont(font)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("src/modbus/modbus/picture/teco_icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("../picture/teco_icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
         MainWindow.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -495,13 +495,13 @@ class Ui_MainWindow(object):
         self.label_arm_picture = QtWidgets.QLabel(self.tab_other)
         self.label_arm_picture.setGeometry(QtCore.QRect(20, 80, 151, 141))
         self.label_arm_picture.setText("")
-        self.label_arm_picture.setPixmap(QtGui.QPixmap("src/modbus/modbus/picture/teco_arm.png"))
+        self.label_arm_picture.setPixmap(QtGui.QPixmap("../picture/teco_arm.png"))
         self.label_arm_picture.setScaledContents(True)
         self.label_arm_picture.setObjectName("label_arm_picture")
         self.label_Coordinate_configuration = QtWidgets.QLabel(self.tab_other)
         self.label_Coordinate_configuration.setGeometry(QtCore.QRect(190, 40, 331, 431))
         self.label_Coordinate_configuration.setText("")
-        self.label_Coordinate_configuration.setPixmap(QtGui.QPixmap("src/modbus/modbus/picture/Coordinate_system_configuration_2.jpg"))
+        self.label_Coordinate_configuration.setPixmap(QtGui.QPixmap("../picture/Coordinate_system_configuration_2.jpg"))
         self.label_Coordinate_configuration.setScaledContents(True)
         self.label_Coordinate_configuration.setObjectName("label_Coordinate_configuration")
         self.label_other_armshow = QtWidgets.QLabel(self.tab_other)
@@ -620,7 +620,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(4)
+        self.tabWidget.setCurrentIndex(2)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):

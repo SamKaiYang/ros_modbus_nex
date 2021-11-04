@@ -55,6 +55,7 @@ class StrategyThread(QThread, nex_control):
         while self.runFlag:
             self.callback.emit(index, self.label)
             self.arm_task_sub() # nex_control mission loop
+            self.msleep(self.delay)
 
 class PandasModel_pos(QAbstractTableModel):
     header_labels = ['X', 'Y', 'Z', 'A', 'B', 'C']
@@ -144,7 +145,8 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
         self.mission_number = 0
         self.ui.setupUi(self)
         self._creat_menubar()
-        self.setWindowIcon(QtGui.QIcon('src/modbus/modbus/picture/teco_icon.png'))
+        self.setWindowIcon(QtGui.QIcon('../picture/teco_icon.png'))
+        # self.setWindowIcon(QtGui.QIcon('/picture/teco_icon.png'))
         self.ui.lineEdit_vel.setText(str(self.vel))
         self.ui.lineEdit_acc.setText(str(self.acc))
         self.ui.btn_reset.clicked.connect(self.reset_buttonClicked)
@@ -320,9 +322,9 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
         self.thread2.callback.connect(self.drawUi)
         self.thread2.start()
 
-        self.thread3=MyThread(3, 100)
-        self.thread3.callback.connect(self.drawUi)
-        self.thread3.start()
+        # self.thread3=MyThread(3, 100)
+        # self.thread3.callback.connect(self.drawUi)
+        # self.thread3.start()
 
         QMessageBox.about(self, "對話框", "開始讀取手臂資訊")
     def offBtn(self, event):
@@ -422,12 +424,15 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
             self.ui.tableView_pos.setModel(self.model)
             self.ui.tableView_pos.update()
 
-            if self.checkflag == True:
-                self.checkflag == False
+            if self.checkflag == True and self.safety_state() == "Enable":
+                self.checkflag = False
+                rospy.sleep(0.5)
+                ACS_actual = self.read_ACS_actual_position()
+                ACS_command = self.read_ACS_command_position()
                 a1 = np.array([round(ACS_command.axis1,3),round(ACS_command.axis2,3),round(ACS_command.axis3,3),round(ACS_command.axis4,3),round(ACS_command.axis5,3),round(ACS_command.axis6,3)])
                 a2 = np.array([round(ACS_actual.axis1,3),round(ACS_actual.axis2,3),round(ACS_actual.axis3,3),round(ACS_actual.axis4,3),round(ACS_actual.axis5,3),round(ACS_actual.axis6,3)])
                 if np.allclose(a1,a2, rtol=0.1) == False:
-                    print(np.allclose(a1,a2, rtol=0.1))
+                    # print(np.allclose(a1,a2, rtol=0.1))
                     reply = QMessageBox.warning(self, "警告", "繼續執行會導致手臂非預期運動,你確定要繼續?", QMessageBox.Yes | QMessageBox.No)
                     if reply == QMessageBox.Yes:
                         reply = QMessageBox.critical(self, "Error!", "請勿讓手臂執行任何動作", QMessageBox.Yes | QMessageBox.No,)
@@ -438,6 +443,8 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
                             QMessageBox.about(self, "提示", "請至TPUI重新設定Home點校正")
                     else:
                         QMessageBox.about(self, "提示", "請至TPUI重新設定Home點校正")
+                else:
+                    QMessageBox.about(self, "提示", "手臂當前角度正確, 可正常運行")
         else:
             # TODO： test ros topic echo from nex_control 
             # self.ui.label_rostopic_pub_show.setText("task_cmd:"+ self.task_cmd  +"statusID:" + self.statusID)
@@ -490,7 +497,7 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
         QMessageBox.about(self, "關於...", "......")
 
 if __name__=="__main__":
-    rospy.init_node("control_strategy")
+    rospy.init_node("arm_control_ui")
     app = QtWidgets.QApplication([])
     window = MainWindow()
     window.show()
