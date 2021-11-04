@@ -27,7 +27,7 @@ class nex_control:
         self.task_cmd = 0 # init number
         self.statusID = 0 # init number
         self.nex_api = ModbusNexApi()
-        rospy.loginfo("API setting")
+        # rospy.loginfo("API setting")
         self.Stop_motion_flag = False
         self.Start_motion_flag = False
         self.pub_armstatus = rospy.Publisher("/reply_external_comm",peripheralCmd,queue_size=10)

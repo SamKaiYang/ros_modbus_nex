@@ -143,6 +143,8 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
         self.checkflag = True
         self.ui = Ui_MainWindow()
         self.mission_number = 0
+        self.task_cmd = 0 # init number
+        self.statusID = 0 # init number
         self.ui.setupUi(self)
         self._creat_menubar()
         self.setWindowIcon(QtGui.QIcon('../picture/teco_icon.png'))
@@ -169,9 +171,9 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
         self.point_init() 
         
         # TODO: edit thread for AGV & arm strategy 
-        self.thread_strategy=StrategyThread(4, 100) # not test 
-        self.thread_strategy.callback.connect(self.drawUi)
-        self.thread_strategy.start()
+        # self.thread_strategy=StrategyThread(4, 100) # not test 
+        # self.thread_strategy.callback.connect(self.drawUi)
+        # self.thread_strategy.start()
 
         # Vel. HorizontalSlider
         self.ui.horizontalSlider_vel.valueChanged.connect(self.VelSliderValue)
@@ -314,17 +316,20 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
         start_status = self.start_programs(0)
 
     def onBtn(self, event):
-        self.thread1=MyThread(1, 100)
+        self.topic_callback_init()
+
+        self.thread1=MyThread(1, 100) #cycle 100ms
         self.thread1.callback.connect(self.drawUi)
         self.thread1.start()
         
-        self.thread2=MyThread(2, 100)
+        self.thread2=MyThread(2, 100) #cycle 100ms
         self.thread2.callback.connect(self.drawUi)
         self.thread2.start()
 
-        # self.thread3=MyThread(3, 100)
-        # self.thread3.callback.connect(self.drawUi)
-        # self.thread3.start()
+        self.thread3=MyThread(3, 100)
+        self.thread3.callback.connect(self.drawUi)
+        self.thread3.start()
+        
 
         QMessageBox.about(self, "對話框", "開始讀取手臂資訊")
     def offBtn(self, event):
@@ -447,9 +452,8 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
                     QMessageBox.about(self, "提示", "手臂當前角度正確, 可正常運行")
         else:
             # TODO： test ros topic echo from nex_control 
-            # self.ui.label_rostopic_pub_show.setText("task_cmd:"+ self.task_cmd  +"statusID:" + self.statusID)
-            pass 
-
+            self.ui.label_rostopic_pub_show.setText("task_cmd:"+ str(self.task_cmd)  +"statusID:" + str(self.statusID))
+            
     def vel_setClicked(self):
         """
             set TPUI SMO 1 
@@ -495,6 +499,16 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
         QMessageBox.warning(self, "警告....", QMessageBox.Yes | QMessageBox.No)
         QMessageBox.critical(self, "錯誤...", QMessageBox.Yes | QMessageBox.No,)
         QMessageBox.about(self, "關於...", "......")
+
+    # topic callback initial
+    def topic_callback_init(self):
+        self.pub_armstatus = rospy.Publisher("/reply_external_comm",peripheralCmd,queue_size=10)
+        self.sub_taskcmd = rospy.Subscriber("/write_external_comm",peripheralCmd,self.topic_callback)
+        self.peripheralCmd = peripheralCmd()
+
+    def topic_callback(self,data):
+        self.task_cmd = data.actionTypeID
+        self.statusID = data.statusID
 
 if __name__=="__main__":
     rospy.init_node("arm_control_ui")

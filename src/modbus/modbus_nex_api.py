@@ -52,7 +52,7 @@ class ACS_command():
 
 class ModbusNexApi():
     def __init__(self):
-        self.host = "192.168.0.6" # 192.168.0.6
+        self.host = "192.168.0.7" # 192.168.0.6
         self.port = 502
         self.rate = 50
         self.reset_registers = False
