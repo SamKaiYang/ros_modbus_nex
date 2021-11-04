@@ -37,6 +37,7 @@ class MyThread(QThread):
             index+=1
             self.msleep(self.delay)
 
+# TODO： test strategy combine gui 
 class StrategyThread(QThread, nex_control):
     callback = pyqtSignal(int, int)#自定義訊號, Qt的文件中有說明, 必需為類別變數
     def __init__(self, label, delay, parent=None):
@@ -44,7 +45,7 @@ class StrategyThread(QThread, nex_control):
         self.runFlag = True
         self.label=label
         self.delay=delay
-        
+        self.init() # If the class calls inheritance in addition, init is required, and the non-class itself is initialized
     def __del__(self):
         self.runFlag = False
         self.wait()
@@ -53,7 +54,7 @@ class StrategyThread(QThread, nex_control):
         index=0
         while self.runFlag:
             self.callback.emit(index, self.label)
-            # self.arm_task_sub()
+            self.arm_task_sub() # nex_control mission loop
 
 class PandasModel_pos(QAbstractTableModel):
     header_labels = ['X', 'Y', 'Z', 'A', 'B', 'C']
@@ -138,7 +139,7 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
         super(MainWindow, self).__init__(parent)
         self.vel = 50
         self.acc = 50
-        
+        self.checkflag = True
         self.ui = Ui_MainWindow()
         self.mission_number = 0
         self.ui.setupUi(self)
@@ -166,9 +167,9 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
         self.point_init() 
         
         # TODO: edit thread for AGV & arm strategy 
-        # self.thread1=StrategyThread(1, 100)
-        # self.thread1.callback.connect(self.drawUi)
-        # self.thread1.start()
+        self.thread_strategy=StrategyThread(4, 100) # not test 
+        self.thread_strategy.callback.connect(self.drawUi)
+        self.thread_strategy.start()
 
         # Vel. HorizontalSlider
         self.ui.horizontalSlider_vel.valueChanged.connect(self.VelSliderValue)
@@ -265,7 +266,8 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
 
     def timeGo(self):
         self.timer.start(100)
-        
+        self.showMsg()
+
     def timeStop(self):
         self.timer.stop()
 
@@ -313,15 +315,16 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
         self.thread1=MyThread(1, 100)
         self.thread1.callback.connect(self.drawUi)
         self.thread1.start()
-
+        
         self.thread2=MyThread(2, 100)
         self.thread2.callback.connect(self.drawUi)
         self.thread2.start()
 
-        # self.thread3=MyThread(3, 100)
-        # self.thread3.callback.connect(self.drawUi)
-        # self.thread3.start()
+        self.thread3=MyThread(3, 100)
+        self.thread3.callback.connect(self.drawUi)
+        self.thread3.start()
 
+        QMessageBox.about(self, "對話框", "開始讀取手臂資訊")
     def offBtn(self, event):
         self.stopThread(self.thread1)
         self.stopThread(self.thread2)
@@ -345,8 +348,50 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
         text = self.ui.lineEdit_ip.text()
         self.ui.label_ip.setText("Set IP:"+text)
         self.ui.lineEdit_ip.clear()
-        self.ip_set(text)
-        rospy.loginfo("Setup complete")
+        reply = self.ip_check(text)
+        if reply == True:
+            self.ip_set(text)
+            rospy.loginfo("Setup complete")
+            QMessageBox.about(self, "對話框", "已設定IP, 請確認modbus server是否正常開啟")
+        else:
+            rospy.loginfo("Setup fail")
+            QMessageBox.warning(self, "警告", "IP輸入格式錯誤, 請重新輸入")
+
+    def ip_check(self, ip):
+        sc=ip.strip().split('.') 
+        if len(sc)!= 4: 
+            print( "check ip address failed!")
+            return False
+        for i in range(4):
+            b=len(sc[i])
+            c=sc[i]
+            for j in range(b):
+                if c[j]==" ":
+                    print ("check ip address failed!")
+                    return False
+            j+=1  
+            try:
+                sc[i]=int(sc[i]) 
+            except: 
+                print ("check ip address failed!")
+                return False
+            if sc[i]<=255 & sc[i]>=0:  
+                pass
+            else:
+                print ("check ip address failed!")
+                return False
+            i+=1
+        else: 
+            print ("check ip address success!")
+            return True
+
+        # if len(sys.argv)!=2: 
+        #     print ("Example: %s 10.0.0.1 "%sys.argv[0] )
+        #     return False
+        # else: 
+        #     self.ip_check(sys.argv[1])
+
+        # print(check_ip(a))
 
     def drawUi(self, index, label):
         if label == 1:
@@ -376,9 +421,27 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
             self.model = PandasModel_pos(data)
             self.ui.tableView_pos.setModel(self.model)
             self.ui.tableView_pos.update()
+
+            if self.checkflag == True:
+                self.checkflag == False
+                a1 = np.array([round(ACS_command.axis1,3),round(ACS_command.axis2,3),round(ACS_command.axis3,3),round(ACS_command.axis4,3),round(ACS_command.axis5,3),round(ACS_command.axis6,3)])
+                a2 = np.array([round(ACS_actual.axis1,3),round(ACS_actual.axis2,3),round(ACS_actual.axis3,3),round(ACS_actual.axis4,3),round(ACS_actual.axis5,3),round(ACS_actual.axis6,3)])
+                if np.allclose(a1,a2, rtol=0.1) == False:
+                    print(np.allclose(a1,a2, rtol=0.1))
+                    reply = QMessageBox.warning(self, "警告", "繼續執行會導致手臂非預期運動,你確定要繼續?", QMessageBox.Yes | QMessageBox.No)
+                    if reply == QMessageBox.Yes:
+                        reply = QMessageBox.critical(self, "Error!", "請勿讓手臂執行任何動作", QMessageBox.Yes | QMessageBox.No,)
+                        if reply == QMessageBox.No:
+                            QMessageBox.about(self, "提示", "將強制關閉程式...")
+                            sys.exit(app.exec_())
+                        else:
+                            QMessageBox.about(self, "提示", "請至TPUI重新設定Home點校正")
+                    else:
+                        QMessageBox.about(self, "提示", "請至TPUI重新設定Home點校正")
         else:
+            # TODO： test ros topic echo from nex_control 
             # self.ui.label_rostopic_pub_show.setText("task_cmd:"+ self.task_cmd  +"statusID:" + self.statusID)
-            pass
+            pass 
 
     def vel_setClicked(self):
         """
@@ -410,10 +473,26 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
     def test2Clicked(self):
         self.set_acs_position(0,-90,0,-90,0,0)
 
+    def closeEvent(self, event):
+        reply = QMessageBox.question(self, 'Message', 'You sure to quit?',
+                                    QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if reply == QMessageBox.Yes:
+            event.accept()
+        else:
+            event.ignore()
+            
+    # message show example
+    def showMsg(self):
+        QMessageBox.information(self, '信息...',QMessageBox.Yes | QMessageBox.No,QMessageBox.Yes)
+        QMessageBox.question(self, "提問...", QMessageBox.Yes | QMessageBox.No)
+        QMessageBox.warning(self, "警告....", QMessageBox.Yes | QMessageBox.No)
+        QMessageBox.critical(self, "錯誤...", QMessageBox.Yes | QMessageBox.No,)
+        QMessageBox.about(self, "關於...", "......")
+
 if __name__=="__main__":
     rospy.init_node("control_strategy")
     app = QtWidgets.QApplication([])
     window = MainWindow()
     window.show()
-
     sys.exit(app.exec_())
+    

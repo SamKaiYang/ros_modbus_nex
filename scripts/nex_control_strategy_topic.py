@@ -34,6 +34,15 @@ class nex_control:
         self.sub_taskcmd = rospy.Subscriber("/write_external_comm",peripheralCmd,self.callback)
         self.peripheralCmd = peripheralCmd()
 
+    def init(self):
+        self.task_cmd = 0 # init number
+        self.statusID = 0 # init number
+        self.Stop_motion_flag = False
+        self.Start_motion_flag = False
+        self.pub_armstatus = rospy.Publisher("/reply_external_comm",peripheralCmd,queue_size=10)
+        self.sub_taskcmd = rospy.Subscriber("/write_external_comm",peripheralCmd,self.callback)
+        self.peripheralCmd = peripheralCmd()
+
     def callback(self,data):
         self.task_cmd = data.actionTypeID
         self.statusID = data.statusID
@@ -54,7 +63,7 @@ class nex_control:
         while not rospy.is_shutdown():
             if self.nex_api.is_task_init() == True:
                 rospy.loginfo("reload_all_programs finished")
-                break #
+                break
 
     def publish_status_running(self):
         self.pub_armstatus.publish(99, 99)# hex 63, 63
@@ -90,7 +99,7 @@ class nex_control:
                                 else:
                                     # task is running
                                     self.publish_status_running()
-                                    # TODO: add If arm error or stop 
+                                    # TODO: add if arm error or stop 
                                     if self.nex_api.task_state(0) == "Task exit": #if Task exit
                                         self.Stop_motion_flag = True
                                         # task is exit
@@ -180,7 +189,7 @@ class nex_control:
                                 else:
                                     # task is running
                                     self.publish_status_running()
-                                    # TODO: add If arm error or stop 
+                                    # TODO: add if arm error or stop 
                                     if self.nex_api.task_state(0) == "Task exit": #if Task exit
                                         self.Stop_motion_flag = True
                                         # task is exit
@@ -225,7 +234,7 @@ class nex_control:
                                 else:
                                     # task is running
                                     self.publish_status_running()
-                                    # TODO: add If arm error or stop 
+                                    # TODO: add if arm error or stop 
                                     if self.nex_api.task_state(0) == "Task exit": #if Task exit
                                         self.Stop_motion_flag = True
                                         # task is exit
