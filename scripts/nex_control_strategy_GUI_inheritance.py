@@ -36,27 +36,6 @@ class MyThread(QThread):
             # TODO：移除index
             index+=1
             self.msleep(self.delay)
-
-# TODO： test strategy combine gui 
-class StrategyThread(QThread, nex_control):
-    callback = pyqtSignal(int, int)#自定義訊號, Qt的文件中有說明, 必需為類別變數
-    def __init__(self, label, delay, parent=None):
-        super(StrategyThread, self).__init__(parent)
-        self.runFlag = True
-        self.label=label
-        self.delay=delay
-        self.init() # If the class calls inheritance in addition, init is required, and the non-class itself is initialized
-    def __del__(self):
-        self.runFlag = False
-        self.wait()
-
-    def run(self):
-        index=0
-        while self.runFlag:
-            self.callback.emit(index, self.label)
-            self.arm_task_sub() # nex_control mission loop
-            self.msleep(self.delay)
-
 class PandasModel_pos(QAbstractTableModel):
     header_labels = ['X', 'Y', 'Z', 'A', 'B', 'C']
     vertical_labels = ['Command', 'Actual','Unit']
@@ -169,12 +148,6 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
         self.ip_init()
         # arm position class define
         self.point_init() 
-        
-        # TODO: edit thread for AGV & arm strategy 
-        # self.thread_strategy=StrategyThread(4, 100) # not test 
-        # self.thread_strategy.callback.connect(self.drawUi)
-        # self.thread_strategy.start()
-
         # Vel. HorizontalSlider
         self.ui.horizontalSlider_vel.valueChanged.connect(self.VelSliderValue)
         # Acc. HorizontalSlider
@@ -202,7 +175,6 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
         self.movie = QtGui.QMovie("src/modbus/modbus/picture/earth.gif")
         self.ui.label_arm_gif.setMovie(self.movie)
         self.movie.start()
-        # TODO:table view
         # table_view init
         data_pos = np.array([
             [0, 0, 0, 0, 0, 0],
@@ -391,14 +363,6 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
         else: 
             print ("check ip address success!")
             return True
-
-        # if len(sys.argv)!=2: 
-        #     print ("Example: %s 10.0.0.1 "%sys.argv[0] )
-        #     return False
-        # else: 
-        #     self.ip_check(sys.argv[1])
-
-        # print(check_ip(a))
 
     def drawUi(self, index, label):
         if label == 1:
