@@ -113,7 +113,82 @@ class PandasModel_joint(QAbstractTableModel):
 
     def flags(self, index):
         return Qt.ItemIsSelectable | Qt.ItemIsEnabled | Qt.ItemIsEditable
+class PandasModel_pub(QAbstractTableModel):
+    header_labels = ['task_cmd', 'statusID']
+    # vertical_labels = ['data', 'data','data']
+    def __init__(self, data, parent=None):
+        super(PandasModel_pub,self).__init__(parent)
+        self._data = data
 
+    def headerData(self, section, orientation, role=Qt.DisplayRole):
+        if role == Qt.DisplayRole and orientation == Qt.Horizontal:
+            return self.header_labels[section]
+        # if role == Qt.DisplayRole and orientation == Qt.Vertical:
+        #     return self.vertical_labels[section]
+        return QAbstractTableModel.headerData(self, section, orientation, role)
+
+    def rowCount(self, index):
+        return self._data.shape[0]
+
+    def columnCount(self, index):
+        return self._data.shape[1]
+
+    def data(self, index, role=Qt.DisplayRole):
+        if index.isValid():
+            if role == Qt.DisplayRole or role == Qt.EditRole:
+                value = self._data[index.row(), index.column()]
+                return str(value)
+
+    def setData(self, index, value, role):
+        if role == Qt.EditRole:
+            try:
+                value = int(value)
+            except ValueError:
+                return False
+            self._data[index.row(), index.column()] = value
+            return True
+        return False
+
+    def flags(self, index):
+        return Qt.ItemIsSelectable | Qt.ItemIsEnabled | Qt.ItemIsEditable
+class PandasModel_echo(QAbstractTableModel):
+    header_labels = ['task_cmd', 'statusID']
+    # vertical_labels = ['data', 'data','data']
+    def __init__(self, data, parent=None):
+        super(PandasModel_echo,self).__init__(parent)
+        self._data = data
+
+    def headerData(self, section, orientation, role=Qt.DisplayRole):
+        if role == Qt.DisplayRole and orientation == Qt.Horizontal:
+            return self.header_labels[section]
+        # if role == Qt.DisplayRole and orientation == Qt.Vertical:
+        #     return self.vertical_labels[section]
+        return QAbstractTableModel.headerData(self, section, orientation, role)
+
+    def rowCount(self, index):
+        return self._data.shape[0]
+
+    def columnCount(self, index):
+        return self._data.shape[1]
+
+    def data(self, index, role=Qt.DisplayRole):
+        if index.isValid():
+            if role == Qt.DisplayRole or role == Qt.EditRole:
+                value = self._data[index.row(), index.column()]
+                return str(value)
+
+    def setData(self, index, value, role):
+        if role == Qt.EditRole:
+            try:
+                value = int(value)
+            except ValueError:
+                return False
+            self._data[index.row(), index.column()] = value
+            return True
+        return False
+
+    def flags(self, index):
+        return Qt.ItemIsSelectable | Qt.ItemIsEnabled | Qt.ItemIsEditable
 class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
@@ -124,6 +199,11 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
         self.mission_number = 0
         self.task_cmd = 0 # init number
         self.statusID = 0 # init number
+        self.task_cmd_reply = 0
+        self.statusID_reply = 0
+        # test 
+        self.i = 0
+        self.j = 0
         self.ui.setupUi(self)
         self._creat_menubar()
         self.setWindowIcon(QtGui.QIcon('../picture/teco_icon.png'))
@@ -141,8 +221,10 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
         self.ui.btn_acc_set.clicked.connect(self.acc_setClicked)
         self.ui.btn_ip_set.clicked.connect(self.ip_setClicked)
         self.ui.btn_project_name_select.clicked.connect(self.project_name_setClicked)
+        # test button 
         self.ui.btn_test.clicked.connect(self.testClicked)
         self.ui.btn_test2.clicked.connect(self.test2Clicked)
+        self.ui.btn_test_pub.clicked.connect(self.testpubClicked)
 
         # modbus connect server ip init
         self.ip_init()
@@ -186,10 +268,20 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
             [0, 0, 0, 0, 0, 0],
             ["Deg","Deg","Deg","Deg","Deg","Deg"]
         ])
+        self.data_pub = np.array([
+            [0, 0]
+        ])
+        self.data_echo = np.array([
+            [0, 0]
+        ])
         self.model = PandasModel_pos(data_pos)
         self.ui.tableView_pos.setModel(self.model)
         self.model = PandasModel_joint(data_joint)
         self.ui.tableView_joint.setModel(self.model)
+        self.model = PandasModel_pub(self.data_pub)
+        self.ui.tableView_pub.setModel(self.model)
+        self.model = PandasModel_echo(self.data_echo)
+        self.ui.tableView_echo.setModel(self.model)
 
     def initUi(self):
         self.status = self.statusBar()
@@ -417,6 +509,17 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
         else:
             # TODO： test ros topic echo from nex_control 
             self.ui.label_rostopic_pub_show.setText("task_cmd:"+ str(self.task_cmd)  +"statusID:" + str(self.statusID))
+            self.ui.label_rostopic_echo_show.setText("task_cmd:"+ str(self.task_cmd_reply)  +"statusID:" + str(self.statusID_reply))
+            # add tableview function for rostopic result show
+            self.data_pub = np.insert(self.data_pub,0,values=[[self.task_cmd,self.statusID]],axis=0)
+            self.model = PandasModel_pub(self.data_pub)
+            self.ui.tableView_pub.setModel(self.model)
+            self.ui.tableView_pub.update()
+
+            self.data_echo = np.insert(self.data_echo,0,values=[[self.task_cmd_reply,self.statusID_reply]],axis=0)
+            self.model = PandasModel_echo(self.data_echo)
+            self.ui.tableView_echo.setModel(self.model)
+            self.ui.tableView_echo.update()
             
     def vel_setClicked(self):
         """
@@ -443,10 +546,23 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
     def project_name_setClicked(self):
         self.read_project_name()
 
+    # test button sent pcs position
     def testClicked(self):
         self.set_pcs_position(0,-162.5,818.1,-180,0,-90)
+    # test button sent acs position
     def test2Clicked(self):
         self.set_acs_position(0,-90,0,-90,0,0)
+    # TODO: test  pub list show update test
+    # test pub list show
+    def testpubClicked(self):
+        # self.data_pub = np.append(self.data_pub,[[1,2]],0)
+        self.i = self.i + 1
+        self.j = self.j + 1
+        self.data_pub = np.insert(self.data_pub,0,values=[[self.i,self.j]],axis=0)
+        self.model = PandasModel_pub(self.data_pub)
+        self.ui.tableView_pub.setModel(self.model)
+        # self.ui.tableView_pub.model().layoutChanged.emit()
+        self.ui.tableView_pub.update()
 
     def closeEvent(self, event):
         reply = QMessageBox.question(self, 'Message', 'You sure to quit?',
@@ -466,13 +582,17 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
 
     # topic callback initial
     def topic_callback_init(self):
-        self.pub_armstatus = rospy.Publisher("/reply_external_comm",peripheralCmd,queue_size=10)
-        self.sub_taskcmd = rospy.Subscriber("/write_external_comm",peripheralCmd,self.topic_callback)
+        self.pub_armstatus = rospy.Subscriber("/reply_external_comm",peripheralCmd,self.topic_reply_callback)
+        self.sub_taskcmd = rospy.Subscriber("/write_external_comm",peripheralCmd,self.topic_write_callback)
         self.peripheralCmd = peripheralCmd()
 
-    def topic_callback(self,data):
+    def topic_write_callback(self,data):
         self.task_cmd = data.actionTypeID
         self.statusID = data.statusID
+
+    def topic_reply_callback(self,data):
+        self.task_cmd_reply = data.actionTypeID
+        self.statusID_reply = data.statusID
 
 if __name__=="__main__":
     rospy.init_node("arm_control_ui")

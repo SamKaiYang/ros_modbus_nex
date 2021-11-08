@@ -61,7 +61,7 @@ class ModbusNexApi():
         self.modclient.setWritingRegisters(ADDRESS_WRITE_START,WRITE_NUM_REGISTERS)
         # self.modclient.setReadingRegisters(ADDRESS_READ_START,READ_NUM_REGISTERS)
         self.modclient.setReadingInputRegisters(ADDRESS_READ_INPUT_START,READ_INPUT_NUM_REGISTERS)
-        rospy.loginfo("Setup complete")
+        # rospy.loginfo("Setup complete")
 
     def ip_init(self):
         self.host = "192.168.0.6" # 192.168.0.6

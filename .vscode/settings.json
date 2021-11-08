@@ -12,10 +12,18 @@
         "/opt/installer/open_cv/cv_bridge/lib/python3/dist-packages"
     ],
     "cSpell.words": [
+        "creat",
+        "msleep",
         "NRPL",
         "pymodbus",
+        "pyqt",
+        "qthread",
         "rospy",
+        "rostopic",
+        "rtol",
         "Specfied",
+        "taskcmd",
+        "teco",
         "TPUI"
     ]
 }

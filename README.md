@@ -23,7 +23,7 @@ rosrun modbus nex_control_strategy_topic.py
 ```bash
 rostopic pub /write_external_comm modbus/peripheralCmd "actionTypeID: 1"
 ```
-2. Command 2 : Start rotation_task <br>
+2. Command 2 : Start init task <br>
 ```bash
 rostopic pub /write_external_comm modbus/peripheralCmd "actionTypeID: 2"
 ```
