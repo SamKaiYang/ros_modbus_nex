@@ -5,7 +5,7 @@ import threading
 import time
 import numpy as np
 from modbus.modbus_nex_api import ModbusNexApi 
-from modbus.msg import peripheralCmd, ipconfig
+from modbus.msg import peripheralCmd, ipconfig, closenode
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
@@ -202,6 +202,7 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
         self.task_cmd_reply = 0
         self.statusID_reply = 0
         self.pub_ipset = rospy.Publisher("/ip_comm",ipconfig,queue_size=10)
+        self.pub_closenode = rospy.Publisher("/close_node",closenode,queue_size=10)
         # test 
         self.i = 0
         self.j = 0
@@ -225,7 +226,7 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
         # test button 
         self.ui.btn_test.clicked.connect(self.testClicked)
         self.ui.btn_test2.clicked.connect(self.test2Clicked)
-        self.ui.btn_test_pub.clicked.connect(self.testpubClicked)
+        # self.ui.btn_test_pub.clicked.connect(self.testpubClicked)
 
         # modbus connect server ip init
         self.ip_init()
@@ -509,8 +510,8 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
                 else:
                     QMessageBox.about(self, "提示", "手臂當前角度正確, 可正常運行")
         else:
-            self.ui.label_rostopic_pub_show.setText("task_cmd:"+ str(self.task_cmd)  +"statusID:" + str(self.statusID))
-            self.ui.label_rostopic_echo_show.setText("task_cmd:"+ str(self.task_cmd_reply)  +"statusID:" + str(self.statusID_reply))
+            # self.ui.label_rostopic_pub_show.setText("task_cmd:"+ str(self.task_cmd)  +"statusID:" + str(self.statusID))
+            # self.ui.label_rostopic_echo_show.setText("task_cmd:"+ str(self.task_cmd_reply)  +"statusID:" + str(self.statusID_reply))
             # add tableview function for rostopic result show
             self.data_pub = np.insert(self.data_pub,0,values=[[self.task_cmd,self.statusID]],axis=0)
             self.model = PandasModel_pub(self.data_pub)
@@ -554,23 +555,27 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
     def test2Clicked(self):
         self.set_acs_position(0,-90,0,-90,0,0)
     # test pub list show
-    def testpubClicked(self):
-        # self.data_pub = np.append(self.data_pub,[[1,2]],0)
-        self.i = self.i + 1
-        self.j = self.j + 1
-        self.data_pub = np.insert(self.data_pub,0,values=[[self.i,self.j]],axis=0)
-        self.model = PandasModel_pub(self.data_pub)
-        self.ui.tableView_pub.setModel(self.model)
-        self.ui.tableView_pub.update()
+    # def testpubClicked(self):
+    #     # self.data_pub = np.append(self.data_pub,[[1,2]],0)
+    #     self.i = self.i + 1
+    #     self.j = self.j + 1
+    #     self.data_pub = np.insert(self.data_pub,0,values=[[self.i,self.j]],axis=0)
+    #     self.model = PandasModel_pub(self.data_pub)
+    #     self.ui.tableView_pub.setModel(self.model)
+    #     self.ui.tableView_pub.update()
 
     def closeEvent(self, event):
         reply = QMessageBox.question(self, 'Message', 'You sure to quit?',
                                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.Yes:
+            reason = "You sure to quit"
+            self.pub_closenode.publish(1)
+            rospy.signal_shutdown(reason)
             event.accept()
+            
+            
         else:
             event.ignore()
-            
     # message show example
     def showMsg(self):
         QMessageBox.information(self, '信息...',QMessageBox.Yes | QMessageBox.No,QMessageBox.Yes)

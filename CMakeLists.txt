@@ -52,6 +52,7 @@ add_message_files(
   FILES
   peripheralCmd.msg
   ipconfig.msg
+  closenode.msg
 #   Message2.msg
 )
 

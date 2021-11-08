@@ -2,7 +2,7 @@
 # -*-coding:utf-8 -*-
 import rospy
 from modbus.modbus_nex_api import ModbusNexApi 
-from modbus.msg import peripheralCmd, ipconfig
+from modbus.msg import peripheralCmd, ipconfig, closenode
 
 class switch(object):
     def __init__(self, value):
@@ -28,11 +28,13 @@ class Nex_control(ModbusNexApi):
     def init(self):
         self.task_cmd = 0 # init number
         self.statusID = 0 # init number
+        self.close_node = 0
         self.Stop_motion_flag = False
         self.Start_motion_flag = False
         self.pub_armstatus = rospy.Publisher("/reply_external_comm",peripheralCmd,queue_size=10)
         self.sub_taskcmd = rospy.Subscriber("/write_external_comm",peripheralCmd,self.callback)
         self.sub_ipset = rospy.Subscriber("/ip_comm",ipconfig,self.ip_callback)
+        self.sub_close_node = rospy.Subscriber("/close_node",closenode,self.close_node_callback)
         self.peripheralCmd = peripheralCmd()
         self.ipconfig = ipconfig()
 
@@ -45,6 +47,13 @@ class Nex_control(ModbusNexApi):
     def ip_callback(self,data):
         self.ip_set(data.ip)
         rospy.loginfo("strategy ip set finished")
+
+    def close_node_callback(self, data):
+        self.close_node = data.signal
+        if self.close_node == 1:
+            reason = "You sure to quit"
+            rospy.signal_shutdown(reason)
+        rospy.loginfo("strategy close")
 
     def stop_arm_reset(self):
         self.stop_programs()
