@@ -1,7 +1,8 @@
 #!/usr/bin/env python
+# -*-coding:utf-8 -*-
 import rospy
 from modbus.modbus_nex_api import ModbusNexApi 
-from modbus.msg import peripheralCmd
+from modbus.msg import peripheralCmd, ipconfig
 
 class switch(object):
     def __init__(self, value):
@@ -22,19 +23,8 @@ class switch(object):
             return True
         else:
             return False
-class nex_control(ModbusNexApi):
-    def __init__(self, parent=None):
-        super(nex_control, self).__init__(parent)
-        self.task_cmd = 0 # init number
-        self.statusID = 0 # init number
-        # self. = ModbusNexApi()
-        # rospy.loginfo("API setting")
-        self.Stop_motion_flag = False
-        self.Start_motion_flag = False
-        self.pub_armstatus = rospy.Publisher("/reply_external_comm",peripheralCmd,queue_size=10)
-        self.sub_taskcmd = rospy.Subscriber("/write_external_comm",peripheralCmd,self.callback)
-        self.peripheralCmd = peripheralCmd()
 
+class Nex_control(ModbusNexApi):
     def init(self):
         self.task_cmd = 0 # init number
         self.statusID = 0 # init number
@@ -42,13 +32,19 @@ class nex_control(ModbusNexApi):
         self.Start_motion_flag = False
         self.pub_armstatus = rospy.Publisher("/reply_external_comm",peripheralCmd,queue_size=10)
         self.sub_taskcmd = rospy.Subscriber("/write_external_comm",peripheralCmd,self.callback)
+        self.sub_ipset = rospy.Subscriber("/ip_comm",ipconfig,self.ip_callback)
         self.peripheralCmd = peripheralCmd()
+        self.ipconfig = ipconfig()
 
     def callback(self,data):
         self.task_cmd = data.actionTypeID
         self.statusID = data.statusID
         rospy.loginfo("I heard actionTypeID is %s", data.actionTypeID)
         rospy.loginfo("I heard statusID is %s", data.statusID)
+
+    def ip_callback(self,data):
+        self.ip_set(data.ip)
+        rospy.loginfo("strategy ip set finished")
 
     def stop_arm_reset(self):
         self.stop_programs()
@@ -60,7 +56,6 @@ class nex_control(ModbusNexApi):
         self.reload_all_programs() 
         self.stop_programs() # reset before starting cmd
 
-        # TODO: this is not test 
         while not rospy.is_shutdown():
             if self.is_task_init() == True:
                 rospy.loginfo("reload_all_programs finished")
@@ -100,7 +95,6 @@ class nex_control(ModbusNexApi):
                                 else:
                                     # task is running
                                     self.publish_status_running()
-                                    # TODO: add if arm error or stop 
                                     if self.task_state(0) == "Task exit": #if Task exit
                                         self.Stop_motion_flag = True
                                         # task is exit
@@ -145,7 +139,6 @@ class nex_control(ModbusNexApi):
                                 else:
                                     # task is running
                                     self.publish_status_running()
-                                    # TODO: add If arm error or stop 
                                     if self.task_state(0) == "Task exit": #if Task exit
                                         self.Stop_motion_flag = True
                                         # task is exit
@@ -190,7 +183,6 @@ class nex_control(ModbusNexApi):
                                 else:
                                     # task is running
                                     self.publish_status_running()
-                                    # TODO: add if arm error or stop 
                                     if self.task_state(0) == "Task exit": #if Task exit
                                         self.Stop_motion_flag = True
                                         # task is exit
@@ -235,7 +227,6 @@ class nex_control(ModbusNexApi):
                                 else:
                                     # task is running
                                     self.publish_status_running()
-                                    # TODO: add if arm error or stop 
                                     if self.task_state(0) == "Task exit": #if Task exit
                                         self.Stop_motion_flag = True
                                         # task is exit
@@ -255,7 +246,6 @@ class nex_control(ModbusNexApi):
             rospy.loginfo("Please switch to external control mode")
 
     def arm_task_sub(self):
-        # TODO: switch function test 
         for case in switch(self.task_cmd):
             # start simple task_programs
             if case(1):
@@ -299,7 +289,8 @@ class nex_control(ModbusNexApi):
 
 if __name__=="__main__":
     rospy.init_node("control_strategy")
-    nex = nex_control()
-
+    nex = Nex_control()
+    nex.init()
     while not rospy.is_shutdown():
         nex.arm_task_sub()
+        pass

@@ -5,7 +5,7 @@ import threading
 import time
 import numpy as np
 from modbus.modbus_nex_api import ModbusNexApi 
-from modbus.msg import peripheralCmd
+from modbus.msg import peripheralCmd, ipconfig
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
@@ -189,7 +189,7 @@ class PandasModel_echo(QAbstractTableModel):
 
     def flags(self, index):
         return Qt.ItemIsSelectable | Qt.ItemIsEnabled | Qt.ItemIsEditable
-class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
+class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
         self.vel = 50
@@ -201,6 +201,7 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
         self.statusID = 0 # init number
         self.task_cmd_reply = 0
         self.statusID_reply = 0
+        self.pub_ipset = rospy.Publisher("/ip_comm",ipconfig,queue_size=10)
         # test 
         self.i = 0
         self.j = 0
@@ -422,7 +423,8 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
         reply = self.ip_check(text)
         if reply == True:
             self.ip_set(text)
-            rospy.loginfo("Setup complete")
+            self.pub_ipset.publish(text)
+            rospy.loginfo("IP reset complete")
             QMessageBox.about(self, "對話框", "已設定IP, 請確認modbus server是否正常開啟")
         else:
             rospy.loginfo("Setup fail")
@@ -507,7 +509,6 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
                 else:
                     QMessageBox.about(self, "提示", "手臂當前角度正確, 可正常運行")
         else:
-            # TODO： test ros topic echo from nex_control 
             self.ui.label_rostopic_pub_show.setText("task_cmd:"+ str(self.task_cmd)  +"statusID:" + str(self.statusID))
             self.ui.label_rostopic_echo_show.setText("task_cmd:"+ str(self.task_cmd_reply)  +"statusID:" + str(self.statusID_reply))
             # add tableview function for rostopic result show
@@ -520,7 +521,7 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
             self.model = PandasModel_echo(self.data_echo)
             self.ui.tableView_echo.setModel(self.model)
             self.ui.tableView_echo.update()
-            
+
     def vel_setClicked(self):
         """
             set TPUI SMO 1 
@@ -552,7 +553,6 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
     # test button sent acs position
     def test2Clicked(self):
         self.set_acs_position(0,-90,0,-90,0,0)
-    # TODO: test  pub list show update test
     # test pub list show
     def testpubClicked(self):
         # self.data_pub = np.append(self.data_pub,[[1,2]],0)
@@ -561,7 +561,6 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi, nex_control):
         self.data_pub = np.insert(self.data_pub,0,values=[[self.i,self.j]],axis=0)
         self.model = PandasModel_pub(self.data_pub)
         self.ui.tableView_pub.setModel(self.model)
-        # self.ui.tableView_pub.model().layoutChanged.emit()
         self.ui.tableView_pub.update()
 
     def closeEvent(self, event):
