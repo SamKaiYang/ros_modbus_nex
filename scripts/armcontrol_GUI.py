@@ -553,7 +553,7 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
         self.set_pcs_position(0,-162.5,818.1,-180,0,-90)
     # test button sent acs position
     def test2Clicked(self):
-        self.set_acs_position(0,-90,0,-90,0,0)
+        self.set_acs_position(5,-90,-5,-95,10,-10)
     # test pub list show
     # def testpubClicked(self):
     #     # self.data_pub = np.append(self.data_pub,[[1,2]],0)
