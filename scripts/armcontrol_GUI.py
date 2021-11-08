@@ -11,7 +11,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from main_ui import Ui_MainWindow
-from nex_control_strategy_topic import nex_control, switch
+from armcontrol_strategy import Nex_control, switch
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -572,8 +572,6 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
             self.pub_closenode.publish(1)
             rospy.signal_shutdown(reason)
             event.accept()
-            
-            
         else:
             event.ignore()
     # message show example
