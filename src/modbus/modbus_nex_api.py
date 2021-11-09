@@ -668,9 +668,9 @@ class ModbusNexApi(object):
         count = 32 #Read 32 16bit registers
         result = self.modclient.read_input_Registers(8208,count)
         for i in range(count):
-            result.registers[i] = struct.unpack("<H", struct.pack(">H", result.registers[i]))[0]
+            result[i] = struct.unpack("<H", struct.pack(">H", result[i]))[0]
 
-        decoder = BinaryPayloadDecoder.fromRegisters(result.registers)
-        project_name = decoder.decode_string(64)#Since string is 64 characters long
+        decoder = BinaryPayloadDecoder.fromRegisters(result)
+        project_name = decoder.decode_string(31)#Since string is 64 characters long
         print("project name: %s" % project_name)
         return project_name
