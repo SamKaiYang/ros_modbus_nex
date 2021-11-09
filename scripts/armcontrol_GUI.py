@@ -388,20 +388,20 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
         self.thread1.callback.connect(self.drawUi)
         self.thread1.start()
         
-        self.thread2=MyThread(2, 100) #cycle 100ms
-        self.thread2.callback.connect(self.drawUi)
-        self.thread2.start()
+        # self.thread2=MyThread(2, 100) #cycle 100ms
+        # self.thread2.callback.connect(self.drawUi)
+        # self.thread2.start()
 
-        self.thread3=MyThread(3, 100)
-        self.thread3.callback.connect(self.drawUi)
-        self.thread3.start()
+        # self.thread3=MyThread(3, 100)
+        # self.thread3.callback.connect(self.drawUi)
+        # self.thread3.start()
         self.startthreadflag = True
 
         QMessageBox.about(self, "對話框", "開始讀取手臂資訊")
     def offBtn(self, event):
         if self.startthreadflag == True:
             self.stopThread(self.thread1)
-            self.stopThread(self.thread2)
+            # self.stopThread(self.thread2)
         else:
             pass
 
@@ -469,7 +469,7 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
             self.reloadNum.setText("Reload: "+str(self.is_task_init()))
             if self.safety_state() == "Error":
                 self.safetyNum.setStyleSheet("background-color:red;font-size: 18px;border-radius: 25px;border: 1px solid black;")
-        elif label == 2:
+        # elif label == 2:
             ACS_actual = self.read_ACS_actual_position()
             ACS_command = self.read_ACS_command_position()
             PCS_actual = self.read_PCS_actual_position()
@@ -511,7 +511,7 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
                         QMessageBox.about(self, "提示", "請至TPUI重新設定Home點校正")
                 else:
                     QMessageBox.about(self, "提示", "手臂當前角度正確, 可正常運行")
-        else:
+        # else:
             self.data_pub = np.insert(self.data_pub,0,values=[[self.task_cmd,self.statusID]],axis=0)
             self.model = PandasModel_pub(self.data_pub)
             self.ui.tableView_pub.setModel(self.model)

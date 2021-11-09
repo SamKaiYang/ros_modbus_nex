@@ -101,7 +101,9 @@ catkin_package(
 ## Your package locations should be listed before other locations
 # include_directories(include)
 include_directories(
+  #include
   ${catkin_INCLUDE_DIRS}
+  #${PYTHON_INCLUDE_DIRS}
 )
 
 ## Declare a cpp library
@@ -168,3 +170,12 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+
+# add_executable(strategy src/armcontrol_strategy.c)
+# target_link_libraries(strategy ${catkin_LIBRARIES})
+# add_dependencies(strategy modbus_generate_messages_cpp)
+
+# add_executable(armcontro src/armcontrol_GUI.c)
+# target_link_libraries(armcontro ${catkin_LIBRARIES})
+# add_dependencies(armcontro modbus_generate_messages_cpp)
+
