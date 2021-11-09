@@ -8,6 +8,7 @@ from pymodbus.compat import iteritems
 from collections import OrderedDict
 from std_msgs.msg import Int32MultiArray as HoldingRegister
 import time
+import struct
 
 WRITE_NUM_REGISTERS = 36
 READ_INPUT_NUM_REGISTERS = 272
@@ -151,7 +152,6 @@ class ModbusNexApi(object):
             rospy.loginfo("CAN'T START")
             return False
 
-    # TODO: when start programs is set, this function is only available
     def stop_programs(self):
         """
             Stopped running programs (falling edge)
@@ -185,7 +185,6 @@ class ModbusNexApi(object):
         rospy.sleep(0.2)
         rospy.loginfo("ENABLE")
 
-    # TODO: when programs is stop or not use, this function is only available
     def disable_robot(self):
         """
             Disable robot (falling edge)
@@ -239,6 +238,7 @@ class ModbusNexApi(object):
         """
         project_name_str = name_str + "\0"
         builder = BinaryPayloadBuilder()
+        # builder = BinaryPayloadBuilder(byteorder= Endian.Big, wordorder=Endian.Little)
         builder.add_string(project_name_str)
         payload = builder.to_registers()
         payload = builder.build()
@@ -543,12 +543,7 @@ class ModbusNexApi(object):
             return True
         else:
             return False
-#  self.pcs_actual = PCS_actual()
-#         self.pcs_command = PCS_command()
-#         self.acs_actual = ACS_actual()
-#         self.acs_command = ACS_command()
 
-    # TODO: add read input register pcs & angle
     def read_PCS_actual_position(self):
         """
             read_PCS_actual_position (double)
@@ -670,8 +665,12 @@ class ModbusNexApi(object):
         """
             Maximum 64 char, C-String, include null terminating char.
         """
-        result = self.modclient.read_input_Registers(8208,32)
-        decoder = BinaryPayloadDecoder.fromRegisters(result, byteorder= Endian.Big, wordorder=Endian.Little)
-        project_name = decoder.decode_string(32)
+        count = 32 #Read 32 16bit registers
+        result = self.modclient.read_input_Registers(8208,count)
+        for i in range(count):
+            result.registers[i] = struct.unpack("<H", struct.pack(">H", result.registers[i]))[0]
+
+        decoder = BinaryPayloadDecoder.fromRegisters(result.registers)
+        project_name = decoder.decode_string(64)#Since string is 64 characters long
         print("project name: %s" % project_name)
         return project_name

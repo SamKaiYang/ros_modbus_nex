@@ -10,7 +10,7 @@ from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
-from main_ui import Ui_MainWindow
+from Ui_main import Ui_MainWindow
 from armcontrol_strategy import Nex_control, switch
 import sys
 reload(sys)
@@ -203,13 +203,10 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
         self.statusID_reply = 0
         self.pub_ipset = rospy.Publisher("/ip_comm",ipconfig,queue_size=10)
         self.pub_closenode = rospy.Publisher("/close_node",closenode,queue_size=10)
-        # test 
-        self.i = 0
-        self.j = 0
+        self.startthreadflag = False
         self.ui.setupUi(self)
         self._creat_menubar()
         self.setWindowIcon(QtGui.QIcon('../picture/teco_icon.png'))
-        # self.setWindowIcon(QtGui.QIcon('/picture/teco_icon.png'))
         self.ui.lineEdit_vel.setText(str(self.vel))
         self.ui.lineEdit_acc.setText(str(self.acc))
         self.ui.btn_reset.clicked.connect(self.reset_buttonClicked)
@@ -219,14 +216,15 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
         self.ui.onBtn.clicked.connect(self.onBtn)
         self.ui.offBtn.clicked.connect(self.offBtn)
         self.ui.btn_start_program.clicked.connect(self.start_buttonClicked)
+        self.ui.btn_stop_program.clicked.connect(self.stop_buttonClicked)
         self.ui.btn_vel_set.clicked.connect(self.vel_setClicked)
         self.ui.btn_acc_set.clicked.connect(self.acc_setClicked)
         self.ui.btn_ip_set.clicked.connect(self.ip_setClicked)
         self.ui.btn_project_name_select.clicked.connect(self.project_name_setClicked)
+        self.ui.btn_project_name_read.clicked.connect(self.project_name_readClicked)
         # test button 
-        self.ui.btn_test.clicked.connect(self.testClicked)
-        self.ui.btn_test2.clicked.connect(self.test2Clicked)
-        # self.ui.btn_test_pub.clicked.connect(self.testpubClicked)
+        # self.ui.btn_test.clicked.connect(self.testClicked)
+        # self.ui.btn_test2.clicked.connect(self.test2Clicked)
 
         # modbus connect server ip init
         self.ip_init()
@@ -294,7 +292,6 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
         self.reloadNum = QtWidgets.QLabel("Reload:")
 
         self.safetyNum.setFixedWidth(200)
-        # self.safetyNum.setStyleSheet("background-color:red;font-size: 18px;border-radius: 25px;border: 1px solid black;")
         self.safetyNum.setStyleSheet("font-size: 18px;border-radius: 25px;border: 1px solid black;")
         self.taskNum.setFixedWidth(200)
         self.taskNum.setStyleSheet("font-size: 18px;border-radius: 25px;border: 1px solid black;")
@@ -381,6 +378,9 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
         self.modclient.setOutput(register,value,0)
         start_status = self.start_programs(0)
 
+    def stop_buttonClicked(self):
+        self.stop_programs()
+
     def onBtn(self, event):
         self.topic_callback_init()
 
@@ -395,12 +395,15 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
         self.thread3=MyThread(3, 100)
         self.thread3.callback.connect(self.drawUi)
         self.thread3.start()
-        
+        self.startthreadflag = True
 
         QMessageBox.about(self, "對話框", "開始讀取手臂資訊")
     def offBtn(self, event):
-        self.stopThread(self.thread1)
-        self.stopThread(self.thread2)
+        if self.startthreadflag == True:
+            self.stopThread(self.thread1)
+            self.stopThread(self.thread2)
+        else:
+            pass
 
     def stopThread(self, name_or_qthread):
         """
@@ -496,7 +499,6 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
                 a1 = np.array([round(ACS_command.axis1,3),round(ACS_command.axis2,3),round(ACS_command.axis3,3),round(ACS_command.axis4,3),round(ACS_command.axis5,3),round(ACS_command.axis6,3)])
                 a2 = np.array([round(ACS_actual.axis1,3),round(ACS_actual.axis2,3),round(ACS_actual.axis3,3),round(ACS_actual.axis4,3),round(ACS_actual.axis5,3),round(ACS_actual.axis6,3)])
                 if np.allclose(a1,a2, rtol=0.1) == False:
-                    # print(np.allclose(a1,a2, rtol=0.1))
                     reply = QMessageBox.warning(self, "警告", "繼續執行會導致手臂非預期運動,你確定要繼續?", QMessageBox.Yes | QMessageBox.No)
                     if reply == QMessageBox.Yes:
                         reply = QMessageBox.critical(self, "Error!", "請勿讓手臂執行任何動作", QMessageBox.Yes | QMessageBox.No,)
@@ -510,9 +512,6 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
                 else:
                     QMessageBox.about(self, "提示", "手臂當前角度正確, 可正常運行")
         else:
-            # self.ui.label_rostopic_pub_show.setText("task_cmd:"+ str(self.task_cmd)  +"statusID:" + str(self.statusID))
-            # self.ui.label_rostopic_echo_show.setText("task_cmd:"+ str(self.task_cmd_reply)  +"statusID:" + str(self.statusID_reply))
-            # add tableview function for rostopic result show
             self.data_pub = np.insert(self.data_pub,0,values=[[self.task_cmd,self.statusID]],axis=0)
             self.model = PandasModel_pub(self.data_pub)
             self.ui.tableView_pub.setModel(self.model)
@@ -544,25 +543,22 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
         
     def AccSliderValue(self):
         self.ui.lineEdit_acc.setText(str(self.ui.horizontalSlider_acc.value()))
-
+        
+    # TODO: test button set project name   
     def project_name_setClicked(self):
+        self.project_name("modbus_test")
+    # TODO: test button read project name
+    def project_name_readClicked(self):
         self.read_project_name()
 
-    # test button sent pcs position
-    def testClicked(self):
-        self.set_pcs_position(0,-162.5,818.1,-180,0,-90)
-    # test button sent acs position
-    def test2Clicked(self):
-        self.set_acs_position(5,-90,-5,-95,10,-10)
-    # test pub list show
-    # def testpubClicked(self):
-    #     # self.data_pub = np.append(self.data_pub,[[1,2]],0)
-    #     self.i = self.i + 1
-    #     self.j = self.j + 1
-    #     self.data_pub = np.insert(self.data_pub,0,values=[[self.i,self.j]],axis=0)
-    #     self.model = PandasModel_pub(self.data_pub)
-    #     self.ui.tableView_pub.setModel(self.model)
-    #     self.ui.tableView_pub.update()
+    # # TODO: test button sent pcs & acs position for arm motion
+    # def testClicked(self):
+    #     self.set_pcs_position(260,-112,412,-90,0,-180)
+    #     self.set_acs_position(0.552,-68.967,-103.583,-97.449,90,0.552)
+    # # TODO: test button read SMI
+    # def test2Clicked(self):
+    #     input_registers = self.modclient.read_input_Registers(1024,1)
+    #     print(input_registers)
 
     def closeEvent(self, event):
         reply = QMessageBox.question(self, 'Message', 'You sure to quit?',

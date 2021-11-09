@@ -8,12 +8,19 @@ twisted server implementation, his work is based on.
 ```bash
 sudo apt-get install python-pymodbus
 sudo apt-get install python-pyasn1 python-twisted-conch
+sudo apt-get install qt5-default
+sudo apt-get install qttools5-dev-tools
+sudo pip3 install pyqt5
 ```
 ## Quickstart
 
 Start a modbus control arm task:
 ```bash
 rosrun modbus nex_control_strategy_topic.py
+```
+Start GUI control arm task:
+```bash
+roslaunch modbus arm_control_gui.launch 
 ```
 ## ROS topic control
 ### Publish command list:
