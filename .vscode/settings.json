@@ -25,5 +25,11 @@
         "taskcmd",
         "teco",
         "TPUI"
+    ],
+    "favorites.resources": [
+        {
+            "filePath": "scripts/armcontrol_GUI.py",
+            "group": "Default"
+        }
     ]
 }

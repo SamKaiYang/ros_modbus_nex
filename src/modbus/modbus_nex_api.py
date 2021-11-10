@@ -236,13 +236,16 @@ class ModbusNexApi(object):
             Using ASCII code (C-style string).
             Maximum 64 characters including terminating null-character.
         """
+        count = 32
         project_name_str = name_str + "\0"
         builder = BinaryPayloadBuilder()
-        # builder = BinaryPayloadBuilder(byteorder= Endian.Big, wordorder=Endian.Little)
         builder.add_string(project_name_str)
         payload = builder.to_registers()
         payload = builder.build()
         register = 4100
+
+        for i in range(len(payload)):
+            payload[i] = struct.pack('<h', int(float(payload[i])))[0]
         self.modclient.setOutput(register,payload,0)
         rospy.sleep(0.2)
         rospy.loginfo("project name set")
@@ -260,43 +263,43 @@ class ModbusNexApi(object):
 
     def set_pcs_position(self, x, y, z, a, b, c):
         """
-            set TPUI SMO 8 start 55 end
+            set TPUI SMO 64 start 111 end
         """
         builder = BinaryPayloadBuilder(byteorder= Endian.Big, wordorder=Endian.Little)
         builder.add_64bit_float(x)
         X = builder.to_registers()
         # X = builder.build()
-        register = 1024 + 4
+        register = 1024 + 32 # 64
         self.modclient.setOutput(register,X,0)
         builder = BinaryPayloadBuilder(byteorder= Endian.Big, wordorder=Endian.Little)
         builder.add_64bit_float(y)
         Y = builder.to_registers()
         # Y = builder.build()
-        register = 1024 + 8
+        register = 1024 + 36 # 72
         self.modclient.setOutput(register,Y,0)
         builder = BinaryPayloadBuilder(byteorder= Endian.Big, wordorder=Endian.Little)
         builder.add_64bit_float(z)
         Z = builder.to_registers()
         # Z = builder.build()
-        register = 1024 + 12
+        register = 1024 + 40 # 80
         self.modclient.setOutput(register,Z,0)
         builder = BinaryPayloadBuilder(byteorder= Endian.Big, wordorder=Endian.Little)
         builder.add_64bit_float(a)
         A = builder.to_registers()
         # A = builder.build()
-        register = 1024 + 16
+        register = 1024 + 44 # 88
         self.modclient.setOutput(register,A,0)
         builder = BinaryPayloadBuilder(byteorder= Endian.Big, wordorder=Endian.Little)
         builder.add_64bit_float(b)
         B = builder.to_registers()
         # B = builder.build()
-        register = 1024 + 20
+        register = 1024 + 48 # 96
         self.modclient.setOutput(register,B,0)
         builder = BinaryPayloadBuilder(byteorder= Endian.Big, wordorder=Endian.Little)
         builder.add_64bit_float(c)
         C = builder.to_registers()
         # C = builder.build()
-        register = 1024 + 24
+        register = 1024 + 52 # 104
         self.modclient.setOutput(register,C,0)
 
         rospy.sleep(0.2)
@@ -304,48 +307,56 @@ class ModbusNexApi(object):
 
     def set_acs_position(self, axis1, axis2, axis3, axis4, axis5, axis6):
         """
-            set TPUI SMO 56 start 103 end 
+            set TPUI SMO 112 start 159 end 
         """
         builder = BinaryPayloadBuilder(byteorder= Endian.Big, wordorder=Endian.Little)
         builder.add_64bit_float(axis1)
         Axis1 = builder.to_registers()
         # Axis1 = builder.build()
-        register = 1024 + 28
+        register = 1024 + 56 # 112
         self.modclient.setOutput(register,Axis1,0)
         builder = BinaryPayloadBuilder(byteorder= Endian.Big, wordorder=Endian.Little)
         builder.add_64bit_float(axis2)
         Axis2 = builder.to_registers()
         # Axis2 = builder.build()
-        register = 1024 + 32
+        register = 1024 + 60 # 120
         self.modclient.setOutput(register,Axis2,0)
         builder = BinaryPayloadBuilder(byteorder= Endian.Big, wordorder=Endian.Little)
         builder.add_64bit_float(axis3)
         Axis3 = builder.to_registers()
         # Axis3 = builder.build()
-        register = 1024 + 36
+        register = 1024 + 64 # 128
         self.modclient.setOutput(register,Axis3,0)
         builder = BinaryPayloadBuilder(byteorder= Endian.Big, wordorder=Endian.Little)
         builder.add_64bit_float(axis4)
         Axis4 = builder.to_registers()
         # Axis4 = builder.build()
-        register = 1024 + 40
+        register = 1024 + 68 # 136
         self.modclient.setOutput(register,Axis4,0)
         builder = BinaryPayloadBuilder(byteorder= Endian.Big, wordorder=Endian.Little)
         builder.add_64bit_float(axis5)
         Axis5 = builder.to_registers()
         # Axis5 = builder.build()
-        register = 1024 + 44
+        register = 1024 + 72 # 144
         self.modclient.setOutput(register,Axis5,0)
         builder = BinaryPayloadBuilder(byteorder= Endian.Big, wordorder=Endian.Little)
         builder.add_64bit_float(axis6)
         Axis6 = builder.to_registers()
         # Axis6 = builder.build()
-        register = 1024 + 48
+        register = 1024 + 76 # 152
         self.modclient.setOutput(register,Axis6,0)
         
         rospy.sleep(0.2)
         rospy.loginfo("set acs position")
 
+    def send_64bit_value(self, register, value):
+        builder = BinaryPayloadBuilder(byteorder= Endian.Big, wordorder=Endian.Little)
+        builder.add_64bit_float(value)
+        Value = builder.to_registers()
+        # Axis1 = builder.build()
+        to_register = register
+        self.modclient.setOutput(to_register,Value,0)
+        rospy.sleep(0.2)
     # ----------------Request modbus server to read server state API-------------------
     def operation_mode_state(self):
         """
@@ -667,10 +678,10 @@ class ModbusNexApi(object):
         """
         count = 32 #Read 32 16bit registers
         result = self.modclient.read_input_Registers(8208,count)
-        for i in range(count):
+        for i in range(len(result)):
             result[i] = struct.unpack("<H", struct.pack(">H", result[i]))[0]
 
         decoder = BinaryPayloadDecoder.fromRegisters(result)
-        project_name = decoder.decode_string(31)#Since string is 64 characters long
-        print("project name: %s" % project_name)
+        project_name = decoder.decode_string(len(result))#Since string is 64 characters long
+        # print(project_name)
         return project_name

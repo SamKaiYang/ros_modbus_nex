@@ -33,7 +33,6 @@ class MyThread(QThread):
         while self.runFlag:
             self.callback.emit(index, self.label)
             # print(threading.currentThread().getName())
-            # TODO：移除index
             index+=1
             self.msleep(self.delay)
 class PandasModel_pos(QAbstractTableModel):
@@ -212,7 +211,7 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
         self.ui.btn_reset.clicked.connect(self.reset_buttonClicked)
         self.ui.btn_enable.clicked.connect(self.enable_buttonClicked)
         self.ui.btn_disable.clicked.connect(self.disable_buttonClicked)
-        self.ui.btn_reload.clicked.connect(self.reload_buttonClicked)
+        # self.ui.btn_reload.clicked.connect(self.reload_buttonClicked)
         self.ui.onBtn.clicked.connect(self.onBtn)
         self.ui.offBtn.clicked.connect(self.offBtn)
         self.ui.btn_start_program.clicked.connect(self.start_buttonClicked)
@@ -223,7 +222,7 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
         self.ui.btn_project_name_select.clicked.connect(self.project_name_setClicked)
         self.ui.btn_project_name_read.clicked.connect(self.project_name_readClicked)
         # test button 
-        # self.ui.btn_test.clicked.connect(self.testClicked)
+        self.ui.btn_test.clicked.connect(self.testClicked)
         # self.ui.btn_test2.clicked.connect(self.test2Clicked)
 
         # modbus connect server ip init
@@ -314,26 +313,46 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
         # tool.addAction('C')
 
     def display(self):
-        self.ui.label_mission_case_show.setText('Choose：%s' % self.ui.comboBox.currentText())
+        
         if self.ui.comboBox.currentText() == "None":
+            # self.ui.label_mission_case_show.setText('Choose：%s' % self.ui.comboBox.currentText())
             task_value = 0
+            # self.ui_reload_program()
         elif self.ui.comboBox.currentText() == "All":
+            self.ui.label_mission_case_show.setText('Choose：%s' % self.ui.comboBox.currentText())
             task_value = 1
+            self.ui_reload_program()
+            self.ui.comboBox.setCurrentIndex(0)
         elif self.ui.comboBox.currentText() == "Init":
+            self.ui.label_mission_case_show.setText('Choose：%s' % self.ui.comboBox.currentText())
             task_value = 2
+            self.ui_reload_program()
+            self.ui.comboBox.setCurrentIndex(0)
         elif self.ui.comboBox.currentText() == "3":
+            self.ui.label_mission_case_show.setText('Choose：%s' % self.ui.comboBox.currentText())
             task_value = 3
+            self.ui_reload_program()
+            self.ui.comboBox.setCurrentIndex(0)
         elif self.ui.comboBox.currentText() == "Home":
+            self.ui.label_mission_case_show.setText('Choose：%s' % self.ui.comboBox.currentText())
             task_value = 4
+            self.ui_reload_program()
+            self.ui.comboBox.setCurrentIndex(0)
         elif self.ui.comboBox.currentText() == "5":
+            self.ui.label_mission_case_show.setText('Choose：%s' % self.ui.comboBox.currentText())
             task_value = 5
+            self.ui_reload_program()
+            self.ui.comboBox.setCurrentIndex(0)
         elif self.ui.comboBox.currentText() == "6":
+            self.ui.label_mission_case_show.setText('Choose：%s' % self.ui.comboBox.currentText())
             task_value = 6
+            self.ui_reload_program()
+            self.ui.comboBox.setCurrentIndex(0)
         self.mission_number = task_value
+        
 
     def timeGo(self):
         self.timer.start(100)
-        self.showMsg()
 
     def timeStop(self):
         self.timer.stop()
@@ -363,7 +382,7 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
     def disable_buttonClicked(self):
         self.disable_robot()
 
-    def reload_buttonClicked(self):
+    def ui_reload_program(self):
         self.send_reset_other_state(4096, 4) # reset and only reserve enable
         self.reload_all_programs() 
         self.stop_programs() # reset before starting cmd
@@ -377,6 +396,7 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
         value = self.mission_number
         self.modclient.setOutput(register,value,0)
         start_status = self.start_programs(0)
+        # self.mission_number = 0 # init
 
     def stop_buttonClicked(self):
         self.stop_programs()
@@ -526,17 +546,16 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
         """
             set TPUI SMO 1 
         """
-        register = 1025
-        self.vel = int(self.ui.lineEdit_vel.text())
-        self.modclient.setOutput(register,self.vel,0)
-
+        register = 1024 + 4 # 8 
+        self.vel = float(self.ui.lineEdit_vel.text())
+        self.send_64bit_value(register,self.vel)
     def acc_setClicked(self):
         """
             set TPUI SMO 2
         """
-        register = 1026
-        self.acc = int(self.ui.lineEdit_acc.text())
-        self.modclient.setOutput(register,self.acc,0)
+        register = 1024 + 8 # 16
+        self.acc = float(self.ui.lineEdit_acc.text())
+        self.send_64bit_value(register,self.acc)
 
     def VelSliderValue(self):
         self.ui.lineEdit_vel.setText(str(self.ui.horizontalSlider_vel.value()))
@@ -546,15 +565,15 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
         
     # TODO: test button set project name   
     def project_name_setClicked(self):
-        self.project_name("modbus_test")
+        # self.project_name("modbus_test")
+        pass
     # TODO: test button read project name
     def project_name_readClicked(self):
-        self.read_project_name()
-
+        self.ui.label_project_name.setText('Project name: %s' % self.read_project_name())
     # # TODO: test button sent pcs & acs position for arm motion
-    # def testClicked(self):
-    #     self.set_pcs_position(260,-112,412,-90,0,-180)
-    #     self.set_acs_position(0.552,-68.967,-103.583,-97.449,90,0.552)
+    def testClicked(self):
+        self.set_pcs_position(260,-112,412,-90,0,-180)
+        self.set_acs_position(0.552,-68.967,-103.583,-97.449,90,0.552)
     # # TODO: test button read SMI
     # def test2Clicked(self):
     #     input_registers = self.modclient.read_input_Registers(1024,1)
