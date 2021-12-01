@@ -224,6 +224,13 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
         self.ui.btn_ip_set.clicked.connect(self.ip_setClicked)
         self.ui.btn_project_name_select.clicked.connect(self.project_name_setClicked)
         self.ui.btn_project_name_read.clicked.connect(self.project_name_readClicked)
+        # show program
+        self.ui.btn_show_program.clicked.connect(self.show_program_readClicked)
+        self.ui.btn_smile_program.clicked.connect(self.smile_program_readClicked)
+        self.ui.btn_dance_program.clicked.connect(self.dance_program_readClicked)
+        self.ui.btn_bow_program.clicked.connect(self.bow_program_readClicked)
+        # self.ui.btn_start_program.clicked.connect(self.project_name_readClicked)
+        
         # test button 
         self.ui.btn_test.clicked.connect(self.testClicked)
         # self.ui.btn_test2.clicked.connect(self.test2Clicked)
@@ -249,7 +256,7 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
         self.s = 0
 
         # ComboBox
-        choices = ['None','All', 'Init', '3', 'Home','5','6']
+        choices = ['None','All', 'Init', '3', 'Home','5','6','show']
         self.ui.comboBox.addItems(choices)
         self.ui.comboBox.currentIndexChanged.connect(self.display)
         self.display()
@@ -379,6 +386,11 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
         elif self.ui.comboBox.currentText() == "6":
             self.ui.label_mission_case_show.setText('Choose：%s' % self.ui.comboBox.currentText())
             task_value = 6
+            self.ui_reload_program()
+            self.ui.comboBox.setCurrentIndex(0)
+        elif self.ui.comboBox.currentText() == "show":
+            self.ui.label_mission_case_show.setText('Choose：%s' % self.ui.comboBox.currentText())
+            task_value = 7
             self.ui_reload_program()
             self.ui.comboBox.setCurrentIndex(0)
         self.mission_number = task_value
@@ -666,6 +678,27 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
     def topic_reply_callback(self,data):
         self.task_cmd_reply = data.actionTypeID
         self.statusID_reply = data.statusID
+
+    # TODO：for show
+    def show_program_readClicked(self):
+        register = 1024 + 12 # 24
+        value = 1
+        self.send_64bit_value(register,value)
+
+    def smile_program_readClicked(self):
+        register = 1024 + 12 # 24
+        value = 2
+        self.send_64bit_value(register,value)
+
+    def dance_program_readClicked(self):
+        register = 1024 + 12 # 24
+        value = 3
+        self.send_64bit_value(register,value)
+
+    def bow_program_readClicked(self):
+        register = 1024 + 12 # 24
+        value = 4
+        self.send_64bit_value(register,value)
 
 if __name__=="__main__":
     rospy.init_node("arm_control_ui")
