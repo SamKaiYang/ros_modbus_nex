@@ -16,6 +16,8 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
+
+
 class MyThread(QThread):
     callback = pyqtSignal(int, int)#自定義訊號, Qt的文件中有說明, 必需為類別變數
     def __init__(self, label, delay, parent=None):
@@ -204,6 +206,7 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
         self.pub_closenode = rospy.Publisher("/close_node",closenode,queue_size=10)
         self.startthreadflag = False
         self.ui.setupUi(self)
+        self.setStyleSheet()
         self._creat_menubar()
         self.setWindowIcon(QtGui.QIcon('../picture/teco_icon.png'))
         self.ui.lineEdit_vel.setText(str(self.vel))
@@ -301,6 +304,36 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
         self.status.addPermanentWidget(self.taskNum, stretch=0)
         self.status.addPermanentWidget(self.reloadNum, stretch=0)
         
+    def setStyleSheet(self):
+        self.ui.btn_ip_set.setStyleSheet("QPushButton" + "{" + "background-color:#0056ef;\n" + "color:white;\n" + "border-color: black;" 
+            + "}" + "QPushButton::pressed" + "{" + "background-color :#5151A2;\n" + "color:white;" +"}")
+        self.ui.btn_reset.setStyleSheet("QPushButton" + "{" + "background-color:#da7700;\n" + "color:white;\n" + "border-color: black;" 
+            + "}" + "QPushButton::pressed" + "{" + "background-color :#5151A2;\n" + "color:white;" +"}")
+        self.ui.btn_enable.setStyleSheet("QPushButton" + "{" + "background-color:#00d21a;\n" + "color:white;\n" + "border-color: black;" 
+            + "}" + "QPushButton::pressed" + "{" + "background-color :#5151A2;\n" + "color:white;" +"}")
+        self.ui.btn_disable.setStyleSheet("QPushButton" + "{" + "background-color:#b10011;\n" + "color:white;\n" + "border-color: black;" 
+            + "}" + "QPushButton::pressed" + "{" + "background-color :#5151A2;\n" + "color:white;" +"}")
+        self.ui.onBtn.setStyleSheet("QPushButton" + "{" + "background-color:#da7700;\n" + "color:white;\n" + "border-color: black;" 
+            + "}" + "QPushButton::pressed" + "{" + "background-color :#5151A2;\n" + "color:white;" +"}")
+        self.ui.offBtn.setStyleSheet("QPushButton" + "{" + "background-color:#da7700;\n" + "color:white;\n" + "border-color: black;" 
+            + "}" + "QPushButton::pressed" + "{" + "background-color :#5151A2;\n" + "color:white;" +"}")
+        
+        self.ui.btn_start_program.setStyleSheet("QPushButton" + "{" + "background-color:#da7700;\n" + "color:white;\n" + "border-color: black;" 
+            + "}" + "QPushButton::pressed" + "{" + "background-color :#5151A2;\n" + "color:white;" +"}")
+        self.ui.btn_stop_program.setStyleSheet("QPushButton" + "{" + "background-color:#da7700;\n" + "color:white;\n" + "border-color: black;" 
+            + "}" + "QPushButton::pressed" + "{" + "background-color :#5151A2;\n" + "color:white;" +"}")
+        self.ui.btn_vel_set.setStyleSheet("QPushButton" + "{" + "background-color:#da7700;\n" + "color:white;\n" + "border-color: black;" 
+            + "}" + "QPushButton::pressed" + "{" + "background-color :#5151A2;\n" + "color:white;" +"}")
+        self.ui.btn_acc_set.setStyleSheet("QPushButton" + "{" + "background-color:#da7700;\n" + "color:white;\n" + "border-color: black;" 
+            + "}" + "QPushButton::pressed" + "{" + "background-color :#5151A2;\n" + "color:white;" +"}")
+        self.ui.btn_project_name_select.setStyleSheet("QPushButton" + "{" + "background-color:#da7700;\n" + "color:white;\n" + "border-color: black;" 
+            + "}" + "QPushButton::pressed" + "{" + "background-color :#5151A2;\n" + "color:white;" +"}")
+        self.ui.btn_project_name_read.setStyleSheet("QPushButton" + "{" + "background-color:#da7700;\n" + "color:white;\n" + "border-color: black;" 
+            + "}" + "QPushButton::pressed" + "{" + "background-color :#5151A2;\n" + "color:white;" +"}")
+        self.ui.btn_start_program.setStyleSheet("QPushButton" + "{" + "background-color:#0300fc;\n" + "color:white;\n" + "border-color: black;" 
+            + "}" + "QPushButton::pressed" + "{" + "background-color :#5151A2;\n" + "color:white;" +"}")
+        self.ui.btn_stop_program.setStyleSheet("QPushButton" + "{" + "background-color:#005b62;\n" + "color:white;\n" + "border-color: black;" 
+            + "}" + "QPushButton::pressed" + "{" + "background-color :#5151A2;\n" + "color:white;" +"}")
     def _creat_menubar(self):
         self.menu=self.menuBar()
         file=self.menu.addMenu('File')
@@ -378,10 +411,20 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
 
     def enable_buttonClicked(self):
         self.send_reset_other_state(4096, 4) # reset and only reserve enable
-
+        self.ui.btn_enable.setDisabled(True)
+        self.ui.btn_disable.setDisabled(False)
+        self.ui.btn_enable.setStyleSheet("QPushButton" + "{" + "background-color:#5151A2;\n" + "color:white;\n" + "border-color: black;" 
+            + "}" + "QPushButton::pressed" + "{" + "background-color :#5151A2;\n" + "color:white;" +"}")
+        self.ui.btn_disable.setStyleSheet("QPushButton" + "{" + "background-color:#b10011;\n" + "color:white;\n" + "border-color: black;" 
+            + "}" + "QPushButton::pressed" + "{" + "background-color :#5151A2;\n" + "color:white;" +"}")
     def disable_buttonClicked(self):
         self.disable_robot()
-
+        self.ui.btn_enable.setDisabled(False)
+        self.ui.btn_disable.setDisabled(True)
+        self.ui.btn_enable.setStyleSheet("QPushButton" + "{" + "background-color:#00d21a;\n" + "color:white;\n" + "border-color: black;" 
+            + "}" + "QPushButton::pressed" + "{" + "background-color :#5151A2;\n" + "color:white;" +"}")
+        self.ui.btn_disable.setStyleSheet("QPushButton" + "{" + "background-color:#5151A2;\n" + "color:white;\n" + "border-color: black;" 
+            + "}" + "QPushButton::pressed" + "{" + "background-color :#5151A2;\n" + "color:white;" +"}")
     def ui_reload_program(self):
         self.send_reset_other_state(4096, 4) # reset and only reserve enable
         self.reload_all_programs() 
@@ -417,10 +460,23 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
         # self.thread3.start()
         self.startthreadflag = True
 
+        self.ui.onBtn.setDisabled(True)
+        self.ui.offBtn.setDisabled(False)
+        self.ui.onBtn.setStyleSheet("QPushButton" + "{" + "background-color:#5151A2;\n" + "color:white;\n" + "border-color: black;" 
+                + "}" + "QPushButton::pressed" + "{" + "background-color :#5151A2;\n" + "color:white;" +"}")
+        self.ui.offBtn.setStyleSheet("QPushButton" + "{" + "background-color:#da7700;\n" + "color:white;\n" + "border-color: black;" 
+                + "}" + "QPushButton::pressed" + "{" + "background-color :#5151A2;\n" + "color:white;" +"}")
         QMessageBox.about(self, "對話框", "開始讀取手臂資訊")
+
     def offBtn(self, event):
         if self.startthreadflag == True:
             self.stopThread(self.thread1)
+            self.ui.offBtn.setDisabled(True)
+            self.ui.onBtn.setDisabled(False)
+            self.ui.onBtn.setStyleSheet("QPushButton" + "{" + "background-color:#da7700;\n" + "color:white;\n" + "border-color: black;" 
+                + "}" + "QPushButton::pressed" + "{" + "background-color :#5151A2;\n" + "color:white;" +"}")
+            self.ui.offBtn.setStyleSheet("QPushButton" + "{" + "background-color:#5151A2;\n" + "color:white;\n" + "border-color: black;" 
+                + "}" + "QPushButton::pressed" + "{" + "background-color :#5151A2;\n" + "color:white;" +"}")
             # self.stopThread(self.thread2)
         else:
             pass
