@@ -122,7 +122,7 @@ class Nex_control(ModbusNexApi):
             self.Stop_motion_flag = False
             rospy.loginfo("Please switch to external control mode")
 
-    def rotation_task(self):
+    def init_task(self):
         ## Test all program run, can get task state
         if self.operation_mode_state() == "EXT":
             self.start_arm_reset()
@@ -166,7 +166,7 @@ class Nex_control(ModbusNexApi):
             self.Stop_motion_flag = False
             rospy.loginfo("Please switch to external control mode")
 
-    def pick_and_place_task(self):
+    def show_task(self):
         ## Test all program run, can get task state
         if self.operation_mode_state() == "EXT":
             self.start_arm_reset()
@@ -261,15 +261,15 @@ class Nex_control(ModbusNexApi):
                 self.task_cmd = 0
                 self.arm_task_program()
                 break
-            # start rotation_task
+            # start init_task
             if case(2):
                 self.task_cmd = 0
-                self.rotation_task()
+                self.init_task()
                 break
-            # start pick_and_place_task
+            # start show_task
             if case(3):
                 self.task_cmd = 0
-                self.pick_and_place_task()
+                self.show_task()
                 break
             # back_home
             if case(4):

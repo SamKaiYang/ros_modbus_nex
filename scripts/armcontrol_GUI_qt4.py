@@ -6,11 +6,11 @@ import time
 import numpy as np
 from modbus.modbus_nex_api import ModbusNexApi 
 from modbus.msg import peripheralCmd, ipconfig, closenode
-from PyQt5 import QtWidgets, QtGui
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtGui import *
-from Ui_main import Ui_MainWindow
+# from PyQt4 import QtWidgets, QtGui
+from PyQt4.QtCore import *
+from PyQt4.QtWidgets import *
+from PyQt4.QtGui import *
+from Ui_main_qt4 import Ui_MainWindow
 from armcontrol_strategy import Nex_control, switch
 import sys
 reload(sys)
