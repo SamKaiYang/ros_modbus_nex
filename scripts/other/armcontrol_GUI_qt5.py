@@ -6,10 +6,10 @@ import time
 import numpy as np
 from modbus.modbus_nex_api import ModbusNexApi 
 from modbus.msg import peripheralCmd, ipconfig, closenode
-from PySide2 import QtWidgets, QtGui
-from PySide2.QtCore import *
-from PySide2.QtWidgets import *
-from PySide2.QtGui import *
+from PyQt5 import QtWidgets, QtGui
+from PyQt5.QtCore import *
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
 from Ui_main import Ui_MainWindow
 from armcontrol_strategy import Nex_control, switch
 import sys
@@ -19,7 +19,7 @@ sys.setdefaultencoding('utf-8')
 
 
 class MyThread(QThread):
-    callback = Signal(int, int)#自定義訊號, Qt的文件中有說明, 必需為類別變數
+    callback = pyqtSignal(int, int)#自定義訊號, Qt的文件中有說明, 必需為類別變數
     def __init__(self, label, delay, parent=None):
         super(MyThread, self).__init__(parent)
         self.runFlag = True
