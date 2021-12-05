@@ -6,10 +6,19 @@ Modbus control the TECO robotic arm task package
 In order to have all dependencies installed, you need to install Collin's pymodbus, as well as the
 twisted server implementation, his work is based on.
 ```bash
+sudo apt-get update && sudo apt-get -y upgrade
+python -m pip install --user --upgrade pip==20.2.4
 sudo apt-get install python-pymodbus
 sudo apt-get install python-pyasn1 python-twisted-conch
-sudo apt-get install qt5-default
+pip install pymodbus --upgrade
+sudo apt-get install build-essential
 sudo apt-get install qttools5-dev-tools
+sudo apt-get install qtcreator
+sudo apt-get install qt5-default
+sudo apt-get install qt5-doc
+sudo apt-get install qt5-doc-html qtbase5-doc-html
+sudo apt-get install qtbase5-examples
+sudo apt-get install libxcb-xinerama0
 sudo pip3 install pyqt5
 ```
 ## Quickstart
