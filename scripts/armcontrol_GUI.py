@@ -229,7 +229,7 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
         self.ui.btn_smile_program.clicked.connect(self.smile_program_readClicked)
         self.ui.btn_dance_program.clicked.connect(self.dance_program_readClicked)
         self.ui.btn_bow_program.clicked.connect(self.bow_program_readClicked)
-        # self.ui.btn_start_program.clicked.connect(self.project_name_readClicked)
+        self.ui.btn_stopshow_program.clicked.connect(self.stopshow_program_readClicked)
         
         # test button 
         self.ui.btn_test.clicked.connect(self.testClicked)
@@ -450,6 +450,11 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
         register = 1024
         value = self.mission_number
         self.modclient.setOutput(register,value,0)
+        # for show
+        register = 1024 + 12 # 24
+        value = 0
+        self.send_16bit_value(register,value) # set SMOGetU16(24)
+
         start_status = self.start_programs(0)
         # self.mission_number = 0 # init
 
@@ -683,23 +688,27 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
     def show_program_readClicked(self):
         register = 1024 + 12 # 24
         value = 1
-        self.send_64bit_value(register,value) # set SMOGetF64(24)
+        self.send_16bit_value(register,value) # set SMOGetU16(24)
 
     def smile_program_readClicked(self):
         register = 1024 + 12 # 24
         value = 2
-        self.send_64bit_value(register,value) # set SMOGetF64(24)
+        self.send_16bit_value(register,value) # set SMOGetU16(24)
 
     def dance_program_readClicked(self):
         register = 1024 + 12 # 24
         value = 3
-        self.send_64bit_value(register,value) # set SMOGetF64(24)
+        self.send_16bit_value(register,value) # set SMOGetU16(24)
 
     def bow_program_readClicked(self):
         register = 1024 + 12 # 24
         value = 4
-        self.send_64bit_value(register,value) # set SMOGetF64(24)
+        self.send_16bit_value(register,value) # set SMOGetU16(24)
 
+    def stopshow_program_readClicked(self):
+        register = 1024 + 12 # 24
+        value = 0
+        self.send_16bit_value(register,value) # set SMOGetU16(24)
 if __name__=="__main__":
     rospy.init_node("arm_control_ui")
     app = QtWidgets.QApplication([])

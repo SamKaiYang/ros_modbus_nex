@@ -2534,89 +2534,92 @@
        <string>Read</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="btn_dance_program">
+     <widget class="QWidget" name="verticalLayoutWidget_5">
       <property name="geometry">
        <rect>
         <x>490</x>
-        <y>120</y>
-        <width>156</width>
-        <height>29</height>
+        <y>40</y>
+        <width>160</width>
+        <height>166</height>
        </rect>
       </property>
-      <property name="font">
-       <font>
-        <pointsize>13</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color:#0300fc;color:white;border-color: black;</string>
-      </property>
-      <property name="text">
-       <string>dance</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="btn_bow_program">
-      <property name="geometry">
-       <rect>
-        <x>490</x>
-        <y>170</y>
-        <width>156</width>
-        <height>29</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>13</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color:#0300fc;color:white;border-color: black;</string>
-      </property>
-      <property name="text">
-       <string>bow</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="btn_smile_program">
-      <property name="geometry">
-       <rect>
-        <x>490</x>
-        <y>220</y>
-        <width>156</width>
-        <height>29</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>13</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color:#0300fc;color:white;border-color: black;</string>
-      </property>
-      <property name="text">
-       <string>smile</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="btn_show_program">
-      <property name="geometry">
-       <rect>
-        <x>490</x>
-        <y>30</y>
-        <width>156</width>
-        <height>29</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>13</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color:#0300fc;color:white;border-color: black;</string>
-      </property>
-      <property name="text">
-       <string>show</string>
-      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_5">
+       <item>
+        <widget class="QPushButton" name="btn_show_program">
+         <property name="font">
+          <font>
+           <pointsize>13</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color:#0300fc;color:white;border-color: black;</string>
+         </property>
+         <property name="text">
+          <string>show</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btn_dance_program">
+         <property name="font">
+          <font>
+           <pointsize>13</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color:#0300fc;color:white;border-color: black;</string>
+         </property>
+         <property name="text">
+          <string>dance</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btn_smile_program">
+         <property name="font">
+          <font>
+           <pointsize>13</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color:#0300fc;color:white;border-color: black;</string>
+         </property>
+         <property name="text">
+          <string>smile</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btn_bow_program">
+         <property name="font">
+          <font>
+           <pointsize>13</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color:#0300fc;color:white;border-color: black;</string>
+         </property>
+         <property name="text">
+          <string>bow</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btn_stopshow_program">
+         <property name="font">
+          <font>
+           <pointsize>13</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color:#0300fc;color:white;border-color: black;</string>
+         </property>
+         <property name="text">
+          <string>stop</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_state">

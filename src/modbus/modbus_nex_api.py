@@ -357,6 +357,15 @@ class ModbusNexApi(object):
         to_register = register
         self.modclient.setOutput(to_register,Value,0)
         rospy.sleep(0.2)
+
+    def send_16bit_value(self, register, value):
+        builder = BinaryPayloadBuilder(byteorder= Endian.Big, wordorder=Endian.Little)
+        builder.add_16bit_int(value)
+        Value = builder.to_registers()
+        # Axis1 = builder.build()
+        to_register = register
+        self.modclient.setOutput(to_register,Value,0)
+        rospy.sleep(0.2)
     # ----------------Request modbus server to read server state API-------------------
     def operation_mode_state(self):
         """
