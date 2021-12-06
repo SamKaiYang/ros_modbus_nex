@@ -20,6 +20,7 @@ sudo apt-get install qt5-doc-html qtbase5-doc-html
 sudo apt-get install qtbase5-examples
 sudo apt-get install libxcb-xinerama0
 sudo pip3 install pyqt5
+sudo pip install PySide2
 ```
 ## Quickstart
 
