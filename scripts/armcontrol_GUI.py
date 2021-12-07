@@ -202,6 +202,8 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
         self.statusID = 0 # init number
         self.task_cmd_reply = 0
         self.statusID_reply = 0
+        self.jogging_postion_rel = 0
+        self.jogging_posture_rel = 0
         self.pub_ipset = rospy.Publisher("/ip_comm",ipconfig,queue_size=10)
         self.pub_closenode = rospy.Publisher("/close_node",closenode,queue_size=10)
         self.startthreadflag = False
@@ -224,6 +226,19 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
         self.ui.btn_ip_set.clicked.connect(self.ip_setClicked)
         self.ui.btn_project_name_select.clicked.connect(self.project_name_setClicked)
         self.ui.btn_project_name_read.clicked.connect(self.project_name_readClicked)
+        # arm jogging button
+        self.ui.btn_x_positive.clicked.connect(lambda:self.pose_setClicked("+x"))
+        self.ui.btn_x_negative.clicked.connect(lambda:self.pose_setClicked("-x"))
+        self.ui.btn_y_positive.clicked.connect(lambda:self.pose_setClicked("+y"))
+        self.ui.btn_y_negative.clicked.connect(lambda:self.pose_setClicked("-y"))
+        self.ui.btn_z_positive.clicked.connect(lambda:self.pose_setClicked("+z"))
+        self.ui.btn_z_negative.clicked.connect(lambda:self.pose_setClicked("-z"))
+        self.ui.btn_a_positive.clicked.connect(lambda:self.pose_setClicked("+a"))
+        self.ui.btn_a_negative.clicked.connect(lambda:self.pose_setClicked("-a"))
+        self.ui.btn_b_positive.clicked.connect(lambda:self.pose_setClicked("+b"))
+        self.ui.btn_b_negative.clicked.connect(lambda:self.pose_setClicked("-b"))
+        self.ui.btn_c_positive.clicked.connect(lambda:self.pose_setClicked("+c"))
+        self.ui.btn_c_negative.clicked.connect(lambda:self.pose_setClicked("-c"))
         # show program
         self.ui.btn_show_program.clicked.connect(self.show_program_readClicked)
         self.ui.btn_smile_program.clicked.connect(self.smile_program_readClicked)
@@ -256,10 +271,17 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
         self.s = 0
 
         # ComboBox
-        choices = ['None','All', 'Init', 'show', 'Home','5','6','7']
+        choices = ['None','All', 'Init', 'show', 'Home','jogging','6','7']
         self.ui.comboBox.addItems(choices)
         self.ui.comboBox.currentIndexChanged.connect(self.display)
         self.display()
+        
+        # ComboBox jog
+        choices = ['None','100 mm / 10o','10 mm / 3o', '1 mm / 1o', '0.1 mm / 0.005o']
+        self.ui.comboBox_jogging_mode.addItems(choices)
+        self.ui.comboBox_jogging_mode.currentIndexChanged.connect(self.JogMode_display)
+        self.JogMode_display()
+        
         self.initUi()
 
         # Gif 
@@ -378,7 +400,7 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
             task_value = 4
             self.ui_reload_program()
             self.ui.comboBox.setCurrentIndex(0)
-        elif self.ui.comboBox.currentText() == "5":
+        elif self.ui.comboBox.currentText() == "jogging":
             self.ui.label_mission_case_show.setText('Choose：%s' % self.ui.comboBox.currentText())
             task_value = 5
             self.ui_reload_program()
@@ -709,6 +731,131 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
         register = 1024 + 12 # 24
         value = 0
         self.send_16bit_value(register,value) # set SMOGetU16(24)
+
+    def JogMode_display(self):
+        if self.ui.comboBox_jogging_mode.currentText() == "None":
+            self.jogging_postion_rel = 0
+            self.jogging_posture_rel = 0
+        elif self.ui.comboBox_jogging_mode.currentText() == "100 mm / 10o":
+            self.jogging_postion_rel = 100
+            self.jogging_posture_rel = 10
+        elif self.ui.comboBox_jogging_mode.currentText() == "10 mm / 3o":
+            self.jogging_postion_rel = 10
+            self.jogging_posture_rel = 3
+        elif self.ui.comboBox_jogging_mode.currentText() == "1 mm / 1o":
+            self.jogging_postion_rel = 1
+            self.jogging_posture_rel = 1
+        elif self.ui.comboBox_jogging_mode.currentText() == "0.1 mm / 0.005o":
+            self.jogging_postion_rel = 0.1
+            self.jogging_posture_rel = 0.005
+
+    def pose_setClicked(self, type):
+        PCS_actual = self.read_PCS_actual_position()
+        for case in switch(type):
+            if case("+x"):
+                self.set_pcs_position(round(PCS_actual.X + self.jogging_postion_rel,3),round(PCS_actual.Y,3),round(PCS_actual.Z,3),round(PCS_actual.A,3),round(PCS_actual.B,3),round(PCS_actual.C,3)) # set SMOGetCP(64);
+                break
+            if case("-x"):
+                self.set_pcs_position(round(PCS_actual.X - self.jogging_postion_rel,3),round(PCS_actual.Y,3),round(PCS_actual.Z,3),round(PCS_actual.A,3),round(PCS_actual.B,3),round(PCS_actual.C,3)) # set SMOGetCP(64);
+                break
+            if case("+y"):
+                self.set_pcs_position(round(PCS_actual.X,3),round(PCS_actual.Y + self.jogging_postion_rel,3),round(PCS_actual.Z,3),round(PCS_actual.A,3),round(PCS_actual.B,3),round(PCS_actual.C,3)) # set SMOGetCP(64);
+                break
+            if case("-y"):
+                self.set_pcs_position(round(PCS_actual.X,3),round(PCS_actual.Y - self.jogging_postion_rel,3),round(PCS_actual.Z,3),round(PCS_actual.A,3),round(PCS_actual.B,3),round(PCS_actual.C,3)) # set SMOGetCP(64);
+                break
+            if case("+z"):
+                self.set_pcs_position(round(PCS_actual.X,3),round(PCS_actual.Y,3),round(PCS_actual.Z + self.jogging_postion_rel,3),round(PCS_actual.A,3),round(PCS_actual.B,3),round(PCS_actual.C,3)) # set SMOGetCP(64);
+                break
+            if case("-z"):
+                self.set_pcs_position(round(PCS_actual.X,3),round(PCS_actual.Y,3),round(PCS_actual.Z - self.jogging_postion_rel,3),round(PCS_actual.A,3),round(PCS_actual.B,3),round(PCS_actual.C,3)) # set SMOGetCP(64);
+                break
+            if case("+a"):
+                self.set_pcs_position(round(PCS_actual.X,3),round(PCS_actual.Y,3),round(PCS_actual.Z,3),round(PCS_actual.A + self.jogging_posture_rel,3),round(PCS_actual.B,3),round(PCS_actual.C,3)) # set SMOGetCP(64);
+                break
+            if case("-a"):
+                self.set_pcs_position(round(PCS_actual.X,3),round(PCS_actual.Y,3),round(PCS_actual.Z,3),round(PCS_actual.A - self.jogging_posture_rel,3),round(PCS_actual.B,3),round(PCS_actual.C,3)) # set SMOGetCP(64);
+                break
+            if case("+b"):
+                self.set_pcs_position(round(PCS_actual.X,3),round(PCS_actual.Y,3),round(PCS_actual.Z,3),round(PCS_actual.A,3),round(PCS_actual.B + self.jogging_posture_rel,3),round(PCS_actual.C,3)) # set SMOGetCP(64);
+                break
+            if case("-b"):
+                self.set_pcs_position(round(PCS_actual.X,3),round(PCS_actual.Y,3),round(PCS_actual.Z,3),round(PCS_actual.A,3),round(PCS_actual.B - self.jogging_posture_rel,3),round(PCS_actual.C,3)) # set SMOGetCP(64);
+                break
+            if case("+c"):
+                self.set_pcs_position(round(PCS_actual.X,3),round(PCS_actual.Y,3),round(PCS_actual.Z,3),round(PCS_actual.A,3),round(PCS_actual.B,3),round(PCS_actual.C + self.jogging_posture_rel,3)) # set SMOGetCP(64);
+                break
+            if case("-c"):
+                self.set_pcs_position(round(PCS_actual.X,3),round(PCS_actual.Y,3),round(PCS_actual.Z,3),round(PCS_actual.A,3),round(PCS_actual.B,3),round(PCS_actual.C - self.jogging_posture_rel,3)) # set SMOGetCP(64);
+                break
+            if case(): # default
+                break
+
+        # print("type:",type)
+        # for case in switch(type):
+        #     if case("+x"):
+        #         print("+x")
+        #         print("self.jogging_postion_rel:",self.jogging_postion_rel)
+        #         print("self.jogging_posture_rel:",self.jogging_posture_rel)
+        #         break
+        #     if case("-x"):
+        #         print("-x")
+        #         print("self.jogging_postion_rel:",self.jogging_postion_rel)
+        #         print("self.jogging_posture_rel:",self.jogging_posture_rel)
+        #         break
+        #     if case("+y"):
+        #         print("+y")
+        #         print("self.jogging_postion_rel:",self.jogging_postion_rel)
+        #         print("self.jogging_posture_rel:",self.jogging_posture_rel)
+        #         break
+        #     if case("-y"):
+        #         print("-y")
+        #         print("self.jogging_postion_rel:",self.jogging_postion_rel)
+        #         print("self.jogging_posture_rel:",self.jogging_posture_rel)
+        #         break
+        #     if case("+z"):
+        #         print("+z")
+        #         print("self.jogging_postion_rel:",self.jogging_postion_rel)
+        #         print("self.jogging_posture_rel:",self.jogging_posture_rel)
+        #         break
+        #     if case("-z"):
+        #         print("-z")
+        #         print("self.jogging_postion_rel:",self.jogging_postion_rel)
+        #         print("self.jogging_posture_rel:",self.jogging_posture_rel)
+        #         break
+        #     if case("+a"):
+        #         print("+a")
+        #         print("self.jogging_postion_rel:",self.jogging_postion_rel)
+        #         print("self.jogging_posture_rel:",self.jogging_posture_rel)
+        #         break
+        #     if case("-a"):
+        #         print("-a")
+        #         print("self.jogging_postion_rel:",self.jogging_postion_rel)
+        #         print("self.jogging_posture_rel:",self.jogging_posture_rel)
+        #         break
+        #     if case("+b"):
+        #         print("+b")
+        #         print("self.jogging_postion_rel:",self.jogging_postion_rel)
+        #         print("self.jogging_posture_rel:",self.jogging_posture_rel)
+        #         break
+        #     if case("-b"):
+        #         print("-b")
+        #         print("self.jogging_postion_rel:",self.jogging_postion_rel)
+        #         print("self.jogging_posture_rel:",self.jogging_posture_rel)
+        #         break
+        #     if case("+c"):
+        #         print("+c")
+        #         print("self.jogging_postion_rel:",self.jogging_postion_rel)
+        #         print("self.jogging_posture_rel:",self.jogging_posture_rel)
+        #         break
+        #     if case("-c"):
+        #         print("-c")
+        #         print("self.jogging_postion_rel:",self.jogging_postion_rel)
+        #         print("self.jogging_posture_rel:",self.jogging_posture_rel)
+        #         break
+        #     if case(): # default
+        #         break
+
 if __name__=="__main__":
     rospy.init_node("arm_control_ui")
     app = QtWidgets.QApplication([])
