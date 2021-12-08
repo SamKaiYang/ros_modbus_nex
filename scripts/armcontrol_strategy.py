@@ -266,7 +266,7 @@ class Nex_control(ModbusNexApi):
                 self.task_cmd = 0
                 self.init_task()
                 break
-            # start show_task
+            # start show dance
             if case(3):
                 self.task_cmd = 0
                 self.show_task()

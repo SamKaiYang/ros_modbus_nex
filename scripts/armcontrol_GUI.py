@@ -289,7 +289,7 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
         self.s = 0
 
         # ComboBox
-        choices = ['None','All', 'Init', 'show', 'Home','jogging','6','7']
+        choices = ['None','All', 'Init', 'Show dance', 'Home','Stop','Show Select','jogging']
         self.ui.comboBox.addItems(choices)
         self.ui.comboBox.currentIndexChanged.connect(self.display)
         self.display()
@@ -408,7 +408,7 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
             task_value = 2
             self.ui_reload_program()
             self.ui.comboBox.setCurrentIndex(0)
-        elif self.ui.comboBox.currentText() == "show":
+        elif self.ui.comboBox.currentText() == "Show dance":
             self.ui.label_mission_case_show.setText('Choose：%s' % self.ui.comboBox.currentText())
             task_value = 3
             self.ui_reload_program()
@@ -418,17 +418,17 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
             task_value = 4
             self.ui_reload_program()
             self.ui.comboBox.setCurrentIndex(0)
-        elif self.ui.comboBox.currentText() == "jogging":
+        elif self.ui.comboBox.currentText() == "Stop":
             self.ui.label_mission_case_show.setText('Choose：%s' % self.ui.comboBox.currentText())
             task_value = 5
             self.ui_reload_program()
             self.ui.comboBox.setCurrentIndex(0)
-        elif self.ui.comboBox.currentText() == "6":
+        elif self.ui.comboBox.currentText() == "Show Select":
             self.ui.label_mission_case_show.setText('Choose：%s' % self.ui.comboBox.currentText())
             task_value = 6
             self.ui_reload_program()
             self.ui.comboBox.setCurrentIndex(0)
-        elif self.ui.comboBox.currentText() == "7":
+        elif self.ui.comboBox.currentText() == "jogging":
             self.ui.label_mission_case_show.setText('Choose：%s' % self.ui.comboBox.currentText())
             task_value = 7
             self.ui_reload_program()

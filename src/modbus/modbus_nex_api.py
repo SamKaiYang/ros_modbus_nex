@@ -133,7 +133,7 @@ class ModbusNexApi(object):
 
     def send_reset_other_state(self, address, output):
         self.modclient.setOutput(address,output,0)
-        rospy.sleep(0.2)
+        rospy.sleep(1)
         rospy.loginfo("RESET")
 
     def start_programs(self, num):
@@ -182,7 +182,7 @@ class ModbusNexApi(object):
         value = self.set_bit_val(int(input_registers[0]),2,1)
         register = 4096
         self.modclient.setOutput(register,value,0)
-        rospy.sleep(0.2)
+        rospy.sleep(1)
         rospy.loginfo("ENABLE")
 
     def disable_robot(self):

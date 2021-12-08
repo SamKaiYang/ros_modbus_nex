@@ -44,7 +44,7 @@ rostopic pub /write_external_comm modbus/peripheralCmd "actionTypeID: 1"
 ```bash
 rostopic pub /write_external_comm modbus/peripheralCmd "actionTypeID: 2"
 ```
-3. Command 3 : Start pick_and_place_task <br>
+3. Command 3 : Start Show Dance <br>
 ```bash
 rostopic pub /write_external_comm modbus/peripheralCmd "actionTypeID: 3"
 ```
