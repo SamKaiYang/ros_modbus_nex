@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*-coding:utf-8 -*-
 import rospy
-import threading
-import time
+# import threading
+# import time
 import numpy as np
 from modbus.modbus_nex_api import ModbusNexApi 
 from modbus.msg import peripheralCmd, ipconfig, closenode
@@ -11,12 +11,30 @@ from PySide2.QtCore import *
 from PySide2.QtWidgets import *
 from PySide2.QtGui import *
 from Ui_main import Ui_MainWindow
-from armcontrol_strategy import Nex_control, switch
+# from armcontrol_strategy import Nex_control, switch
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
+class switch(object):
+    def __init__(self, value):
+        self.value = value
+        self.fall = False
 
+    def __iter__(self):
+        """Return the match method once, then stop"""
+        yield self.match
+        raise StopIteration
+    
+    def match(self, *args):
+        """Indicate whether or not to enter a case suite"""
+        if self.fall or not args:
+            return True
+        elif self.value in args: # changed for v1.5, see below
+            self.fall = True
+            return True
+        else:
+            return False
 
 class MyThread(QThread):
     callback = Signal(int, int)#自定義訊號, Qt的文件中有說明, 必需為類別變數
