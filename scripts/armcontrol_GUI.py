@@ -484,6 +484,8 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
         while not rospy.is_shutdown():
             if self.is_task_init() == True:
                 rospy.loginfo("reload_all_programs finished")
+                self.ui.btn_start_program.setStyleSheet("QPushButton" + "{" + "background-color:#da7700;\n" + "color:white;\n" + "border-color: black;" 
+                + "}" + "QPushButton::pressed" + "{" + "background-color :#5151A2;\n" + "color:white;" +"}")
                 break
 
     def start_buttonClicked(self):
@@ -497,6 +499,9 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
 
         start_status = self.start_programs(0)
         # self.mission_number = 0 # init
+        self.ui.btn_start_program.setStyleSheet("QPushButton" + "{" + "background-color:#0300fc;\n" + "color:white;\n" + "border-color: black;" 
+                + "}" + "QPushButton::pressed" + "{" + "background-color :#5151A2;\n" + "color:white;" +"}")
+        
 
     def stop_buttonClicked(self):
         self.stop_programs()

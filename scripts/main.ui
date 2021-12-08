@@ -1298,7 +1298,7 @@
      <enum>QTabWidget::Triangular</enum>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab_arm">
      <attribute name="title">
@@ -1385,49 +1385,13 @@
      <attribute name="title">
       <string>Mission</string>
      </attribute>
-     <widget class="QWidget" name="verticalLayoutWidget_2">
-      <property name="geometry">
-       <rect>
-        <x>550</x>
-        <y>300</y>
-        <width>131</width>
-        <height>151</height>
-       </rect>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <widget class="QLCDNumber" name="lcdNumber"/>
-       </item>
-       <item>
-        <widget class="QPushButton" name="btn_start_time">
-         <property name="text">
-          <string>Start</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="btn_stop_time">
-         <property name="text">
-          <string>Stop</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="btn_reset_time">
-         <property name="text">
-          <string>Reset</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
      <widget class="QWidget" name="gridLayoutWidget">
       <property name="geometry">
        <rect>
         <x>20</x>
         <y>260</y>
-        <width>321</width>
-        <height>131</height>
+        <width>381</width>
+        <height>151</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout">
@@ -1438,15 +1402,15 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="0">
-        <widget class="QComboBox" name="comboBox"/>
-       </item>
        <item row="2" column="0">
         <widget class="QLabel" name="label_mission_case">
          <property name="text">
           <string>You choose ?</string>
          </property>
         </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QComboBox" name="comboBox"/>
        </item>
        <item row="0" column="1">
         <widget class="QPushButton" name="btn_start_program">
@@ -1469,7 +1433,7 @@
           <string notr="true">background-color:#005b62;color:white;border-color: black;</string>
          </property>
          <property name="text">
-          <string>Stop</string>
+          <string>Stop motion</string>
          </property>
         </widget>
        </item>
@@ -2538,9 +2502,9 @@
       <property name="geometry">
        <rect>
         <x>490</x>
-        <y>40</y>
+        <y>30</y>
         <width>160</width>
-        <height>171</height>
+        <height>361</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -2612,10 +2576,10 @@
           </font>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-color:#0300fc;color:white;border-color: black;</string>
+          <string notr="true">background-color:#005b62;color:white;border-color: black;</string>
          </property>
          <property name="text">
-          <string>stop</string>
+          <string>stop mission</string>
          </property>
         </widget>
        </item>
@@ -5146,6 +5110,42 @@
         <widget class="QLabel" name="label_jogging">
          <property name="text">
           <string>Jogging</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="verticalLayoutWidget_2">
+      <property name="geometry">
+       <rect>
+        <x>550</x>
+        <y>260</y>
+        <width>131</width>
+        <height>151</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QLCDNumber" name="lcdNumber"/>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btn_start_time">
+         <property name="text">
+          <string>Start</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btn_stop_time">
+         <property name="text">
+          <string>Stop</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btn_reset_time">
+         <property name="text">
+          <string>Reset</string>
          </property>
         </widget>
        </item>

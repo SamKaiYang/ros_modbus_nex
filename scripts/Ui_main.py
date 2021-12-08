@@ -297,35 +297,9 @@ class Ui_MainWindow(object):
         self.tabWidget.addTab(self.tab_arm, "")
         self.tab_mission = QWidget()
         self.tab_mission.setObjectName(u"tab_mission")
-        self.verticalLayoutWidget_2 = QWidget(self.tab_mission)
-        self.verticalLayoutWidget_2.setObjectName(u"verticalLayoutWidget_2")
-        self.verticalLayoutWidget_2.setGeometry(QRect(550, 300, 131, 151))
-        self.verticalLayout_2 = QVBoxLayout(self.verticalLayoutWidget_2)
-        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
-        self.lcdNumber = QLCDNumber(self.verticalLayoutWidget_2)
-        self.lcdNumber.setObjectName(u"lcdNumber")
-
-        self.verticalLayout_2.addWidget(self.lcdNumber)
-
-        self.btn_start_time = QPushButton(self.verticalLayoutWidget_2)
-        self.btn_start_time.setObjectName(u"btn_start_time")
-
-        self.verticalLayout_2.addWidget(self.btn_start_time)
-
-        self.btn_stop_time = QPushButton(self.verticalLayoutWidget_2)
-        self.btn_stop_time.setObjectName(u"btn_stop_time")
-
-        self.verticalLayout_2.addWidget(self.btn_stop_time)
-
-        self.btn_reset_time = QPushButton(self.verticalLayoutWidget_2)
-        self.btn_reset_time.setObjectName(u"btn_reset_time")
-
-        self.verticalLayout_2.addWidget(self.btn_reset_time)
-
         self.gridLayoutWidget = QWidget(self.tab_mission)
         self.gridLayoutWidget.setObjectName(u"gridLayoutWidget")
-        self.gridLayoutWidget.setGeometry(QRect(20, 260, 321, 131))
+        self.gridLayoutWidget.setGeometry(QRect(20, 260, 381, 151))
         self.gridLayout = QGridLayout(self.gridLayoutWidget)
         self.gridLayout.setObjectName(u"gridLayout")
         self.gridLayout.setContentsMargins(0, 0, 0, 0)
@@ -334,15 +308,15 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.label_mission_case_show, 2, 1, 1, 1)
 
-        self.comboBox = QComboBox(self.gridLayoutWidget)
-        self.comboBox.setObjectName(u"comboBox")
-
-        self.gridLayout.addWidget(self.comboBox, 0, 0, 1, 1)
-
         self.label_mission_case = QLabel(self.gridLayoutWidget)
         self.label_mission_case.setObjectName(u"label_mission_case")
 
         self.gridLayout.addWidget(self.label_mission_case, 2, 0, 1, 1)
+
+        self.comboBox = QComboBox(self.gridLayoutWidget)
+        self.comboBox.setObjectName(u"comboBox")
+
+        self.gridLayout.addWidget(self.comboBox, 0, 0, 1, 1)
 
         self.btn_start_program = QPushButton(self.gridLayoutWidget)
         self.btn_start_program.setObjectName(u"btn_start_program")
@@ -519,7 +493,7 @@ class Ui_MainWindow(object):
         self.btn_project_name_read.setStyleSheet(u"background-color:#da7700;color:white;border-color: black;")
         self.verticalLayoutWidget_5 = QWidget(self.tab_mission)
         self.verticalLayoutWidget_5.setObjectName(u"verticalLayoutWidget_5")
-        self.verticalLayoutWidget_5.setGeometry(QRect(490, 40, 160, 171))
+        self.verticalLayoutWidget_5.setGeometry(QRect(490, 30, 160, 361))
         self.verticalLayout_5 = QVBoxLayout(self.verticalLayoutWidget_5)
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
         self.verticalLayout_5.setContentsMargins(0, 0, 0, 0)
@@ -554,7 +528,7 @@ class Ui_MainWindow(object):
         self.btn_stopshow_program = QPushButton(self.verticalLayoutWidget_5)
         self.btn_stopshow_program.setObjectName(u"btn_stopshow_program")
         self.btn_stopshow_program.setFont(font5)
-        self.btn_stopshow_program.setStyleSheet(u"background-color:#0300fc;color:white;border-color: black;")
+        self.btn_stopshow_program.setStyleSheet(u"background-color:#005b62;color:white;border-color: black;")
 
         self.verticalLayout_5.addWidget(self.btn_stopshow_program)
 
@@ -984,6 +958,32 @@ class Ui_MainWindow(object):
 
         self.gridLayout_3.addWidget(self.label_jogging, 1, 0, 1, 1)
 
+        self.verticalLayoutWidget_2 = QWidget(self.tab)
+        self.verticalLayoutWidget_2.setObjectName(u"verticalLayoutWidget_2")
+        self.verticalLayoutWidget_2.setGeometry(QRect(550, 260, 131, 151))
+        self.verticalLayout_2 = QVBoxLayout(self.verticalLayoutWidget_2)
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.lcdNumber = QLCDNumber(self.verticalLayoutWidget_2)
+        self.lcdNumber.setObjectName(u"lcdNumber")
+
+        self.verticalLayout_2.addWidget(self.lcdNumber)
+
+        self.btn_start_time = QPushButton(self.verticalLayoutWidget_2)
+        self.btn_start_time.setObjectName(u"btn_start_time")
+
+        self.verticalLayout_2.addWidget(self.btn_start_time)
+
+        self.btn_stop_time = QPushButton(self.verticalLayoutWidget_2)
+        self.btn_stop_time.setObjectName(u"btn_stop_time")
+
+        self.verticalLayout_2.addWidget(self.btn_stop_time)
+
+        self.btn_reset_time = QPushButton(self.verticalLayoutWidget_2)
+        self.btn_reset_time.setObjectName(u"btn_reset_time")
+
+        self.verticalLayout_2.addWidget(self.btn_reset_time)
+
         self.tabWidget.addTab(self.tab, "")
         self.tab_other = QWidget()
         self.tab_other.setObjectName(u"tab_other")
@@ -1036,7 +1036,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(3)
+        self.tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -1058,13 +1058,10 @@ class Ui_MainWindow(object):
         self.label_acs_command_list.setText(QCoreApplication.translate("MainWindow", u"Joint Space (ACS)", None))
         self.label_pcs_command_list.setText(QCoreApplication.translate("MainWindow", u"Cartesian Space (PCS)", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_arm), QCoreApplication.translate("MainWindow", u"Arm position", None))
-        self.btn_start_time.setText(QCoreApplication.translate("MainWindow", u"Start", None))
-        self.btn_stop_time.setText(QCoreApplication.translate("MainWindow", u"Stop", None))
-        self.btn_reset_time.setText(QCoreApplication.translate("MainWindow", u"Reset", None))
         self.label_mission_case_show.setText(QCoreApplication.translate("MainWindow", u"???", None))
         self.label_mission_case.setText(QCoreApplication.translate("MainWindow", u"You choose ?", None))
         self.btn_start_program.setText(QCoreApplication.translate("MainWindow", u"Start task", None))
-        self.btn_stop_program.setText(QCoreApplication.translate("MainWindow", u"Stop", None))
+        self.btn_stop_program.setText(QCoreApplication.translate("MainWindow", u"Stop motion", None))
         self.groupBox_speed.setTitle(QCoreApplication.translate("MainWindow", u"Overall speed setting", None))
         self.btn_acc_set.setText(QCoreApplication.translate("MainWindow", u"Set", None))
         self.btn_vel_set.setText(QCoreApplication.translate("MainWindow", u"Set", None))
@@ -1077,7 +1074,7 @@ class Ui_MainWindow(object):
         self.btn_dance_program.setText(QCoreApplication.translate("MainWindow", u"dance", None))
         self.btn_smile_program.setText(QCoreApplication.translate("MainWindow", u"smile", None))
         self.btn_bow_program.setText(QCoreApplication.translate("MainWindow", u"bow", None))
-        self.btn_stopshow_program.setText(QCoreApplication.translate("MainWindow", u"stop", None))
+        self.btn_stopshow_program.setText(QCoreApplication.translate("MainWindow", u"stop mission", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_mission), QCoreApplication.translate("MainWindow", u"Mission", None))
         self.label_rostopic_pub_list.setText(QCoreApplication.translate("MainWindow", u"rostopic /reply_external_comm", None))
         self.label_rostopic_echo_list.setText(QCoreApplication.translate("MainWindow", u"rostopic /write_external_comm", None))
@@ -1099,6 +1096,9 @@ class Ui_MainWindow(object):
         self.btn_x_positive.setText(QCoreApplication.translate("MainWindow", u"+X", None))
         self.pushButton_2.setText("")
         self.label_jogging.setText(QCoreApplication.translate("MainWindow", u"Jogging", None))
+        self.btn_start_time.setText(QCoreApplication.translate("MainWindow", u"Start", None))
+        self.btn_stop_time.setText(QCoreApplication.translate("MainWindow", u"Stop", None))
+        self.btn_reset_time.setText(QCoreApplication.translate("MainWindow", u"Reset", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("MainWindow", u"Jog", None))
         self.label_arm_picture.setText("")
         self.label_Coordinate_configuration.setText("")
