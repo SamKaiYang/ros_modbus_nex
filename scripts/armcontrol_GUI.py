@@ -12,10 +12,10 @@ from PySide2.QtWidgets import *
 from PySide2.QtGui import *
 from Ui_main import Ui_MainWindow
 # from armcontrol_strategy import Nex_control, switch
-# import sys
-# reload(sys)
-import importlib,sys
-importlib.reload(sys)
+import sys
+reload(sys)
+#import importlib,sys
+#importlib.reload(sys)
 sys.setdefaultencoding('utf-8')
 
 class switch(object):
@@ -265,7 +265,8 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
         self.ui.btn_dance_program.clicked.connect(self.dance_program_readClicked)
         self.ui.btn_bow_program.clicked.connect(self.bow_program_readClicked)
         self.ui.btn_stopshow_program.clicked.connect(self.stopshow_program_readClicked)
-        
+        self.ui.btn_init_program.clicked.connect(self.init_program_readClicked)
+        self.ui.btn_home_program.clicked.connect(self.home_program_readClicked)
         # test button 
         self.ui.btn_test.clicked.connect(self.testClicked)
         # self.ui.btn_test2.clicked.connect(self.test2Clicked)
@@ -291,7 +292,8 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
         self.s = 0
 
         # ComboBox
-        choices = ['None','All', 'Init', 'Show dance', 'Home','Stop','Show Select','jogging']
+        # choices = ['None','Show 1', 'Show 2', 'Init', 'Home','Stop','Show All Select','jogging']
+        choices = ['None','Show 1', 'Show 2', 'Init', 'Home','Stop','Show All Select']
         self.ui.comboBox.addItems(choices)
         self.ui.comboBox.currentIndexChanged.connect(self.display)
         self.display()
@@ -400,19 +402,19 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
             # self.ui.label_mission_case_show.setText('Choose：%s' % self.ui.comboBox.currentText())
             task_value = 0
             # self.ui_reload_program()
-        elif self.ui.comboBox.currentText() == "All":
+        elif self.ui.comboBox.currentText() == "Show 1":
             self.ui.label_mission_case_show.setText('Choose：%s' % self.ui.comboBox.currentText())
             task_value = 1
+            self.ui_reload_program()
+            self.ui.comboBox.setCurrentIndex(0)
+        elif self.ui.comboBox.currentText() == "Show 2":
+            self.ui.label_mission_case_show.setText('Choose：%s' % self.ui.comboBox.currentText())
+            task_value = 3
             self.ui_reload_program()
             self.ui.comboBox.setCurrentIndex(0)
         elif self.ui.comboBox.currentText() == "Init":
             self.ui.label_mission_case_show.setText('Choose：%s' % self.ui.comboBox.currentText())
             task_value = 2
-            self.ui_reload_program()
-            self.ui.comboBox.setCurrentIndex(0)
-        elif self.ui.comboBox.currentText() == "Show dance":
-            self.ui.label_mission_case_show.setText('Choose：%s' % self.ui.comboBox.currentText())
-            task_value = 3
             self.ui_reload_program()
             self.ui.comboBox.setCurrentIndex(0)
         elif self.ui.comboBox.currentText() == "Home":
@@ -425,16 +427,16 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
             task_value = 5
             self.ui_reload_program()
             self.ui.comboBox.setCurrentIndex(0)
-        elif self.ui.comboBox.currentText() == "Show Select":
+        elif self.ui.comboBox.currentText() == "Show All Select":
             self.ui.label_mission_case_show.setText('Choose：%s' % self.ui.comboBox.currentText())
             task_value = 6
             self.ui_reload_program()
             self.ui.comboBox.setCurrentIndex(0)
-        elif self.ui.comboBox.currentText() == "jogging":
-            self.ui.label_mission_case_show.setText('Choose：%s' % self.ui.comboBox.currentText())
-            task_value = 7
-            self.ui_reload_program()
-            self.ui.comboBox.setCurrentIndex(0)
+        # elif self.ui.comboBox.currentText() == "jogging":
+        #     self.ui.label_mission_case_show.setText('Choose：%s' % self.ui.comboBox.currentText())
+        #     task_value = 7
+        #     self.ui_reload_program()
+        #     self.ui.comboBox.setCurrentIndex(0)
         self.mission_number = task_value
         
 
@@ -755,6 +757,16 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
     def stopshow_program_readClicked(self):
         register = 1024 + 12 # 24
         value = 0
+        self.send_16bit_value(register,value) # set SMOGetU16(24)
+
+    def init_program_readClicked(self):
+        register = 1024 + 12 # 24
+        value = 5
+        self.send_16bit_value(register,value) # set SMOGetU16(24)
+    
+    def home_program_readClicked(self):
+        register = 1024 + 12 # 24
+        value = 6
         self.send_16bit_value(register,value) # set SMOGetU16(24)
 
     def JogMode_display(self):

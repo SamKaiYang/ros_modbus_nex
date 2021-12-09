@@ -327,6 +327,11 @@ class Ui_MainWindow(object):
 
         self.btn_stop_program = QPushButton(self.gridLayoutWidget)
         self.btn_stop_program.setObjectName(u"btn_stop_program")
+        font6 = QFont()
+        font6.setPointSize(13)
+        font6.setBold(True)
+        font6.setWeight(75)
+        self.btn_stop_program.setFont(font6)
         self.btn_stop_program.setStyleSheet(u"background-color:#005b62;color:white;border-color: black;")
 
         self.gridLayout.addWidget(self.btn_stop_program, 1, 1, 1, 1)
@@ -493,41 +498,57 @@ class Ui_MainWindow(object):
         self.btn_project_name_read.setStyleSheet(u"background-color:#da7700;color:white;border-color: black;")
         self.verticalLayoutWidget_5 = QWidget(self.tab_mission)
         self.verticalLayoutWidget_5.setObjectName(u"verticalLayoutWidget_5")
-        self.verticalLayoutWidget_5.setGeometry(QRect(490, 30, 160, 361))
+        self.verticalLayoutWidget_5.setGeometry(QRect(490, 0, 160, 461))
         self.verticalLayout_5 = QVBoxLayout(self.verticalLayoutWidget_5)
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
         self.verticalLayout_5.setContentsMargins(0, 0, 0, 0)
         self.btn_show_program = QPushButton(self.verticalLayoutWidget_5)
         self.btn_show_program.setObjectName(u"btn_show_program")
-        self.btn_show_program.setFont(font5)
+        font7 = QFont()
+        font7.setPointSize(15)
+        self.btn_show_program.setFont(font7)
         self.btn_show_program.setStyleSheet(u"background-color:#0300fc;color:white;border-color: black;")
 
         self.verticalLayout_5.addWidget(self.btn_show_program)
 
         self.btn_dance_program = QPushButton(self.verticalLayoutWidget_5)
         self.btn_dance_program.setObjectName(u"btn_dance_program")
-        self.btn_dance_program.setFont(font5)
+        self.btn_dance_program.setFont(font7)
         self.btn_dance_program.setStyleSheet(u"background-color:#0300fc;color:white;border-color: black;")
 
         self.verticalLayout_5.addWidget(self.btn_dance_program)
 
         self.btn_smile_program = QPushButton(self.verticalLayoutWidget_5)
         self.btn_smile_program.setObjectName(u"btn_smile_program")
-        self.btn_smile_program.setFont(font5)
+        self.btn_smile_program.setFont(font7)
         self.btn_smile_program.setStyleSheet(u"background-color:#0300fc;color:white;border-color: black;")
 
         self.verticalLayout_5.addWidget(self.btn_smile_program)
 
         self.btn_bow_program = QPushButton(self.verticalLayoutWidget_5)
         self.btn_bow_program.setObjectName(u"btn_bow_program")
-        self.btn_bow_program.setFont(font5)
+        self.btn_bow_program.setFont(font7)
         self.btn_bow_program.setStyleSheet(u"background-color:#0300fc;color:white;border-color: black;")
 
         self.verticalLayout_5.addWidget(self.btn_bow_program)
 
+        self.btn_init_program = QPushButton(self.verticalLayoutWidget_5)
+        self.btn_init_program.setObjectName(u"btn_init_program")
+        self.btn_init_program.setFont(font4)
+        self.btn_init_program.setStyleSheet(u"background-color:#0300fc;color:white;border-color: black;")
+
+        self.verticalLayout_5.addWidget(self.btn_init_program)
+
+        self.btn_home_program = QPushButton(self.verticalLayoutWidget_5)
+        self.btn_home_program.setObjectName(u"btn_home_program")
+        self.btn_home_program.setFont(font4)
+        self.btn_home_program.setStyleSheet(u"background-color:#0300fc;color:white;border-color: black;")
+
+        self.verticalLayout_5.addWidget(self.btn_home_program)
+
         self.btn_stopshow_program = QPushButton(self.verticalLayoutWidget_5)
         self.btn_stopshow_program.setObjectName(u"btn_stopshow_program")
-        self.btn_stopshow_program.setFont(font5)
+        self.btn_stopshow_program.setFont(font4)
         self.btn_stopshow_program.setStyleSheet(u"background-color:#005b62;color:white;border-color: black;")
 
         self.verticalLayout_5.addWidget(self.btn_stopshow_program)
@@ -543,11 +564,11 @@ class Ui_MainWindow(object):
         self.verticalLayout_4.setContentsMargins(0, 0, 0, 0)
         self.label_rostopic_pub_list = QLabel(self.verticalLayoutWidget_4)
         self.label_rostopic_pub_list.setObjectName(u"label_rostopic_pub_list")
-        font6 = QFont()
-        font6.setPointSize(14)
-        font6.setBold(True)
-        font6.setWeight(75)
-        self.label_rostopic_pub_list.setFont(font6)
+        font8 = QFont()
+        font8.setPointSize(14)
+        font8.setBold(True)
+        font8.setWeight(75)
+        self.label_rostopic_pub_list.setFont(font8)
 
         self.verticalLayout_4.addWidget(self.label_rostopic_pub_list)
 
@@ -561,7 +582,7 @@ class Ui_MainWindow(object):
 
         self.label_rostopic_echo_list = QLabel(self.verticalLayoutWidget_4)
         self.label_rostopic_echo_list.setObjectName(u"label_rostopic_echo_list")
-        self.label_rostopic_echo_list.setFont(font6)
+        self.label_rostopic_echo_list.setFont(font8)
 
         self.verticalLayout_4.addWidget(self.label_rostopic_echo_list)
 
@@ -1013,12 +1034,12 @@ class Ui_MainWindow(object):
         palette26.setBrush(QPalette.Disabled, QPalette.Text, brush10)
         palette26.setBrush(QPalette.Disabled, QPalette.ButtonText, brush10)
         self.label_other_armshow.setPalette(palette26)
-        font7 = QFont()
-        font7.setFamily(u"DejaVu Sans Mono")
-        font7.setPointSize(14)
-        font7.setBold(True)
-        font7.setWeight(75)
-        self.label_other_armshow.setFont(font7)
+        font9 = QFont()
+        font9.setFamily(u"DejaVu Sans Mono")
+        font9.setPointSize(14)
+        font9.setBold(True)
+        font9.setWeight(75)
+        self.label_other_armshow.setFont(font9)
         self.label_arm_gif = QLabel(self.tab_other)
         self.label_arm_gif.setObjectName(u"label_arm_gif")
         self.label_arm_gif.setGeometry(QRect(30, 280, 151, 141))
@@ -1036,7 +1057,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -1070,10 +1091,12 @@ class Ui_MainWindow(object):
         self.label_project_name.setText(QCoreApplication.translate("MainWindow", u"Project Name:", None))
         self.btn_project_name_select.setText(QCoreApplication.translate("MainWindow", u"Select", None))
         self.btn_project_name_read.setText(QCoreApplication.translate("MainWindow", u"Read", None))
-        self.btn_show_program.setText(QCoreApplication.translate("MainWindow", u"show", None))
-        self.btn_dance_program.setText(QCoreApplication.translate("MainWindow", u"dance", None))
+        self.btn_show_program.setText(QCoreApplication.translate("MainWindow", u"show 1", None))
+        self.btn_dance_program.setText(QCoreApplication.translate("MainWindow", u"show 2", None))
         self.btn_smile_program.setText(QCoreApplication.translate("MainWindow", u"smile", None))
         self.btn_bow_program.setText(QCoreApplication.translate("MainWindow", u"bow", None))
+        self.btn_init_program.setText(QCoreApplication.translate("MainWindow", u"init", None))
+        self.btn_home_program.setText(QCoreApplication.translate("MainWindow", u"home", None))
         self.btn_stopshow_program.setText(QCoreApplication.translate("MainWindow", u"stop mission", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_mission), QCoreApplication.translate("MainWindow", u"Mission", None))
         self.label_rostopic_pub_list.setText(QCoreApplication.translate("MainWindow", u"rostopic /reply_external_comm", None))

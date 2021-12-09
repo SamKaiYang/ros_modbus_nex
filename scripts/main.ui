@@ -1298,7 +1298,7 @@
      <enum>QTabWidget::Triangular</enum>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab_arm">
      <attribute name="title">
@@ -1429,6 +1429,13 @@
        </item>
        <item row="1" column="1">
         <widget class="QPushButton" name="btn_stop_program">
+         <property name="font">
+          <font>
+           <pointsize>13</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
          <property name="styleSheet">
           <string notr="true">background-color:#005b62;color:white;border-color: black;</string>
          </property>
@@ -2502,9 +2509,9 @@
       <property name="geometry">
        <rect>
         <x>490</x>
-        <y>30</y>
+        <y>0</y>
         <width>160</width>
-        <height>361</height>
+        <height>461</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -2512,14 +2519,14 @@
         <widget class="QPushButton" name="btn_show_program">
          <property name="font">
           <font>
-           <pointsize>13</pointsize>
+           <pointsize>15</pointsize>
           </font>
          </property>
          <property name="styleSheet">
           <string notr="true">background-color:#0300fc;color:white;border-color: black;</string>
          </property>
          <property name="text">
-          <string>show</string>
+          <string>show 1</string>
          </property>
         </widget>
        </item>
@@ -2527,14 +2534,14 @@
         <widget class="QPushButton" name="btn_dance_program">
          <property name="font">
           <font>
-           <pointsize>13</pointsize>
+           <pointsize>15</pointsize>
           </font>
          </property>
          <property name="styleSheet">
           <string notr="true">background-color:#0300fc;color:white;border-color: black;</string>
          </property>
          <property name="text">
-          <string>dance</string>
+          <string>show 2</string>
          </property>
         </widget>
        </item>
@@ -2542,7 +2549,7 @@
         <widget class="QPushButton" name="btn_smile_program">
          <property name="font">
           <font>
-           <pointsize>13</pointsize>
+           <pointsize>15</pointsize>
           </font>
          </property>
          <property name="styleSheet">
@@ -2557,7 +2564,7 @@
         <widget class="QPushButton" name="btn_bow_program">
          <property name="font">
           <font>
-           <pointsize>13</pointsize>
+           <pointsize>15</pointsize>
           </font>
          </property>
          <property name="styleSheet">
@@ -2569,10 +2576,46 @@
         </widget>
        </item>
        <item>
+        <widget class="QPushButton" name="btn_init_program">
+         <property name="font">
+          <font>
+           <pointsize>15</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color:#0300fc;color:white;border-color: black;</string>
+         </property>
+         <property name="text">
+          <string>init</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btn_home_program">
+         <property name="font">
+          <font>
+           <pointsize>15</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color:#0300fc;color:white;border-color: black;</string>
+         </property>
+         <property name="text">
+          <string>home</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="btn_stopshow_program">
          <property name="font">
           <font>
-           <pointsize>13</pointsize>
+           <pointsize>15</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
           </font>
          </property>
          <property name="styleSheet">
