@@ -114,7 +114,7 @@ class Nex_control(ModbusNexApi):
                                 break
                         else:
                             break
-                except Exception, e:
+                except Exception as e:
                     self.Stop_motion_flag = False
                     rospy.logwarn("Could not running. %s", str(e))
                     raise e
@@ -158,7 +158,7 @@ class Nex_control(ModbusNexApi):
                                 break
                         else:
                             break
-                except Exception, e:
+                except Exception as e:
                     self.Stop_motion_flag = False
                     rospy.logwarn("Could not running. %s", str(e))
                     raise e
@@ -202,7 +202,7 @@ class Nex_control(ModbusNexApi):
                                 break
                         else:
                             break
-                except Exception, e:
+                except Exception as e:
                     self.Stop_motion_flag = False
                     rospy.logwarn("Could not running. %s", str(e))
                     raise e
@@ -246,7 +246,7 @@ class Nex_control(ModbusNexApi):
                                 break
                         else:
                             break
-                except Exception, e:
+                except Exception as e:
                     self.Stop_motion_flag = False
                     rospy.logwarn("Could not running. %s", str(e))
                     raise e
@@ -289,8 +289,9 @@ class Nex_control(ModbusNexApi):
                 self.send_reset(4096)
                 break
             if case(): # default, could also just omit condition or 'if True'
-		        # self.pub_armstatus.publish(100, 100)
+                # self.pub_armstatus.publish(100, 100)
                 if self.task_cmd == 1003 and self.statusID == 99:
+                    self.task_cmd = 0
                     rospy.loginfo("Scripts break")
                     self.stop_programs()
                     # self.stop_arm_reset()

@@ -12,8 +12,10 @@ from PySide2.QtWidgets import *
 from PySide2.QtGui import *
 from Ui_main import Ui_MainWindow
 # from armcontrol_strategy import Nex_control, switch
-import sys
-reload(sys)
+# import sys
+# reload(sys)
+import importlib,sys
+importlib.reload(sys)
 sys.setdefaultencoding('utf-8')
 
 class switch(object):
@@ -688,11 +690,11 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
     # TODO: test button read project name
     def project_name_readClicked(self):
         self.ui.label_project_name.setText('Project name: %s' % self.read_project_name())
-    # # TODO: test button sent pcs & acs position for arm motion
+    # test button sent pcs & acs position for arm motion
     def testClicked(self):
         self.set_pcs_position(260,-112,412,-90,0,-180) # set SMOGetCP(64);
         self.set_acs_position(0.552,-68.967,-103.583,-97.449,90,0.552) # set SMOGetAP(112);
-    # # TODO: test button read SMI
+    # test button read SMI
     # def test2Clicked(self):
     #     input_registers = self.modclient.read_input_Registers(1024,1)
     #     print(input_registers)
@@ -813,71 +815,6 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
                 break
             if case(): # default
                 break
-
-        # print("type:",type)
-        # for case in switch(type):
-        #     if case("+x"):
-        #         print("+x")
-        #         print("self.jogging_postion_rel:",self.jogging_postion_rel)
-        #         print("self.jogging_posture_rel:",self.jogging_posture_rel)
-        #         break
-        #     if case("-x"):
-        #         print("-x")
-        #         print("self.jogging_postion_rel:",self.jogging_postion_rel)
-        #         print("self.jogging_posture_rel:",self.jogging_posture_rel)
-        #         break
-        #     if case("+y"):
-        #         print("+y")
-        #         print("self.jogging_postion_rel:",self.jogging_postion_rel)
-        #         print("self.jogging_posture_rel:",self.jogging_posture_rel)
-        #         break
-        #     if case("-y"):
-        #         print("-y")
-        #         print("self.jogging_postion_rel:",self.jogging_postion_rel)
-        #         print("self.jogging_posture_rel:",self.jogging_posture_rel)
-        #         break
-        #     if case("+z"):
-        #         print("+z")
-        #         print("self.jogging_postion_rel:",self.jogging_postion_rel)
-        #         print("self.jogging_posture_rel:",self.jogging_posture_rel)
-        #         break
-        #     if case("-z"):
-        #         print("-z")
-        #         print("self.jogging_postion_rel:",self.jogging_postion_rel)
-        #         print("self.jogging_posture_rel:",self.jogging_posture_rel)
-        #         break
-        #     if case("+a"):
-        #         print("+a")
-        #         print("self.jogging_postion_rel:",self.jogging_postion_rel)
-        #         print("self.jogging_posture_rel:",self.jogging_posture_rel)
-        #         break
-        #     if case("-a"):
-        #         print("-a")
-        #         print("self.jogging_postion_rel:",self.jogging_postion_rel)
-        #         print("self.jogging_posture_rel:",self.jogging_posture_rel)
-        #         break
-        #     if case("+b"):
-        #         print("+b")
-        #         print("self.jogging_postion_rel:",self.jogging_postion_rel)
-        #         print("self.jogging_posture_rel:",self.jogging_posture_rel)
-        #         break
-        #     if case("-b"):
-        #         print("-b")
-        #         print("self.jogging_postion_rel:",self.jogging_postion_rel)
-        #         print("self.jogging_posture_rel:",self.jogging_posture_rel)
-        #         break
-        #     if case("+c"):
-        #         print("+c")
-        #         print("self.jogging_postion_rel:",self.jogging_postion_rel)
-        #         print("self.jogging_posture_rel:",self.jogging_posture_rel)
-        #         break
-        #     if case("-c"):
-        #         print("-c")
-        #         print("self.jogging_postion_rel:",self.jogging_postion_rel)
-        #         print("self.jogging_posture_rel:",self.jogging_posture_rel)
-        #         break
-        #     if case(): # default
-        #         break
 
 if __name__=="__main__":
     rospy.init_node("arm_control_ui")
