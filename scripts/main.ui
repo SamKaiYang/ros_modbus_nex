@@ -1388,8 +1388,8 @@
      <widget class="QWidget" name="gridLayoutWidget">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>260</y>
+        <x>30</x>
+        <y>290</y>
         <width>381</width>
         <height>151</height>
        </rect>
@@ -1449,10 +1449,10 @@
      <widget class="QGroupBox" name="groupBox_speed">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>110</y>
+        <x>30</x>
+        <y>90</y>
         <width>371</width>
-        <height>131</height>
+        <height>171</height>
        </rect>
       </property>
       <property name="palette">
@@ -2085,6 +2085,48 @@
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btn_vel_slow_set">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>130</y>
+         <width>151</width>
+         <height>29</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>13</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color:#0300fc;color:white;border-color: black;</string>
+       </property>
+       <property name="text">
+        <string>SLOW</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btn_vel_quick_set">
+       <property name="geometry">
+        <rect>
+         <x>190</x>
+         <y>130</y>
+         <width>151</width>
+         <height>29</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>13</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color:#0300fc;color:white;border-color: black;</string>
+       </property>
+       <property name="text">
+        <string>QUICK</string>
        </property>
       </widget>
      </widget>

@@ -241,9 +241,15 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
         self.ui.offBtn.clicked.connect(self.offBtn)
         self.ui.btn_start_program.clicked.connect(self.start_buttonClicked)
         self.ui.btn_stop_program.clicked.connect(self.stop_buttonClicked)
+        # set arm speed 
         self.ui.btn_vel_set.clicked.connect(self.vel_setClicked)
         self.ui.btn_acc_set.clicked.connect(self.acc_setClicked)
+        self.ui.btn_vel_slow_set.clicked.connect(self.vel_slow_setClicked)
+        self.ui.btn_vel_quick_set.clicked.connect(self.vel_quick_setClicked)
+        
+
         self.ui.btn_ip_set.clicked.connect(self.ip_setClicked)
+        # TPUI project 
         self.ui.btn_project_name_select.clicked.connect(self.project_name_setClicked)
         self.ui.btn_project_name_read.clicked.connect(self.project_name_readClicked)
         # arm jogging button
@@ -685,6 +691,22 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
     def AccSliderValue(self):
         self.ui.lineEdit_acc.setText(str(self.ui.horizontalSlider_acc.value()))
         
+    def vel_slow_setClicked(self):
+        """
+            set TPUI SMO 1 
+        """
+        register = 1024 + 4 # 8 
+        self.vel = 50
+        self.send_64bit_value(register,self.vel) # set SMOGetF64(8)
+
+    def vel_quick_setClicked(self):
+        """
+            set TPUI SMO 1 
+        """
+        register = 1024 + 4 # 8 
+        self.vel = 100
+        self.send_64bit_value(register,self.vel) # set SMOGetF64(8)
+
     # TODO: test button set project name   
     def project_name_setClicked(self):
         # self.project_name("modbus_test")
