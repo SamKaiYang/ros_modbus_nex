@@ -122,7 +122,7 @@ class Nex_control(ModbusNexApi):
             self.Stop_motion_flag = False
             rospy.loginfo("Please switch to external control mode")
 
-    def init_task(self):
+    def smile_task(self):
         ## Test all program run, can get task state
         if self.operation_mode_state() == "EXT":
             self.start_arm_reset()
@@ -166,6 +166,49 @@ class Nex_control(ModbusNexApi):
             self.Stop_motion_flag = False
             rospy.loginfo("Please switch to external control mode")
 
+    def bow_task(self):
+        ## Test all program run, can get task state
+        if self.operation_mode_state() == "EXT":
+            self.start_arm_reset()
+            register = 1024
+            self.modclient.setOutput(register,7,0)
+            start_status = self.start_programs(0)
+            while not rospy.is_shutdown():
+                try:
+                    # status 1003 AGV scripts close or shutdown
+                    if self.task_cmd == 1003 and self.statusID == 99:
+                        rospy.loginfo("Scripts break")
+                        self.stop_programs()
+                        # self.stop_arm_reset()
+                        break
+                    else:
+                        if start_status == True:
+                            if self.Stop_motion_flag == False:
+                                # stop program command
+                                if self.task_cmd == 5:
+                                    self.task_cmd = 0
+                                    self.stop_arm_reset()
+                                    break
+                                else:
+                                    # task is running
+                                    self.publish_status_running()
+                                    if self.task_state(0) == "Task exit": #if Task exit
+                                        self.Stop_motion_flag = True
+                                        # task is exit
+                                        self.publish_status_exit()
+                            else:
+                                rospy.loginfo("Stop programs")
+                                self.stop_programs()
+                                break
+                        else:
+                            break
+                except Exception as e:
+                    self.Stop_motion_flag = False
+                    rospy.logwarn("Could not running. %s", str(e))
+                    raise e
+        else:
+            self.Stop_motion_flag = False
+            rospy.loginfo("Please switch to external control mode")
     def show_task(self):
         ## Test all program run, can get task state
         if self.operation_mode_state() == "EXT":
@@ -261,10 +304,10 @@ class Nex_control(ModbusNexApi):
                 self.task_cmd = 0
                 self.arm_task_program()
                 break
-            # start init_task
+            # start smile_task # show smile
             if case(2):
                 self.task_cmd = 0
-                self.init_task()
+                self.smile_task()
                 break
             # start show dance
             if case(3):
@@ -287,6 +330,11 @@ class Nex_control(ModbusNexApi):
                 self.send_reset(4096)
                 self.reset_error_robot()
                 self.send_reset(4096)
+                break
+            # start bow_task # show bow
+            if case(7):
+                self.task_cmd = 0
+                self.bow_task()
                 break
             if case(): # default, could also just omit condition or 'if True'
                 # self.pub_armstatus.publish(100, 100)
