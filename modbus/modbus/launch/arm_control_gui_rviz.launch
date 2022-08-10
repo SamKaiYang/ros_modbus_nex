@@ -1,0 +1,32 @@
+<launch>
+    <node name="arm_control_ui" pkg="modbus" type="armcontrol_GUI.py" cwd="node" output="screen" > </node>
+    <node name="control_strategy" pkg="modbus" type="armcontrol_strategy.py" cwd="node" output="screen" > </node>
+
+    <arg
+    name="model" />
+    <arg
+    name="gui"
+    default="false" />
+    <param
+    name="robot_description"
+    textfile="$(find tecobot)/urdf/tecobot.urdf" />
+    <param
+    name="use_gui"
+    value="$(arg gui)" />
+    <node
+    name="joint_state_publisher"
+    pkg="robot_visual"
+    type="state_publisher" 
+    output="screen"/>
+    <node
+    name="robot_state_publisher"
+    pkg="robot_state_publisher"
+    type="robot_state_publisher" 
+    output="screen"/>
+    <node
+    name="rviz"
+    pkg="rviz"
+    type="rviz"
+    args="-d $(find tecobot)/default.rviz" />
+
+</launch>

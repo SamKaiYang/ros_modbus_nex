@@ -3,16 +3,22 @@
 #include <sensor_msgs/JointState.h>
 #include <tf/transform_broadcaster.h>
 #include <modbus/joint_state.h>
+#include <math.h>
 class arm_state
 {
     public:
-        float joint_angle[6];
+        float joint_angle_1=0.0, joint_angle_2=-90.0 , joint_angle_3=0.0 , joint_angle_4=-90.0 , joint_angle_5=0.0, joint_angle_6=0.0;
         void joint_Callback(const modbus::joint_state::ConstPtr& state);
 };
 void arm_state::joint_Callback(const modbus::joint_state::ConstPtr& state)
 {
-    ROS_INFO("I heard: [%f, %f, %f, %f, %f, %f]", state->position[0],state->position[1],state->position[2],state->position[3],state->position[4],state->position[5]);
-    // arm_state.joint_angle = state->position;
+    // ROS_INFO("I heard: [%f, %f, %f, %f, %f, %f]", state->position[0],state->position[1],state->position[2],state->position[3],state->position[4],state->position[5]);
+    joint_angle_1 = state->position[0];
+    joint_angle_2 = state->position[1];
+    joint_angle_3 = state->position[2];
+    joint_angle_4 = state->position[3];
+    joint_angle_5 = state->position[4];
+    joint_angle_6 = state->position[5];
 }
 
 int main(int argc, char** argv) {
@@ -45,17 +51,17 @@ int main(int argc, char** argv) {
         joint_state.name.resize(6);
         joint_state.position.resize(6);
         joint_state.name[0] ="j1";
-        joint_state.position[0] = swivel;
+        joint_state.position[0] = tfRadians(state.joint_angle_1);
         joint_state.name[1] ="j2";
-        joint_state.position[1] = swivel;
+        joint_state.position[1] = tfRadians(state.joint_angle_2+90);
         joint_state.name[2] ="j3";
-        joint_state.position[2] = swivel;
+        joint_state.position[2] = tfRadians(state.joint_angle_3);
         joint_state.name[3] ="j4";
-        joint_state.position[3] = swivel;
+        joint_state.position[3] = tfRadians(-(state.joint_angle_4+90));
         joint_state.name[4] ="j5";
-        joint_state.position[4] = swivel;
+        joint_state.position[4] = tfRadians(-(state.joint_angle_5));
         joint_state.name[5] ="j6";
-        joint_state.position[5] = swivel;
+        joint_state.position[5] = tfRadians(state.joint_angle_6);
 
 
 
