@@ -1,0 +1,35 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/home/iclab/Documents/nex/modbus_ws/devel/lib/python2.7/dist-packages",
+        "/opt/ros/melodic/lib/python2.7/dist-packages",
+        "/usr/local/lib/python3.6/dist-packages/cv2",
+        "/opt/installer/open_cv/cv_bridge/lib/python3/dist-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/iclab/Documents/nex/modbus_ws/devel/lib/python2.7/dist-packages",
+        "/opt/ros/melodic/lib/python2.7/dist-packages",
+        "/usr/local/lib/python3.6/dist-packages/cv2",
+        "/opt/installer/open_cv/cv_bridge/lib/python3/dist-packages"
+    ],
+    "cSpell.words": [
+        "creat",
+        "msleep",
+        "NRPL",
+        "pymodbus",
+        "pyqt",
+        "qthread",
+        "rospy",
+        "rostopic",
+        "rtol",
+        "Specfied",
+        "taskcmd",
+        "teco",
+        "TPUI"
+    ],
+    "favorites.resources": [
+        {
+            "filePath": "scripts/armcontrol_GUI.py",
+            "group": "Default"
+        }
+    ]
+}

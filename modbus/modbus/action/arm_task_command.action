@@ -1,0 +1,5 @@
+uint32 cmd
+---
+string result_message
+---
+uint32 counts_elapsed
