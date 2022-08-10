@@ -306,7 +306,7 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
 
         # ComboBox
         # choices = ['None','Show 1', 'Show 2', 'Init', 'Home','Stop','Show All Select','jogging']
-        choices = ['None','Show 1', 'Show 2', 'Init', 'Home','Stop','Show All Select']
+        choices = ['None','Show 1', 'Show 2', 'Smile', 'Bow', 'Home','Stop','Show All Select']
         self.ui.comboBox.addItems(choices)
         self.ui.comboBox.currentIndexChanged.connect(self.display)
         self.display()
@@ -425,9 +425,14 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
             task_value = 3
             self.ui_reload_program()
             self.ui.comboBox.setCurrentIndex(0)
-        elif self.ui.comboBox.currentText() == "Init":
+        elif self.ui.comboBox.currentText() == "Smile":
             self.ui.label_mission_case_show.setText('Choose：%s' % self.ui.comboBox.currentText())
             task_value = 2
+            self.ui_reload_program()
+            self.ui.comboBox.setCurrentIndex(0)
+        elif self.ui.comboBox.currentText() == "Bow":
+            self.ui.label_mission_case_show.setText('Choose：%s' % self.ui.comboBox.currentText())
+            task_value = 7
             self.ui_reload_program()
             self.ui.comboBox.setCurrentIndex(0)
         elif self.ui.comboBox.currentText() == "Home":
