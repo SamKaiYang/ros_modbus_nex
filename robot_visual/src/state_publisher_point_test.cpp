@@ -5,8 +5,7 @@
 #include <modbus/joint_state.h>
 #include <math.h>
 #include <string.h>
-//#include <robot_visual/conio.h>
-// # define KEY_X 120
+
 class arm_state
 {
     public:
@@ -22,6 +21,27 @@ void arm_state::joint_Callback(const modbus::joint_state::ConstPtr& state)
     joint_angle_4 = state->position[3];
     joint_angle_5 = state->position[4];
     joint_angle_6 = state->position[5];
+}
+void publish_state(ros::Publisher& pub, float joint_angle_1, float joint_angle_2, float joint_angle_3, float joint_angle_4, float joint_angle_5, float joint_angle_6)
+{
+    sensor_msgs::JointState joint_state;
+    joint_state.header.stamp = ros::Time::now();
+    joint_state.name.resize(6);
+    joint_state.position.resize(6);
+    joint_state.name[0] = "j1";
+    joint_state.position[0] = tfRadians(joint_angle_1);
+    joint_state.name[1] = "j2";
+    joint_state.position[1] = tfRadians(joint_angle_2+90);
+    joint_state.name[2] = "j3";
+    joint_state.position[2] = tfRadians(joint_angle_3);
+    joint_state.name[3] = "j4";
+    joint_state.position[3] = tfRadians(-(joint_angle_4+90));
+    joint_state.name[4] = "j5";
+    joint_state.position[4] = tfRadians(-joint_angle_5);
+    joint_state.name[5] = "j6";
+    joint_state.position[5] = tfRadians(joint_angle_6);
+    pub.publish(joint_state);
+    ros::Duration(2).sleep();
 }
 
 int main(int argc, char** argv) {
@@ -45,89 +65,58 @@ int main(int argc, char** argv) {
     odom_trans.header.frame_id = "odom";
     odom_trans.child_frame_id = "axis";
 
-    // char key = getch();
-    // int value = key;
     while (ros::ok()) {
-
-        // if(value == KEY_X)
-        // {
-            //update joint_state
-
-            //math.radians()
-            ros::Duration(0.5).sleep();
-            joint_state.header.stamp = ros::Time::now();
-            joint_state.name.resize(6);
-            joint_state.position.resize(6);
-            joint_state.name[0] ="j1";
-            joint_state.position[0] = tfRadians(state.joint_angle_1);
-            joint_state.name[1] ="j2";
-            joint_state.position[1] = tfRadians(state.joint_angle_2+90);
-            joint_state.name[2] ="j3";
-            joint_state.position[2] = tfRadians(state.joint_angle_3);
-            joint_state.name[3] ="j4";
-            joint_state.position[3] = tfRadians(-(state.joint_angle_4+90));
-            joint_state.name[4] ="j5";
-            joint_state.position[4] = tfRadians(-(state.joint_angle_5));
-            joint_state.name[5] ="j6";
-            joint_state.position[5] = tfRadians(state.joint_angle_6);
-            joint_pub.publish(joint_state);
-            ros::Duration(0.5).sleep();
-            joint_state.header.stamp = ros::Time::now();
-            joint_state.name.resize(6);
-            joint_state.position.resize(6);
-            joint_state.name[0] ="j1";
-            joint_state.position[0] = tfRadians(state.joint_angle_1+90);
-            joint_state.name[1] ="j2";
-            joint_state.position[1] = tfRadians(state.joint_angle_2+90);
-            joint_state.name[2] ="j3";
-            joint_state.position[2] = tfRadians(state.joint_angle_3+90);
-            joint_state.name[3] ="j4";
-            joint_state.position[3] = tfRadians(-(state.joint_angle_4+90));
-            joint_state.name[4] ="j5";
-            joint_state.position[4] = tfRadians(-(state.joint_angle_5));
-            joint_state.name[5] ="j6";
-            joint_state.position[5] = tfRadians(state.joint_angle_6);
-            joint_pub.publish(joint_state);
-            ros::Duration(0.5).sleep();
-            joint_state.header.stamp = ros::Time::now();
-            joint_state.name.resize(6);
-            joint_state.position.resize(6);
-            joint_state.name[0] ="j1";
-            joint_state.position[0] = tfRadians(state.joint_angle_1);
-            joint_state.name[1] ="j2";
-            joint_state.position[1] = tfRadians(state.joint_angle_2+90);
-            joint_state.name[2] ="j3";
-            joint_state.position[2] = tfRadians(state.joint_angle_3);
-            joint_state.name[3] ="j4";
-            joint_state.position[3] = tfRadians(-(state.joint_angle_4+90));
-            joint_state.name[4] ="j5";
-            joint_state.position[4] = tfRadians(-(state.joint_angle_5));
-            joint_state.name[5] ="j6";
-            joint_state.position[5] = tfRadians(state.joint_angle_6);
-
-            // update transform
-            // (moving in a circle with radius=2)
-            // odom_trans.header.stamp = ros::Time::now();
-            // odom_trans.transform.translation.x = cos(angle)*2;
-            // odom_trans.transform.translation.y = sin(angle)*2;
-            // odom_trans.transform.translation.z = .7;
-            // odom_trans.transform.rotation = tf::createQuaternionMsgFromYaw(angle+M_PI/2);
-
-            //send the joint state and transform
-            joint_pub.publish(joint_state);
-            // broadcaster.sendTransform(odom_trans);
-
-            // Create new robot state
-            // tilt += tinc;
-            // if (tilt<-.5 || tilt>0) tinc *= -1;
-            // height += hinc;
-            // if (height>.2 || height<0) hinc *= -1;
-            // swivel += degree;
-            // angle += degree/4;
-
-            // This will adjust as needed per iteration
-        // }
+        ros::Duration(2).sleep();
         
+        // 1
+        ROS_INFO("G1");
+        publish_state(joint_pub, 30,-90,0,-90,0,0);
+        ROS_INFO("G3");
+        publish_state(joint_pub, 150,-90,0,-90,0,0);
+        ROS_INFO("G4");
+        publish_state(joint_pub, 30,-90,0,-90,0,0); 
+        // 1,2
+        ROS_INFO("G5");
+        publish_state(joint_pub, 30,-110,0,-90,0,0); 
+        ROS_INFO("G6");
+        publish_state(joint_pub, 150,-70,0,-90,0,0); 
+        // 1, 3
+        ROS_INFO("G8");
+        publish_state(joint_pub, 30,-90,-45,-90,0,0); 
+        ROS_INFO("G9");
+        publish_state(joint_pub, 150,-90,45,-90,0,0);
+        ROS_INFO("G10");
+        publish_state(joint_pub, 30,-90,0,-90,0,0); 
+        // 1, 2, 3
+        ROS_INFO("A1");
+        publish_state(joint_pub, 30,-110,20,-90,0,0);
+        ROS_INFO("A2");
+        publish_state(joint_pub, 150,-70,-20,-90,0,0); 
+        // 1, 4
+        ROS_INFO("G11");
+        publish_state(joint_pub, 30,-110,0,-45,0,0); 
+        ROS_INFO("G12");
+        publish_state(joint_pub, 150,-70,0,-135,0,0); 
+        ROS_INFO("G13");
+        publish_state(joint_pub, 30,-90,0,-90,0,0); 
+        // 7 字形
+        ROS_INFO("B1");
+        publish_state(joint_pub, -45,-55,-90,-90,0,0); 
+        ROS_INFO("B5");
+        publish_state(joint_pub, -45,-55,-90,-30,60,0); 
+        ROS_INFO("B2");
+        publish_state(joint_pub, -135, -125,90,-90,0,0); 
+        ROS_INFO("B6");
+        publish_state(joint_pub, -135, -125,90,-150,-60,0); 
+        ROS_INFO("B3");
+        publish_state(joint_pub, -20,-55,-90,-110, 118.216,0); 
+        ROS_INFO("B4");
+        publish_state(joint_pub, 45,-55,-90,-30,30,0); 
+        ROS_INFO("B7");
+        publish_state(joint_pub, 200, -125, 90,-60,-60,0); 
+        ROS_INFO("B8");
+        publish_state(joint_pub, 130, -125, 90,-140,-52.9,0); 
+
         loop_rate.sleep();
         ros::spinOnce();
     }

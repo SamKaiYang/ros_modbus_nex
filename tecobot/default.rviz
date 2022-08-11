@@ -109,7 +109,7 @@ Visualization Manager:
       Visual Enabled: true
   Enabled: true
   Global Options:
-    Background Color: 48; 48; 48
+    Background Color: 238; 238; 236
     Default Light: true
     Fixed Frame: dummy
     Frame Rate: 30
@@ -142,18 +142,18 @@ Visualization Manager:
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0
-        Y: 0
-        Z: 0
+        X: -0.07706086337566376
+        Y: -0.2465876191854477
+        Z: 0.3129899799823761
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.6853981018066406
+      Pitch: 0.6753981113433838
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 1.1303977966308594
+      Yaw: 0.6453982591629028
     Saved: ~
 Window Geometry:
   Displays:
@@ -172,4 +172,4 @@ Window Geometry:
     collapsed: false
   Width: 1267
   X: 611
-  Y: 107
+  Y: 77
