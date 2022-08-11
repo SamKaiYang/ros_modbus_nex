@@ -208,3 +208,7 @@ include_directories(
 include_directories(include ${catkin_INCLUDE_DIRS})
 add_executable(state_publisher src/state_publisher.cpp)
 target_link_libraries(state_publisher ${catkin_LIBRARIES})
+
+include_directories(include ${catkin_INCLUDE_DIRS})
+add_executable(state_publisher_point_test src/state_publisher_point_test.cpp)
+target_link_libraries(state_publisher_point_test ${catkin_LIBRARIES})

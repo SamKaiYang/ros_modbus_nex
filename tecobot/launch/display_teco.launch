@@ -13,7 +13,7 @@
   <node
     name="joint_state_publisher"
     pkg="robot_visual"
-    type="state_publisher" 
+    type="state_publisher_point_test" 
     output="screen"/>
   <node
     name="robot_state_publisher"
@@ -24,5 +24,5 @@
     name="rviz"
     pkg="rviz"
     type="rviz"
-    args="-d $(find tecobot)/urdf.rviz" />
+    args="-d $(find tecobot)/default.rviz" />
 </launch>
