@@ -239,7 +239,7 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
         self._creat_menubar()
         self.setWindowIcon(QtGui.QIcon('../picture/teco_icon.png'))
         self.ui.lineEdit_vel.setText(str(self.vel))
-        self.ui.lineEdit_acc.setText(str(self.acc))
+        # self.ui.lineEdit_acc.setText(str(self.acc))
         self.ui.btn_reset.clicked.connect(self.reset_buttonClicked)
         self.ui.btn_enable.clicked.connect(self.enable_buttonClicked)
         self.ui.btn_disable.clicked.connect(self.disable_buttonClicked)
@@ -250,7 +250,7 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
         self.ui.btn_stop_program.clicked.connect(self.stop_buttonClicked)
         # set arm speed 
         self.ui.btn_vel_set.clicked.connect(self.vel_setClicked)
-        self.ui.btn_acc_set.clicked.connect(self.acc_setClicked)
+        # self.ui.btn_acc_set.clicked.connect(self.acc_setClicked)
         self.ui.btn_vel_slow_set.clicked.connect(self.vel_slow_setClicked)
         self.ui.btn_vel_quick_set.clicked.connect(self.vel_quick_setClicked)
         
@@ -291,7 +291,7 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
         # Vel. HorizontalSlider
         self.ui.horizontalSlider_vel.valueChanged.connect(self.VelSliderValue)
         # Acc. HorizontalSlider
-        self.ui.horizontalSlider_acc.valueChanged.connect(self.AccSliderValue)
+        # self.ui.horizontalSlider_acc.valueChanged.connect(self.AccSliderValue)
         # QTimer
         self.timer = QTimer()
 
@@ -388,8 +388,8 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
             + "}" + "QPushButton::pressed" + "{" + "background-color :#5151A2;\n" + "color:white;" +"}")
         self.ui.btn_vel_set.setStyleSheet("QPushButton" + "{" + "background-color:#da7700;\n" + "color:white;\n" + "border-color: black;" 
             + "}" + "QPushButton::pressed" + "{" + "background-color :#5151A2;\n" + "color:white;" +"}")
-        self.ui.btn_acc_set.setStyleSheet("QPushButton" + "{" + "background-color:#da7700;\n" + "color:white;\n" + "border-color: black;" 
-            + "}" + "QPushButton::pressed" + "{" + "background-color :#5151A2;\n" + "color:white;" +"}")
+        # self.ui.btn_acc_set.setStyleSheet("QPushButton" + "{" + "background-color:#da7700;\n" + "color:white;\n" + "border-color: black;" 
+        #     + "}" + "QPushButton::pressed" + "{" + "background-color :#5151A2;\n" + "color:white;" +"}")
         self.ui.btn_project_name_select.setStyleSheet("QPushButton" + "{" + "background-color:#da7700;\n" + "color:white;\n" + "border-color: black;" 
             + "}" + "QPushButton::pressed" + "{" + "background-color :#5151A2;\n" + "color:white;" +"}")
         self.ui.btn_project_name_read.setStyleSheet("QPushButton" + "{" + "background-color:#da7700;\n" + "color:white;\n" + "border-color: black;" 
@@ -627,6 +627,7 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
             self.safetyNum.setText("Safety: "+self.safety_state())
             self.taskNum.setText("Task: "+self.task_state(0))
             self.reloadNum.setText("Reload: "+str(self.is_task_init()))
+            self.safetyNum.setStyleSheet("background-color:green;font-size: 18px;border-radius: 25px;border: 1px solid black;")
             if self.safety_state() == "Error":
                 self.safetyNum.setStyleSheet("background-color:red;font-size: 18px;border-radius: 25px;border: 1px solid black;")
         # elif label == 2:
@@ -695,19 +696,19 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
         register = 1024 + 4 # 8 
         self.vel = float(self.ui.lineEdit_vel.text())
         self.send_64bit_value(register,self.vel) # set SMOGetF64(8)
-    def acc_setClicked(self):
-        """
-            set TPUI SMO 2
-        """
-        register = 1024 + 8 # 16
-        self.acc = float(self.ui.lineEdit_acc.text())
-        self.send_64bit_value(register,self.acc) # set SMOGetF64(16)
+    # def acc_setClicked(self):
+    #     """
+    #         set TPUI SMO 2
+    #     """
+    #     register = 1024 + 8 # 16
+    #     self.acc = float(self.ui.lineEdit_acc.text())
+    #     self.send_64bit_value(register,self.acc) # set SMOGetF64(16)
 
     def VelSliderValue(self):
         self.ui.lineEdit_vel.setText(str(self.ui.horizontalSlider_vel.value()))
         
-    def AccSliderValue(self):
-        self.ui.lineEdit_acc.setText(str(self.ui.horizontalSlider_acc.value()))
+    # def AccSliderValue(self):
+    #     self.ui.lineEdit_acc.setText(str(self.ui.horizontalSlider_acc.value()))
         
     def vel_slow_setClicked(self):
         """
