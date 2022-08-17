@@ -62,7 +62,7 @@ class Nex_control(ModbusNexApi):
 
     def start_arm_reset(self):
         self.send_reset_other_state(4096, 4) # reset and only reserve enable
-        self.reload_all_programs() 
+        self.reload_all_programs()
         self.stop_programs() # reset before starting cmd
 
         while not rospy.is_shutdown():

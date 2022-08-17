@@ -627,9 +627,14 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
             self.safetyNum.setText("Safety: "+self.safety_state())
             self.taskNum.setText("Task: "+self.task_state(0))
             self.reloadNum.setText("Reload: "+str(self.is_task_init()))
-            self.safetyNum.setStyleSheet("background-color:green;font-size: 18px;border-radius: 25px;border: 1px solid black;")
+            self.safetyNum.setStyleSheet("background-color:#66ff33;font-size: 18px;border-radius: 25px;border: 1px solid black;")
             if self.safety_state() == "Error":
                 self.safetyNum.setStyleSheet("background-color:red;font-size: 18px;border-radius: 25px;border: 1px solid black;")
+            elif self.safety_state() == "Enable":
+                self.safetyNum.setStyleSheet("background-color:#ff9900;font-size: 18px;border-radius: 25px;border: 1px solid black;")
+            elif self.safety_state() == "Running":
+                self.safetyNum.setStyleSheet("background-color:#ffff66;font-size: 18px;border-radius: 25px;border: 1px solid black;")
+
         # elif label == 2:
             ACS_actual = self.read_ACS_actual_position()
             ACS_command = self.read_ACS_command_position()

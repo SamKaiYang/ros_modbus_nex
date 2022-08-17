@@ -128,12 +128,12 @@ class ModbusNexApi(object):
     # ----------------Write msg to modbus server API-------------------
     def send_reset(self, address):
         self.modclient.setOutput(address,0,0)
-        rospy.sleep(0.2)
-        rospy.loginfo("RESET")
+        # rospy.sleep(0.2)
+        rospy.loginfo("SET RESET")
 
     def send_reset_other_state(self, address, output):
         self.modclient.setOutput(address,output,0)
-        rospy.sleep(1)
+        # rospy.sleep(1)
         rospy.loginfo("RESET")
 
     def start_programs(self, num):
@@ -144,7 +144,7 @@ class ModbusNexApi(object):
         value = self.set_bit_val(int(input_registers[0]),0,1)
         register = 4096
         self.modclient.setOutput(register,value,0)
-        rospy.sleep(0.2)
+        # rospy.sleep(0.2)
         if self.task_state(num) == "Task running":
             rospy.loginfo("START")
             return True
@@ -160,7 +160,7 @@ class ModbusNexApi(object):
         value = self.set_bit_val(int(input_registers[0]),0,0)
         register = 4096
         self.modclient.setOutput(register,value,0)
-        rospy.sleep(0.2)
+        # rospy.sleep(0.2)
         rospy.loginfo("STOP")
 
     def reset_error_robot(self):
@@ -171,7 +171,7 @@ class ModbusNexApi(object):
         value = self.set_bit_val(int(input_registers[0]),1,1)
         register = 4096
         self.modclient.setOutput(register,value,0)
-        rospy.sleep(0.2)
+        # rospy.sleep(0.2)
         rospy.loginfo("Reset error")
         
     def enable_robot(self):
@@ -182,7 +182,7 @@ class ModbusNexApi(object):
         value = self.set_bit_val(int(input_registers[0]),2,1)
         register = 4096
         self.modclient.setOutput(register,value,0)
-        rospy.sleep(1)
+        # rospy.sleep(1)
         rospy.loginfo("ENABLE")
 
     def disable_robot(self):
@@ -193,19 +193,23 @@ class ModbusNexApi(object):
         value = self.set_bit_val(int(input_registers[0]),2,0)
         register = 4096
         self.modclient.setOutput(register,value,0)
-        rospy.sleep(0.2)
+        # rospy.sleep(0.2)
         rospy.loginfo("DISABLE")
+        # self.send_reset(4096)
+        # self.reset_error_robot()
+        # self.send_reset(4096)
         
     def reload_all_programs(self):
         """
             Reload all programs (*2)
         """
+        rospy.sleep(0.2)
         input_registers = self.modclient.readRegisters(4096,1)
         value = self.set_bit_val(int(input_registers[0]),3,1)
         register = 4096
         self.modclient.setOutput(register,value,0)
         rospy.sleep(0.2)
-        rospy.loginfo("RELOAD_ALL")
+        rospy.loginfo("RELOAD ALL")
 
     def reload_sel_programs(self):
         """
@@ -215,8 +219,8 @@ class ModbusNexApi(object):
         value = self.set_bit_val(int(input_registers[0]),4,1)
         register = 4096
         self.modclient.setOutput(register,value,0)
-        rospy.sleep(0.2)
-        rospy.loginfo("RELOAD_SEL")
+        # rospy.sleep(0.2)
+        rospy.loginfo("RELOAD SEL")
         
     def shutdown_controller(self):
         """
@@ -226,7 +230,7 @@ class ModbusNexApi(object):
         value = self.set_bit_val(int(input_registers[0]),10,1)
         register = 4096
         self.modclient.setOutput(register,value,0)
-        rospy.sleep(0.2)
+        # rospy.sleep(0.2)
         rospy.loginfo("SHUTDOWN")
 
     # TODO: add select project name function 
@@ -247,7 +251,7 @@ class ModbusNexApi(object):
         for i in range(len(payload)):
             payload[i] = struct.pack('<h', int(float(payload[i])))[0]
         self.modclient.setOutput(register,payload,0)
-        rospy.sleep(0.2)
+        # rospy.sleep(0.2)
         rospy.loginfo("project name set")
 
     def open_project(self):
@@ -258,7 +262,7 @@ class ModbusNexApi(object):
         value = self.set_bit_val(int(input_registers[0]),8,1)
         register = 4096
         self.modclient.setOutput(register,value,0)
-        rospy.sleep(0.2)
+        # rospy.sleep(0.2)
         rospy.loginfo("open project")
 
     def set_pcs_position(self, x, y, z, a, b, c):
@@ -302,7 +306,7 @@ class ModbusNexApi(object):
         register = 1024 + 52 # 104
         self.modclient.setOutput(register,C,0)
 
-        rospy.sleep(0.2)
+        # rospy.sleep(0.2)
         rospy.loginfo("set pcs position")
 
     def set_acs_position(self, axis1, axis2, axis3, axis4, axis5, axis6):
@@ -346,7 +350,7 @@ class ModbusNexApi(object):
         register = 1024 + 76 # 152
         self.modclient.setOutput(register,Axis6,0)
         
-        rospy.sleep(0.2)
+        # rospy.sleep(0.2)
         rospy.loginfo("set acs position")
 
     def send_64bit_value(self, register, value):
@@ -356,7 +360,7 @@ class ModbusNexApi(object):
         # Axis1 = builder.build()
         to_register = register
         self.modclient.setOutput(to_register,Value,0)
-        rospy.sleep(0.2)
+        # rospy.sleep(0.2)
 
     def send_16bit_value(self, register, value):
         builder = BinaryPayloadBuilder(byteorder= Endian.Big, wordorder=Endian.Little)
@@ -365,7 +369,7 @@ class ModbusNexApi(object):
         # Axis1 = builder.build()
         to_register = register
         self.modclient.setOutput(to_register,Value,0)
-        rospy.sleep(0.2)
+        # rospy.sleep(0.2)
     # ----------------Request modbus server to read server state API-------------------
     def operation_mode_state(self):
         """
