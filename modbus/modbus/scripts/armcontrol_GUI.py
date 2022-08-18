@@ -485,20 +485,20 @@ class MainWindow(QtWidgets.QMainWindow, ModbusNexApi):
 
     def enable_buttonClicked(self):
         self.send_reset_other_state(4096, 4) # reset and only reserve enable
-        self.ui.btn_enable.setDisabled(True)
-        self.ui.btn_disable.setDisabled(False)
-        self.ui.btn_enable.setStyleSheet("QPushButton" + "{" + "background-color:#5151A2;\n" + "color:white;\n" + "border-color: black;" 
-            + "}" + "QPushButton::pressed" + "{" + "background-color :#5151A2;\n" + "color:white;" +"}")
-        self.ui.btn_disable.setStyleSheet("QPushButton" + "{" + "background-color:#b10011;\n" + "color:white;\n" + "border-color: black;" 
-            + "}" + "QPushButton::pressed" + "{" + "background-color :#5151A2;\n" + "color:white;" +"}")
+        # self.ui.btn_enable.setDisabled(True)
+        # self.ui.btn_disable.setDisabled(False)
+        # self.ui.btn_enable.setStyleSheet("QPushButton" + "{" + "background-color:#5151A2;\n" + "color:white;\n" + "border-color: black;" 
+        #     + "}" + "QPushButton::pressed" + "{" + "background-color :#5151A2;\n" + "color:white;" +"}")
+        # self.ui.btn_disable.setStyleSheet("QPushButton" + "{" + "background-color:#b10011;\n" + "color:white;\n" + "border-color: black;" 
+        #     + "}" + "QPushButton::pressed" + "{" + "background-color :#5151A2;\n" + "color:white;" +"}")
     def disable_buttonClicked(self):
         self.disable_robot()
-        self.ui.btn_enable.setDisabled(False)
-        self.ui.btn_disable.setDisabled(True)
-        self.ui.btn_enable.setStyleSheet("QPushButton" + "{" + "background-color:#00d21a;\n" + "color:white;\n" + "border-color: black;" 
-            + "}" + "QPushButton::pressed" + "{" + "background-color :#5151A2;\n" + "color:white;" +"}")
-        self.ui.btn_disable.setStyleSheet("QPushButton" + "{" + "background-color:#5151A2;\n" + "color:white;\n" + "border-color: black;" 
-            + "}" + "QPushButton::pressed" + "{" + "background-color :#5151A2;\n" + "color:white;" +"}")
+        # self.ui.btn_enable.setDisabled(False)
+        # self.ui.btn_disable.setDisabled(True)
+        # self.ui.btn_enable.setStyleSheet("QPushButton" + "{" + "background-color:#00d21a;\n" + "color:white;\n" + "border-color: black;" 
+        #     + "}" + "QPushButton::pressed" + "{" + "background-color :#5151A2;\n" + "color:white;" +"}")
+        # self.ui.btn_disable.setStyleSheet("QPushButton" + "{" + "background-color:#5151A2;\n" + "color:white;\n" + "border-color: black;" 
+        #     + "}" + "QPushButton::pressed" + "{" + "background-color :#5151A2;\n" + "color:white;" +"}")
     def ui_reload_program(self):
         self.send_reset_other_state(4096, 4) # reset and only reserve enable
         self.reload_all_programs() 
